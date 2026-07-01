@@ -1,3 +1,13 @@
+/* Al-Khwarizmi brand palette (derived from the logo) */
+:root {
+    --brand-teal: #12897A;
+    --brand-teal-dark: #0C6157;
+    --brand-teal-light: #2BA891;
+    --brand-orange: #EE7B2E;
+    --brand-orange-light: #F5A44B;
+    --brand-on-teal: #CDEDE6;
+}
+
 * {
     font-size: 14px;
 }
@@ -90,7 +100,7 @@
 
 .header {
     height: 50px;
-    background-color: #7a9ab9;
+    background-color: var(--brand-teal);
 }
 
 .navbar-nav .expiry-warning {
@@ -105,11 +115,14 @@
 
 .login-logo img {
     margin-bottom: 10px;
+    max-height: 120px;
+    width: auto;
+    vertical-align: middle;
 }
 
 .login-logo .logo {
     font-size: 30px;
-    color: #4c788c;
+    color: var(--brand-teal-dark);
 }
 
 .login-footer {
@@ -124,19 +137,19 @@
 .header .logo-text {
     margin-top: 10px;
     padding-left: 15px;
-    color: #afd0df;
+    color: var(--brand-on-teal);
     font-size: 20px;
 }
 
 .header .logo-text a, .header .logo-text a:active {
     text-decoration: none;
-    color: #afd0df !important;
+    color: var(--brand-on-teal) !important;
     font-size: 20px !important;
 }
 
 .header .logo-text a:hover {
     text-decoration: none;
-    color: #d0e3eb !important;
+    color: #ffffff !important;
 }
 
 .header a {
@@ -144,7 +157,7 @@
 }
 
 .header .open a, .header .open .dropdown-menu {
-    background-color: #7a9ab9 !important;
+    background-color: var(--brand-teal) !important;
 }
 
 .header .open .dropdown-menu {
@@ -195,11 +208,11 @@
 }
 
 .btn-promo {
-    background-color: #7a9ab9;
+    background-color: var(--brand-orange);
 }
 
 .btn-promo:hover {
-    background-color: #9bb4cc;
+    background-color: var(--brand-orange-light);
 }
 
 .fullscreen {

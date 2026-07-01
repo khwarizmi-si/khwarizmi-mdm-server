@@ -18,6 +18,15 @@
 
     <Parameter name="usage.scenario" value="${usage.scenario}"/>
 
+    <!-- Rebranding: brand identity shown in the web panel and pushed to devices.
+         'rebranding.mobile.name' overrides the app name on the mobile agent via sync. -->
+    <Parameter name="rebranding.name" value="Al-Khwarizmi MDM"/>
+    <Parameter name="rebranding.mobile.name" value="Al-Khwarizmi MDM"/>
+    <Parameter name="rebranding.vendor.name" value="Al-Khwarizmi"/>
+    <Parameter name="rebranding.vendor.link" value="https://al-khwarizmi.example"/>
+    <!-- Absolute path to the panel logo. Empty falls back to webapp/images/logo.png -->
+    <Parameter name="rebranding.logo" value=""/>
+
     <!-- If set to 1, the device configuration request must be signed by a shared secret (setup in hash.secret and in the Android app) 
          0 or empty value does not require request signature which is less secure -->
     <Parameter name="secure.enrollment" value="${secure.enrollment}"/>

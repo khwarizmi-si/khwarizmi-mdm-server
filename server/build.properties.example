@@ -15,6 +15,14 @@ files.directory=D:/home/launcher/files
 # A base URL for deployment of this build
 base.url=http://localhost:9090
 
+# Rebranding (brand identity) is configured directly in server/conf/context.xml
+# (dev) and install/context_template.xml (production) via the rebranding.* params:
+#   rebranding.name, rebranding.mobile.name, rebranding.vendor.name,
+#   rebranding.vendor.link, rebranding.logo
+# 'rebranding.mobile.name' is the app name pushed to the mobile agent on sync.
+# The panel logo is served from webapp/images/logo.png unless rebranding.logo
+# points to an absolute file path.
+
 # A usage scenario:
 # shared: the application hosts data for multiple customers
 # private: the application hosts the data just for a single customer
