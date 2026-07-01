@@ -1,0 +1,34 @@
+# Local test deployment of Al-Khwarizmi MDM (server).
+# Build the WAR first, then: docker compose -f docker/docker-compose.yml up
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: hmdm
+      POSTGRES_USER: hmdm
+      POSTGRES_PASSWORD: hmdm
+    volumes:
+      - hmdm-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hmdm -d hmdm"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  hmdm:
+    image: tomcat:9.0-jdk11-temurin
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../server/target/launcher.war:/usr/local/tomcat/webapps/hmdm.war:ro
+      - ./context.xml:/usr/local/tomcat/conf/Catalina/localhost/hmdm.xml:ro
+      - ./log4j-hmdm.xml:/opt/hmdm/log4j-hmdm.xml:ro
+      - hmdm-data:/opt/hmdm
+    command: sh -c "mkdir -p /opt/hmdm/logs /opt/hmdm/files /opt/hmdm/plugins && catalina.sh run"
+
+volumes:
+  hmdm-db:
+  hmdm-data:
