@@ -16,7 +16,10 @@ services:
       retries: 30
 
   hmdm:
-    image: tomcat:9.0-jdk11-temurin
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: alkhwarizmi-mdm-tomcat:9-jdk11-aapt
     depends_on:
       db:
         condition: service_healthy
