@@ -42,7 +42,7 @@
 
     <!-- dependencies version -->
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <javax.mail>1.5.0-b01</javax.mail>
         <java.rest.webservice>2.0.1</java.rest.webservice>
         <jackson.version>1.9.13</jackson.version>
@@ -51,10 +51,10 @@
 
         <servlet-api.version>2.5</servlet-api.version>
 
-        <mybatis.version>3.5.3</mybatis.version>
+        <mybatis.version>3.5.16</mybatis.version>
         <mybatis.guice.version>3.10</mybatis.guice.version>
 
-        <postgresql.version>42.3.3</postgresql.version>
+        <postgresql.version>42.7.4</postgresql.version>
         <liquibase.version>3.6.3</liquibase.version>
 
         <junit.version>4.13.1</junit.version>
