@@ -32,7 +32,7 @@
     <Parameter name="secure.enrollment" value="0"/>
     <!-- A shared secret between mobile app and control panel. 
          Don't change this unless you know what you're doing -->
-    <Parameter name="hash.secret" value="changeme-C3z9vi54"/>
+    <Parameter name="hash.secret" value="20089b856964c5b5f71f1d0b"/>
     <!-- If set to 1, Strict-Transport-Security (HSTS) is turned on -->
 <!--    <Parameter name="strict.transport.security" value="${strict.transport.security}"/> -->
 

@@ -34,7 +34,7 @@ secure.enrollment=0
 
 # A hash secret used for validating the device IDs provided by requests
 # from devices
-hash.secret=changeme-C3z9vi54
+hash.secret=20089b856964c5b5f71f1d0b
 
 # An ID of a record in userroles DB table representing an ORG_ADMIN role
 # Do not change this!
