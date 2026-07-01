@@ -44,10 +44,13 @@ angular.module('headwind-kiosk',
         'vi': 'vi_VN',
         'vi_VN': 'vi_VN',
         'it': 'it_IT',
-        'it_IT': 'it_IT'
+        'it_IT': 'it_IT',
+        'id': 'id_ID',
+        'in': 'id_ID',
+        'id_ID': 'id_ID'
     })
     .constant("LOCALIZATION_BUNDLES", [
-        'en_US', 'ru_RU', 'fr_FR', 'pt_PT', 'ar_AE', 'es_ES', 'de_DE',
+        'id_ID', 'en_US', 'ru_RU', 'fr_FR', 'pt_PT', 'ar_AE', 'es_ES', 'de_DE',
         'zh_TW', 'zh_CN', 'ja_JP', 'tr_TR', 'vi_VN', 'it_IT'])
     .constant("APP_VERSION", "5.39.2") // Update this value on each commit
     .constant("ENGLISH", "en_US")
@@ -59,10 +62,11 @@ angular.module('headwind-kiosk',
                 if (SUPPORTED_LANGUAGES[userLang]) {
                     userLang = SUPPORTED_LANGUAGES[userLang];
                 } else {
-                    userLang = ENGLISH;
+                    // Default to Indonesian for this build
+                    userLang = 'id_ID';
                 }
             } else {
-                userLang = ENGLISH;
+                userLang = 'id_ID';
             }
 
             return userLang;

@@ -21,6 +21,7 @@
                 <label class='col-sm-6 control-label' localized-change-tracking>form.settings.lang.use</label>
                 <div class="col-sm-6">
                 <select name="c3_lang" ng-model="settings.language" class="form-control">
+                    <option ng-value="'id_ID'" ng-selected="settings.language === 'id_ID'" localized-change-tracking>form.settings.lang.id</option>
                     <option ng-value="'ar_AE'" ng-selected="settings.language === 'ar_AE'" localized-change-tracking>form.settings.lang.ar</option>
                     <option ng-value="'de_DE'" ng-selected="settings.language === 'de_DE'" localized-change-tracking>form.settings.lang.de</option>
                     <option ng-value="'en_US'" ng-selected="settings.language === 'en_US'" localized-change-tracking>form.settings.lang.en</option>

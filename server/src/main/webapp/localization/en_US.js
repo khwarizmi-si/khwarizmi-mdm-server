@@ -672,6 +672,7 @@ document.localization ['en_US'] = {
     'form.settings.lang.title': 'Language settings',
     'form.settings.lang.use.default': 'Use default language',
     'form.settings.lang.use': 'Use language',
+    'form.settings.lang.id': 'Indonesia',
     'form.settings.lang.en': 'English',
     'form.settings.lang.pt': 'Português',
     'form.settings.lang.ru': 'Русский',
