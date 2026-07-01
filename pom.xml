@@ -45,7 +45,11 @@
         <java.version>11</java.version>
         <javax.mail>1.5.0-b01</javax.mail>
         <java.rest.webservice>2.0.1</java.rest.webservice>
-        <jackson.version>1.9.13</jackson.version>
+        <!-- Jackson 2.x. The legacy org.codehaus Jackson 1.x is no longer used
+             anywhere in the code (the old jackson.version=1.9.13 property was dead).
+             This version is capped by Jersey 2.25.1 compatibility; bumping Jackson to
+             a modern 2.17+ is coupled to the Jersey 3 / jakarta migration (stage 3). -->
+        <jackson.version>2.10.0</jackson.version>
 
         <guice.version>4.2.2</guice.version>
 
@@ -159,17 +163,18 @@
             <version>1.5.24</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <!-- Jackson 2.x (com.fasterxml). Version pinned by ${jackson.version}.
+             jackson-jaxrs-* stays as pulled by Jersey 2.25.1 (do not force-bump: newer
+             Jackson breaks the Jersey 2.25 JSON provider — see stage 3). -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.0</version>
+            <version>${jackson.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.10.0</version>
+            <version>${jackson.version}</version>
         </dependency>
 
 
