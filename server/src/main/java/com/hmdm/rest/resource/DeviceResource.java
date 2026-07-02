@@ -381,6 +381,25 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get installed applications",
+            notes = "Get the full inventory of applications present on the device (every package, " +
+                    "including user-installed and system apps)"
+    )
+    @GET
+    @Path("/{id}/installedApps")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDeviceInstalledApps(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final List<DeviceInstalledApp> installedApps = this.deviceDAO.getDeviceAllInstalledApplications(id);
+            return Response.OK(installedApps);
+        } catch (Exception e) {
+            log.error("Failed to retrieve the installed applications for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device application settings",
             notes = "Save application settings set at device level"
     )

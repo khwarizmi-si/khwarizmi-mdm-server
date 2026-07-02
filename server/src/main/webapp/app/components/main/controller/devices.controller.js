@@ -1001,6 +1001,19 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.showInstalledApps = function (device) {
+            $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.installedApps.html',
+                controller: 'DeviceInstalledAppsModalController',
+                size: 'lg',
+                resolve: {
+                    device: function () {
+                        return device;
+                    }
+                }
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {
@@ -1419,5 +1432,50 @@ angular.module('headwind-kiosk')
         };
 
         loadData();
+
+    })
+
+    .controller('DeviceInstalledAppsModalController', function ($scope, $modalInstance,
+                                                                localization, deviceService,
+                                                                alertService, device) {
+
+        $scope.device = device;
+        $scope.loading = true;
+        $scope.errorMessage = undefined;
+        $scope.includeSystem = false;
+        $scope.searchText = '';
+
+        var allApps = [];
+
+        $scope.getFilteredApps = function () {
+            var lower = ($scope.searchText || '').toLowerCase();
+            return allApps.filter(function (app) {
+                if (!$scope.includeSystem && app.system) {
+                    return false;
+                }
+                if (lower === '') {
+                    return true;
+                }
+                return (app.name && app.name.toLowerCase().indexOf(lower) > -1)
+                    || (app.pkg && app.pkg.toLowerCase().indexOf(lower) > -1);
+            });
+        };
+
+        $scope.close = function () {
+            $modalInstance.dismiss();
+        };
+
+        deviceService.getDeviceInstalledApps({id: device.id}, function (response) {
+            $scope.loading = false;
+            if (response.status === 'OK') {
+                allApps = response.data || [];
+            } else {
+                $scope.errorMessage = localization.localize(response.message);
+            }
+        }, function (failure) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            alertService.onRequestFailure(failure);
+        });
 
     });

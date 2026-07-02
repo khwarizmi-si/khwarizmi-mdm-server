@@ -30,6 +30,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hmdm.persistence.domain.Application;
+import com.hmdm.persistence.domain.DeviceInstalledApp;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -47,6 +48,10 @@ public class DeviceInfo implements Serializable {
 
     @ApiModelProperty("A list of applications installed on device")
     private List<Application> applications = new LinkedList<>();
+
+    @ApiModelProperty("The full inventory of applications present on device (every package, " +
+            "including user-installed and system apps), as opposed to the managed apps above")
+    private List<DeviceInstalledApp> installedApplications = new LinkedList<>();
 
     @ApiModelProperty("A list of configuraiton files installed on device")
     private List<DeviceConfigurationFile> files = new LinkedList<>();
@@ -145,6 +150,14 @@ public class DeviceInfo implements Serializable {
 
     public void setApplications(List<Application> applications) {
         this.applications = applications;
+    }
+
+    public List<DeviceInstalledApp> getInstalledApplications() {
+        return this.installedApplications;
+    }
+
+    public void setInstalledApplications(List<DeviceInstalledApp> installedApplications) {
+        this.installedApplications = installedApplications;
     }
 
     public String getDeviceId() {
