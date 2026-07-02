@@ -258,7 +258,47 @@
                         </configuration>
                     </execution>
 -->
+
+                    <!-- Tailwind CSS build for the web panel (self-contained in webapp) -->
+                    <execution>
+                        <id>tailwind: install node and npm</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>install-node-and-npm</goal></goals>
+                        <configuration>
+                            <workingDirectory>src/main/webapp</workingDirectory>
+                            <nodeVersion>v18.16.0</nodeVersion>
+                            <npmVersion>9.5.1</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tailwind: npm install</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>npm</goal></goals>
+                        <configuration>
+                            <workingDirectory>src/main/webapp</workingDirectory>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tailwind: build css</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>npm</goal></goals>
+                        <configuration>
+                            <workingDirectory>src/main/webapp</workingDirectory>
+                            <arguments>run build:css</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+
+            <!-- Keep the Tailwind toolchain (node, node_modules, config, CSS source)
+                 out of the packaged WAR; only the generated css/tailwind.css ships. -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceExcludes>node/**,node_modules/**,package.json,package-lock.json,.npmrc,tailwind.config.js,postcss.config.js,css/tailwind.src.css</warSourceExcludes>
+                    <packagingExcludes>node/**,node_modules/**,package.json,package-lock.json,.npmrc,tailwind.config.js,postcss.config.js,css/tailwind.src.css</packagingExcludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

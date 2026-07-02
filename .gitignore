@@ -7,7 +7,11 @@ target
 
 # node modules for grunt
 server/webtarget/node
+server/src/main/webapp/node
 **/node_modules
+
+# Tailwind generated CSS (built by frontend-maven-plugin during the build)
+server/src/main/webapp/css/tailwind.css
 
 # bower modules
 **/bower_components
