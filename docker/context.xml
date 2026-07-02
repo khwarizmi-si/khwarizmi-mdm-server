@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tomcat context for the local Docker deployment of Al-Khwarizmi MDM.
+     Mounted at conf/Catalina/localhost/hmdm.xml -> context path /hmdm -->
+<Context>
+    <!-- Database (points to the 'db' compose service) -->
+    <Parameter name="JDBC.driver"   value="org.postgresql.Driver"/>
+    <Parameter name="JDBC.url"      value="jdbc:postgresql://db:5432/hmdm"/>
+    <Parameter name="JDBC.username" value="hmdm"/>
+    <Parameter name="JDBC.password" value="hmdm"/>
+
+    <Parameter name="base.directory" value="/opt/hmdm"/>
+    <Parameter name="files.directory" value="/opt/hmdm/files"/>
+    <Parameter name="plugins.files.directory" value="/opt/hmdm/plugins"/>
+
+    <Parameter name="base.url" value="http://localhost:8080/hmdm"/>
+
+    <Parameter name="usage.scenario" value="private"/>
+    <Parameter name="secure.enrollment" value="0"/>
+    <Parameter name="hash.secret" value="20089b856964c5b5f71f1d0b"/>
+
+    <!-- Rebranding -->
+    <Parameter name="rebranding.name" value="Al-Khwarizmi MDM"/>
+    <Parameter name="rebranding.mobile.name" value="Al-Khwarizmi MDM"/>
+    <Parameter name="rebranding.vendor.name" value="Al-Khwarizmi"/>
+    <Parameter name="rebranding.vendor.link" value="https://al-khwarizmi.example"/>
+    <Parameter name="rebranding.logo" value=""/>
+
+    <Parameter name="plugin.devicelog.persistence.config.class" value="com.hmdm.plugins.devicelog.persistence.postgres.DeviceLogPostgresPersistenceConfiguration"/>
+    <Parameter name="role.orgadmin.id" value="2"/>
+
+    <Parameter name="swagger.host" value="localhost:8080"/>
+    <Parameter name="swagger.base.path" value="/hmdm/rest"/>
+
+    <Parameter name="initialization.completion.signal.file" value="/opt/hmdm/initialized.txt"/>
+    <Parameter name="log4j.config" value="file:///opt/hmdm/log4j-hmdm.xml"/>
+    <Parameter name="aapt.command" value="aapt"/>
+
+    <!-- Embedded MQTT broker for push notifications -->
+    <Parameter name="mqtt.server.uri" value="localhost:31000"/>
+    <Parameter name="mqtt.auth" value="1"/>
+
+    <Parameter name="device.fast.search.chars" value="5"/>
+
+    <!-- SMTP is not configured for local testing (password recovery disabled) -->
+    <Parameter name="smtp.host" value=""/>
+    <Parameter name="smtp.port" value="25"/>
+    <Parameter name="smtp.ssl" value="0"/>
+    <Parameter name="smtp.starttls" value="0"/>
+    <Parameter name="smtp.username" value=""/>
+    <Parameter name="smtp.password" value=""/>
+    <Parameter name="smtp.from" value="noreply@example.com"/>
+
+    <Parameter name="email.recovery.subj" value="/opt/hmdm/emails/_LANGUAGE_/recovery_subj.txt"/>
+    <Parameter name="email.recovery.body" value="/opt/hmdm/emails/_LANGUAGE_/recovery_body.txt"/>
+</Context>

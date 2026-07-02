@@ -9,8 +9,8 @@ angular.module('headwind-kiosk')
             localization.localize('summary.devices.enrolled.monthly')
         ];
         $scope.enrollmentColors = [
-            '#DCDCDC',
-            '#97BBCD'
+            '#CBD5E1',
+            '#12897A'
         ];
 
         $scope.statusLabels = [
@@ -19,9 +19,9 @@ angular.module('headwind-kiosk')
             localization.localize('summary.devices.active')
         ];
         $scope.statusColors = [
-            '#F7464A',
-            '#FDB45C',
-            '#46BFBD'
+            '#94A3B8',
+            '#EE7B2E',
+            '#12897A'
         ];
 
         $scope.installLabels = [
@@ -29,11 +29,15 @@ angular.module('headwind-kiosk')
             localization.localize('summary.devices.version.mismatch'),
             localization.localize('summary.devices.installation.completed')
         ];
-        $scope.installColors = $scope.statusColors;
+        $scope.installColors = [
+            '#EF4444',
+            '#EE7B2E',
+            '#12897A'
+        ];
 
         $scope.monthlyEnrollColors = [];
         for (var i = 0; i < 12; i++) {
-            $scope.monthlyEnrollColors.push('#97BBCD');
+            $scope.monthlyEnrollColors.push('#12897A');
         }
 
         $scope.statusByConfigSeries = [
@@ -42,7 +46,7 @@ angular.module('headwind-kiosk')
             localization.localize('summary.devices.active')
         ];
         $scope.statusByConfigColors = [
-            '#F7464A', '#FDB45C', '#46BFBD'
+            '#94A3B8', '#EE7B2E', '#12897A'
         ];
 
         $scope.installByConfigSeries = [
@@ -50,7 +54,9 @@ angular.module('headwind-kiosk')
             localization.localize('summary.devices.version.mismatch'),
             localization.localize('summary.devices.installation.completed')
         ];
-        $scope.installByConfigColors = $scope.statusByConfigColors;
+        $scope.installByConfigColors = [
+            '#EF4444', '#EE7B2E', '#12897A'
+        ];
 
         summaryService.getDeviceStat(function (response) {
             var devicesEnrolledEarlier = response.data.devicesEnrolled - response.data.devicesEnrolledLastMonth;

@@ -1,43 +1,55 @@
-<div class="login-logo" ng-if="rebranding"><img src="rest/public/logo"><span class="logo">{{rebranding.appName}}</span></div>
+<div class="tw-min-h-screen tw-w-full tw-font-sans tw-flex tw-flex-col tw-items-center tw-px-4 tw-pt-[7vh] tw-pb-24 tw-bg-gradient-to-b tw-from-brand-teal tw-to-brand-tealDark">
 
-<!-- Localization completed -->
-<div ng-if="!isIE">
-    <div class='panel panel-default login' ng-class='{"panel-danger": errorMessage, "panel-success": successMessage}'>
-        <div class='panel-heading' ng-if='errorMessage'>{{errorMessage}}</div>
-        <div class='panel-heading' ng-if='successMessage'>{{successMessage}}</div>
-        <div class='panel-body' style="padding: 30px; background: #f6f8fc">
-            <form name='loginForm' ng-submit='onLogin()' style="margin-bottom: 0px">
-                <div class='form-group'>
-                    <label for='username' localized>login.username</label>
-                    <input type='text' class='form-control' id='username'
-                           ng-model='login.username' localized-placeholder="login.username.placeholder"
-                           required/>
-                </div>
-                <div class='form-group'>
-                    <label for='password' localized>login.password</label>
-                    <input type='password' class='form-control' id='password'
-                           ng-model='login.password' localized-placeholder='login.password.placeholder'
-                           required/>
-                </div>
+    <div class="tw-text-center tw-mb-6" ng-if="rebranding">
+        <img src="rest/public/logo" alt="{{rebranding.appName}}"
+             class="tw-mx-auto tw-max-h-24 tw-w-auto tw-mb-3 tw-drop-shadow-xl">
+        <span class="tw-block tw-text-[26px] tw-font-bold tw-text-white tw-tracking-tight">{{rebranding.appName}}</span>
+    </div>
 
-                <div style="float: left; min-height: 45px; display: flex; flex-direction: column">
-                    <div ng-if="canRecover" style="margin: auto; width: 100%"><a class="action-link" ng-click="recoverPassword()" localized>login.password.recovery</a></div>
-                    <div ng-if="rebranding.signupLink" style="margin: auto; width: 100%"><span localized>login.no.account</span> <a class="action-link" href="{{rebranding.signupLink}}" localized>login.signup</a></div>
-                    <div ng-if="!rebranding.signupLink && canSignup" style="margin: auto; width: 100%"><span localized>login.no.account</span> <a class="action-link" ng-click="signup()" localized>login.signup</a></div>
-                </div>
+    <!-- Localization completed -->
+    <div ng-if="!isIE" class="tw-w-full tw-max-w-[420px]">
+        <div class="tw-bg-white tw-rounded-2xl tw-shadow-card tw-overflow-hidden"
+             ng-class='{"tw-ring-2 tw-ring-red-400": errorMessage, "tw-ring-2 tw-ring-green-400": successMessage}'>
+            <div class="tw-px-6 tw-pt-5 tw-text-center tw-font-semibold tw-text-red-600" ng-if='errorMessage'>{{errorMessage}}</div>
+            <div class="tw-px-6 tw-pt-5 tw-text-center tw-font-semibold tw-text-green-600" ng-if='successMessage'>{{successMessage}}</div>
+            <div class="tw-p-8">
+                <form name='loginForm' ng-submit='onLogin()'>
+                    <div class="tw-mb-[18px]">
+                        <label for='username'
+                               class="tw-block tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-wider tw-text-brand-tealDark tw-mb-[7px]"
+                               localized>login.username</label>
+                        <input type='text' id='username' ng-model='login.username'
+                               localized-placeholder="login.username.placeholder" autofocus required
+                               class="tw-w-full tw-h-[46px] tw-px-[15px] tw-rounded-[11px] tw-border-[1.5px] tw-border-slate-200 tw-text-slate-900 tw-text-[15px] tw-transition focus:tw-border-brand-teal focus:tw-ring-4 focus:tw-ring-brand-teal/20 focus:tw-outline-none"/>
+                    </div>
+                    <div class="tw-mb-[18px]">
+                        <label for='password'
+                               class="tw-block tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-wider tw-text-brand-tealDark tw-mb-[7px]"
+                               localized>login.password</label>
+                        <input type='password' id='password' ng-model='login.password'
+                               localized-placeholder='login.password.placeholder' required
+                               class="tw-w-full tw-h-[46px] tw-px-[15px] tw-rounded-[11px] tw-border-[1.5px] tw-border-slate-200 tw-text-slate-900 tw-text-[15px] tw-transition focus:tw-border-brand-teal focus:tw-ring-4 focus:tw-ring-brand-teal/20 focus:tw-outline-none"/>
+                    </div>
 
-                <button type='submit' class='btn btn-default right' style="opacity: 1; margin-top: 9px"
-                        ng-disabled='loginForm.$invalid' localized>login.submit</button>
-            </form>
+                    <button type='submit' ng-disabled='loginForm.$invalid' localized
+                            class="tw-w-full tw-h-12 tw-mt-1.5 tw-rounded-[11px] tw-bg-brand-orange tw-text-white tw-text-[15px] tw-font-semibold tw-tracking-wide tw-shadow-lg tw-transition hover:tw-bg-brand-orangeLight active:tw-translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed disabled:tw-shadow-none">login.submit</button>
+
+                    <div class="tw-mt-5 tw-text-center tw-text-[13px] tw-text-slate-500 tw-space-y-[7px]">
+                        <div ng-if="canRecover"><a class="tw-text-brand-teal tw-font-semibold tw-cursor-pointer tw-transition hover:tw-text-brand-orange" ng-click="recoverPassword()" localized>login.password.recovery</a></div>
+                        <div ng-if="rebranding.signupLink"><span localized>login.no.account</span> <a class="tw-text-brand-teal tw-font-semibold tw-transition hover:tw-text-brand-orange" href="{{rebranding.signupLink}}" localized>login.signup</a></div>
+                        <div ng-if="!rebranding.signupLink && canSignup"><span localized>login.no.account</span> <a class="tw-text-brand-teal tw-font-semibold tw-cursor-pointer tw-transition hover:tw-text-brand-orange" ng-click="signup()" localized>login.signup</a></div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<div class='content-wrapper width-1000' ng-if="isIE">
-    <div localized>ie.browser.notice.1</div>
-    <div ng-bind-html="ieBrowserNotice2"></div>
-</div>
+    <div class='content-wrapper width-1000' ng-if="isIE">
+        <div localized>ie.browser.notice.1</div>
+        <div ng-bind-html="ieBrowserNotice2"></div>
+    </div>
 
-<div class="login-footer" ng-if="rebranding">
-    <span>{{rebranding.appName}}</span> <span localized>app.description</span>. (c) {{rebranding.year}} <a href="{{rebranding.vendorLink}}">{{rebranding.vendorName}}</a>
+    <div class="tw-fixed tw-bottom-4 tw-left-0 tw-w-full tw-text-center tw-text-[12.5px] tw-text-white/80" ng-if="rebranding">
+        <span>{{rebranding.appName}}</span> <span localized>app.description</span>. (c) {{rebranding.year}} <a href="{{rebranding.vendorLink}}" class="tw-text-white tw-font-semibold">{{rebranding.vendorName}}</a>
+    </div>
 </div>

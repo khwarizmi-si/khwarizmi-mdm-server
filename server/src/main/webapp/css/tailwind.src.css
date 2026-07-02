@@ -1,0 +1,386 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Brand modernization of shared Bootstrap components.
+   Applied globally so every data page (devices, applications,
+   configurations, customers, settings) is refreshed at once,
+   without rewriting each view. Uses the brand CSS variables
+   from main.css. Kept tasteful/conservative to avoid layout shifts.
+   Written as plain CSS (outside @layer) so these overrides of Bootstrap
+   classes are never tree-shaken by Tailwind's content purge.
+   ============================================================ */
+
+    /* ---- Data tables ---- */
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .table > thead > tr > th {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        border-bottom: 1px solid #e2e8f0;
+        border-top: none;
+        padding: 11px 14px;
+        vertical-align: middle;
+    }
+    .table > tbody > tr > td {
+        padding: 10px 14px;
+        border-top: 1px solid #f1f5f9;
+        color: #334155;
+        vertical-align: middle;
+    }
+    .table > tbody > tr:hover > td {
+        background: rgba(18, 137, 122, .05);
+    }
+    .table .sortable { cursor: pointer; }
+    .table .sortable:hover { color: var(--brand-teal-dark); }
+
+    /* ---- Buttons ---- */
+    .btn {
+        border-radius: 9px;
+        font-weight: 500;
+        transition: background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease;
+    }
+    .btn-default {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+    }
+    .btn-default:hover,
+    .btn-default:focus {
+        background: rgba(18, 137, 122, .06);
+        border-color: rgba(18, 137, 122, .45);
+        color: var(--brand-teal-dark);
+    }
+    .btn-primary {
+        background: var(--brand-teal);
+        border: 1px solid var(--brand-teal);
+        color: #fff;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background: var(--brand-teal-dark);
+        border-color: var(--brand-teal-dark);
+        color: #fff;
+    }
+
+    /* ---- Form controls ---- */
+    .form-control {
+        border-radius: 9px;
+        border: 1.5px solid #e2e8f0;
+        box-shadow: none;
+        color: #0f172a;
+        transition: border-color .16s ease, box-shadow .16s ease;
+    }
+    .form-control:focus {
+        border-color: var(--brand-teal);
+        box-shadow: 0 0 0 3px rgba(18, 137, 122, .15);
+    }
+
+    /* ---- Pagination (angular-ui-bootstrap) ---- */
+    .pagination > li > a,
+    .pagination > li > span {
+        color: var(--brand-teal-dark);
+        border-color: #e2e8f0;
+    }
+    .pagination > li:first-child > a,
+    .pagination > li:first-child > span { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    .pagination > li:last-child > a,
+    .pagination > li:last-child > span { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+    .pagination > li > a:hover,
+    .pagination > li > span:hover {
+        background: rgba(18, 137, 122, .08);
+        color: var(--brand-teal-dark);
+        border-color: #e2e8f0;
+    }
+    .pagination > .active > a,
+    .pagination > .active > span,
+    .pagination > .active > a:hover,
+    .pagination > .active > span:hover {
+        background: var(--brand-teal);
+        border-color: var(--brand-teal);
+        color: #fff;
+    }
+
+    /* ---- Tabs (angular-ui-bootstrap tabset) ---- */
+    .nav-tabs {
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-tabs > li > a {
+        border: none;
+        color: #64748b;
+        font-weight: 500;
+        border-radius: 0;
+        margin-right: 4px;
+        border-bottom: 2px solid transparent;
+    }
+    .nav-tabs > li > a:hover {
+        background: transparent;
+        color: var(--brand-teal-dark);
+        border-color: transparent transparent rgba(18, 137, 122, .4);
+    }
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid var(--brand-teal);
+        color: var(--brand-teal-dark);
+        font-weight: 600;
+    }
+
+    /* ---- Dropdown menus (global, e.g. path/action menus) ---- */
+    .dropdown-menu {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 12px 32px -8px rgba(15, 23, 42, .22);
+        padding: 6px;
+    }
+    .dropdown-menu > li > a {
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: #334155;
+    }
+    .dropdown-menu > li > a:hover,
+    .dropdown-menu > li > a:focus {
+        background: rgba(18, 137, 122, .08);
+        color: var(--brand-teal-dark);
+    }
+
+    /* ---- Page shell: light background so cards/tables pop.
+            Login keeps its gradient via the higher-specificity body:has(.auth-screen). ---- */
+    body {
+        background-color: #f1f5f9;
+    }
+    .content-wrapper.fullscreen {
+        margin: 0;
+        padding: 70px 22px 28px 22px;
+    }
+    .tabset > .tab-content {
+        margin-top: 16px;
+    }
+
+    /* ---- Tables rendered as clean white cards ---- */
+    .table {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, .05);
+        overflow: hidden;
+        margin-bottom: 18px;
+    }
+    .table > thead > tr > th:first-child { border-top-left-radius: 14px; }
+    .table > thead > tr > th:last-child { border-top-right-radius: 14px; }
+    .table > tbody > tr:last-child > td { border-bottom: none; }
+
+    /* ---- Modals (angular-ui-bootstrap $uibModal) ---- */
+    .modal-content {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 28px 70px -14px rgba(15, 23, 42, .4);
+        overflow: hidden;
+    }
+    .modal-header {
+        border-bottom: 1px solid #eef2f7;
+        padding: 16px 22px;
+    }
+    .modal-header .modal-title {
+        font-weight: 600;
+        color: #0f172a;
+    }
+    .modal-body {
+        padding: 22px;
+    }
+    .modal-footer {
+        border-top: 1px solid #eef2f7;
+        padding: 14px 22px;
+    }
+
+    /* ---- Editor pages (configuration editor & other width-1000 forms) ---- */
+    .content-wrapper.width-1000 {
+        max-width: 940px;
+        padding: 84px 16px 40px 16px;
+        margin: 0 auto;
+    }
+    .content-wrapper.width-1000 h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+    /* Wrap the editor's tabset (tabs + form) into a clean white card */
+    .content-wrapper.width-1000 .tabset {
+        display: block;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, .05);
+        padding: 4px 26px 24px 26px;
+        margin-top: 10px;
+    }
+    .content-wrapper.width-1000 .tabset .nav-tabs {
+        margin-bottom: 22px;
+    }
+    /* Horizontal form rows */
+    .content-wrapper.width-1000 .control-label {
+        text-align: right;
+        color: #334155;
+        font-weight: 500;
+        padding-top: 9px;
+    }
+    .content-wrapper.width-1000 .form-group {
+        margin-bottom: 15px;
+    }
+    .field-hint {
+        /* slate-500 (#64748b, ~4.76:1 on white) — meets WCAG AA for body
+           text while staying visibly subordinate. Was #94a3b8 (~2.6:1, fail). */
+        color: #64748b;
+        font-size: 12.5px;
+        line-height: 1.45;
+    }
+    .content-wrapper.width-1000 .delimiter {
+        border-top: 1px solid #eef2f7;
+        margin: 18px 0;
+    }
+
+    /* ============================================================
+       Reusable auth screens (login, signup, password reset/recovery)
+       ============================================================ */
+    .auth-screen {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 7vh 16px 96px 16px;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: radial-gradient(1100px 520px at 50% -8%, var(--brand-teal-light), rgba(43,168,145,0) 62%),
+                    linear-gradient(158deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+    }
+    .auth-brand { text-align: center; margin-bottom: 24px; }
+    .auth-brand img {
+        display: block;
+        max-height: 92px;
+        width: auto;
+        margin: 0 auto 12px auto;
+        filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .28));
+    }
+    .auth-brand-name {
+        display: block;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    }
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 30px 70px -18px rgba(12, 97, 87, .55), 0 6px 16px rgba(0, 0, 0, .1);
+        overflow: hidden;
+    }
+    .auth-card-body { padding: 32px; }
+    .auth-title { font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 18px 0; }
+    .auth-msg-error { padding: 16px 24px 0; text-align: center; font-weight: 600; color: #dc2626; }
+    .auth-msg-success { padding: 16px 24px 0; text-align: center; font-weight: 600; color: #16a34a; }
+    .auth-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--brand-teal-dark);
+        margin-bottom: 7px;
+    }
+    .auth-field {
+        width: 100%;
+        min-height: 46px;
+        padding: 11px 15px;
+        border-radius: 11px;
+        border: 1.5px solid #e2e8f0;
+        color: #0f172a;
+        font-size: 15px;
+        transition: border-color .16s ease, box-shadow .16s ease;
+    }
+    .auth-field:focus {
+        outline: none;
+        border-color: var(--brand-teal);
+        box-shadow: 0 0 0 4px rgba(18, 137, 122, .16);
+    }
+    .auth-submit {
+        width: 100%;
+        height: 48px;
+        margin-top: 8px;
+        border: none;
+        border-radius: 11px;
+        background: var(--brand-orange);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: .01em;
+        cursor: pointer;
+        box-shadow: 0 10px 22px -8px rgba(238, 123, 46, .6);
+        transition: background .16s ease, transform .06s ease, box-shadow .16s ease;
+    }
+    .auth-submit:hover:not([disabled]) { background: var(--brand-orange-light); }
+    .auth-submit:active:not([disabled]) { transform: translateY(1px); }
+    .auth-submit[disabled] { opacity: .5; cursor: not-allowed; box-shadow: none; }
+    .auth-footer {
+        position: fixed;
+        bottom: 16px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, .82);
+    }
+    .auth-footer a { color: #ffffff; font-weight: 600; }
+
+    /* ============================================================
+       Accessibility polish (added on top of the brand component layer).
+       1) Keyboard focus: mouse hover states alone leave keyboard users
+          without a visible indicator. Add an on-brand teal focus ring to
+          the interactive components that lacked one (WCAG 2.4.7). Uses
+          :focus-visible so mouse clicks don't show the ring.
+       2) Reduced motion: honor the OS "reduce motion" setting by
+          neutralizing transitions/animations (WCAG 2.3.3 / vestibular).
+       ============================================================ */
+    .btn:focus-visible,
+    .nav-tabs > li > a:focus-visible,
+    .pagination > li > a:focus-visible,
+    .pagination > li > span:focus-visible,
+    .dropdown-menu > li > a:focus-visible,
+    .table .sortable:focus-visible,
+    .content-wrapper a:focus-visible {
+        outline: 2px solid var(--brand-teal);
+        outline-offset: 2px;
+        border-radius: 8px;
+    }
+    /* Inputs already render a teal box-shadow ring on focus; suppress the
+       default UA outline only for pointer focus, keep the branded ring. */
+    .form-control:focus-visible,
+    .auth-field:focus-visible {
+        outline: none;
+    }
+    .auth-submit:focus-visible {
+        outline: 2px solid #ffffff;
+        outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: .001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .001ms !important;
+            scroll-behavior: auto !important;
+        }
+    }

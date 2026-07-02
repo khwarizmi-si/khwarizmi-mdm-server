@@ -42,19 +42,23 @@
 
     <!-- dependencies version -->
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <javax.mail>1.5.0-b01</javax.mail>
-        <java.rest.webservice>2.0.1</java.rest.webservice>
-        <jackson.version>1.9.13</jackson.version>
+        <java.rest.webservice>2.1.1</java.rest.webservice>
+        <!-- Jackson 2.x. The legacy org.codehaus Jackson 1.x is no longer used
+             anywhere in the code (the old jackson.version=1.9.13 property was dead).
+             Aligned with Jersey 2.35 (jersey-media-json-jackson pulls Jackson 2.12.x).
+             A modern 2.17+ remains coupled to the Jersey 3 / jakarta migration (stage 3). -->
+        <jackson.version>2.12.7</jackson.version>
 
         <guice.version>4.2.2</guice.version>
 
         <servlet-api.version>2.5</servlet-api.version>
 
-        <mybatis.version>3.5.3</mybatis.version>
+        <mybatis.version>3.5.16</mybatis.version>
         <mybatis.guice.version>3.10</mybatis.guice.version>
 
-        <postgresql.version>42.3.3</postgresql.version>
+        <postgresql.version>42.7.4</postgresql.version>
         <liquibase.version>3.6.3</liquibase.version>
 
         <junit.version>4.13.1</junit.version>
@@ -69,7 +73,7 @@
 
         <opensource.dist.dir>/Headwind/AndroidKioskWeb/opensource</opensource.dist.dir>
 
-        <glassfish-jersey.version>2.25.1</glassfish-jersey.version>
+        <glassfish-jersey.version>2.35</glassfish-jersey.version>
         <guice-bridge.version>2.6.1</guice-bridge.version>
         
         <lombok.version>1.18.20</lombok.version>
@@ -87,6 +91,13 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
+            <version>${glassfish-jersey.version}</version>
+        </dependency>
+        <!-- Required since Jersey 2.26: the injection provider is no longer bundled;
+             it must be declared explicitly. Pulls HK2 2.6.1 (aligned with guice-bridge). -->
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
             <version>${glassfish-jersey.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-client -->
@@ -153,23 +164,25 @@
 
         <!-- Swagger -->
         <!-- https://mvnrepository.com/artifact/io.swagger/swagger-jersey2-jaxrs -->
+        <!-- 1.6.x (swagger-core 1.6.x) is compatible with Jackson 2.12; 1.5.24 called
+             AnnotatedMember.getType(TypeBindings) which was removed in Jackson 2.12. -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-jersey2-jaxrs</artifactId>
-            <version>1.5.24</version>
+            <version>1.6.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <!-- Jackson 2.x (com.fasterxml). Version pinned by ${jackson.version}.
+             Aligned with Jersey 2.35's jersey-media-json-jackson (Jackson 2.12.x). -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.0</version>
+            <version>${jackson.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.10.0</version>
+            <version>${jackson.version}</version>
         </dependency>
 
 

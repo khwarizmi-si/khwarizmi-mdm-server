@@ -200,6 +200,23 @@ public interface DeviceMapper {
             ") deviceApps")
     List<DeviceApplication> getDeviceInstalledApplications(@Param("deviceId") int deviceId);
 
+    @Select("SELECT " +
+            "    deviceApps.app ->> 'pkg' AS pkg, " +
+            "    deviceApps.app ->> 'name' AS name, " +
+            "    deviceApps.app ->> 'version' AS version, " +
+            "    (deviceApps.app ->> 'versionCode')::bigint AS versionCode, " +
+            "    COALESCE((deviceApps.app ->> 'system')::boolean, false) AS system, " +
+            "    deviceApps.app ->> 'installer' AS installer, " +
+            "    (deviceApps.app ->> 'firstInstall')::bigint AS firstInstall, " +
+            "    (deviceApps.app ->> 'lastUpdate')::bigint AS lastUpdate " +
+            "FROM (" +
+            "    SELECT jsonb_array_elements(infojson -> 'installedApplications') AS app " +
+            "    FROM devices " +
+            "    WHERE id = #{deviceId}" +
+            ") deviceApps " +
+            "ORDER BY LOWER(deviceApps.app ->> 'name')")
+    List<DeviceInstalledApp> getDeviceAllInstalledApplications(@Param("deviceId") int deviceId);
+
     @Update("INSERT INTO deviceStatuses (deviceId, configFilesStatus, applicationsStatus) " +
             "VALUES (#{deviceId}, #{filesStatus}, #{appsStatus})" +
             "ON CONFLICT ON CONSTRAINT deviceStatuses_pr_key DO " +

@@ -250,6 +250,23 @@ public class DeviceDAO extends AbstractDAO<Device> {
     }
 
     /**
+     * <p>Gets the full inventory of applications present on the specified device
+     * (every package reported by the agent, not just the MDM-managed apps).</p>
+     *
+     * @param deviceId an ID of a device.
+     * @return a list of all applications present on the specified device.
+     */
+    @Transactional
+    public List<DeviceInstalledApp> getDeviceAllInstalledApplications(int deviceId) {
+        final Device dbDevice = getDeviceById(deviceId);
+        if (dbDevice != null) {
+            return this.mapper.getDeviceAllInstalledApplications(dbDevice.getId());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * <p>Gets the lookup list of devices matching the specified filter.</p>
      *
      * @param filter a filter to be used for filtering the records.

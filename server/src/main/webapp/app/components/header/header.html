@@ -1,26 +1,27 @@
 <!-- Localization completed -->
-<nav class='navbar navbar-default navbar-fixed-top header'>
-    <div class='nav navbar-nav navbar-left logo-text'><a ng-click='mainPanel()'>{{appName}}</a></div>
-    <ul class='nav navbar-nav navbar-right'>
-        <li ng-if="expiryWarning"><a id='headerExpiryWarning' class="expiry-warning" localized-change-tracking>account.expired.short</a></li>
+<nav class='tw-fixed tw-top-0 tw-inset-x-0 tw-z-40 tw-flex tw-items-center tw-justify-between tw-h-14 tw-px-4 tw-bg-brand-teal tw-shadow-md'>
+    <a class='tw-flex tw-items-center tw-gap-2.5 tw-cursor-pointer tw-select-none' ng-click='mainPanel()'>
+        <img src="rest/public/logo" alt="{{appName}}" class="tw-h-8 tw-w-auto tw-drop-shadow">
+        <span class='tw-text-white tw-font-semibold tw-text-[17px] tw-tracking-tight'>{{appName}}</span>
+    </a>
+    <ul class='tw-flex tw-items-center tw-gap-1 tw-m-0 tw-p-0 tw-list-none'>
+        <li ng-if="expiryWarning"><a id='headerExpiryWarning' class="tw-text-yellow-300 tw-font-bold tw-px-2 tw-cursor-pointer" localized-change-tracking>account.expired.short</a></li>
         <li class='hide-on-small-screen'>
-            <a id='headerDateTime'>{{dateTime}}</a>
+            <a id='headerDateTime' class='tw-text-brand-onTeal tw-text-[13px] tw-px-2'>{{dateTime}}</a>
         </li>
-        <li class='dropdown margin-right' uib-dropdown>
-            <a class='dropdown-toggle' uib-dropdown-toggle role='button' aria-expanded='false'>
-<!--                <span class='hide-on-small-screen username-tip' localized-change-tracking>header.label.username</span> -->
-                <span class='username-label'>{{getUserName()}}</span>
-                <span class='caret username-caret'></span>
+        <li class='dropdown' uib-dropdown>
+            <a class='dropdown-toggle tw-flex tw-items-center tw-gap-1.5 tw-text-white tw-rounded-lg tw-px-3 tw-py-1.5 tw-cursor-pointer tw-transition hover:tw-bg-white/10' uib-dropdown-toggle role='button' aria-expanded='false'>
+                <span class='tw-font-medium'>{{getUserName()}}</span>
+                <span class='caret'></span>
             </a>
-            <ul class='dropdown-menu' uib-dropdown-menu role='menu'>
-                <li><a ng-style='color' ng-click="about()" localized-change-tracking>menu.about</a></li>
-                <li><a ui-sref='profile' ng-style='color' localized-change-tracking>menu.profile</a></li>
-                <li ng-if="updatesAllowed()"><a ui-sref='updates' ng-style='color' localized-change-tracking>menu.updates</a></li>
-                <li ng-if="authService.isSuperAdmin() && !isControlPanel"><a ng-click='controlPanel()' localized-change-tracking>menu.panel.master</a></li>
-                <li ng-if="authService.isSuperAdmin() && isControlPanel"><a ng-click='mainPanel()' localized-change-tracking>menu.panel.main</a></li>
-                <li><a ng-click='logout()' localized-change-tracking>menu.logout</a></li>
+            <ul class='dropdown-menu dropdown-menu-right tw-mt-2 tw-rounded-xl tw-shadow-xl tw-border-0 tw-overflow-hidden tw-p-1 tw-min-w-[190px]' uib-dropdown-menu role='menu'>
+                <li><a class='tw-block tw-px-3 tw-py-2 tw-rounded-lg tw-text-slate-700 tw-cursor-pointer tw-transition hover:tw-bg-brand-teal/10 hover:tw-text-brand-tealDark' ng-click="about()" localized-change-tracking>menu.about</a></li>
+                <li><a class='tw-block tw-px-3 tw-py-2 tw-rounded-lg tw-text-slate-700 tw-cursor-pointer tw-transition hover:tw-bg-brand-teal/10 hover:tw-text-brand-tealDark' ui-sref='profile' localized-change-tracking>menu.profile</a></li>
+                <li ng-if="updatesAllowed()"><a class='tw-block tw-px-3 tw-py-2 tw-rounded-lg tw-text-slate-700 tw-cursor-pointer tw-transition hover:tw-bg-brand-teal/10 hover:tw-text-brand-tealDark' ui-sref='updates' localized-change-tracking>menu.updates</a></li>
+                <li ng-if="authService.isSuperAdmin() && !isControlPanel"><a class='tw-block tw-px-3 tw-py-2 tw-rounded-lg tw-text-slate-700 tw-cursor-pointer tw-transition hover:tw-bg-brand-teal/10 hover:tw-text-brand-tealDark' ng-click='controlPanel()' localized-change-tracking>menu.panel.master</a></li>
+                <li ng-if="authService.isSuperAdmin() && isControlPanel"><a class='tw-block tw-px-3 tw-py-2 tw-rounded-lg tw-text-slate-700 tw-cursor-pointer tw-transition hover:tw-bg-brand-teal/10 hover:tw-text-brand-tealDark' ng-click='mainPanel()' localized-change-tracking>menu.panel.main</a></li>
+                <li class='tw-border-t tw-border-slate-100 tw-mt-1 tw-pt-1'><a class='tw-block tw-px-3 tw-py-2 tw-rounded-lg tw-cursor-pointer tw-transition tw-text-brand-orange tw-font-medium hover:tw-bg-brand-orange/10' ng-click='logout()' localized-change-tracking>menu.logout</a></li>
             </ul>
         </li>
     </ul>
-
 </nav>

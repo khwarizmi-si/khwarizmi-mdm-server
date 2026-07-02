@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%p] %-10c : %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="main-log-file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/opt/hmdm/logs/hmdm.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss,SSS} %-5p  %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="audit-file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/opt/hmdm/logs/audit.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss,SSS} %-5p  %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="AuditLogger" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="audit-file"/>
+    </logger>
+
+    <logger name="org.apache.activemq.broker.region.RegionBroker">
+        <level value="ERROR"/>
+    </logger>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="main-log-file"/>
+    </root>
+
+</log4j:configuration>
