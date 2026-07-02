@@ -151,4 +151,30 @@
         background: rgba(18, 137, 122, .08);
         color: var(--brand-teal-dark);
     }
+
+    /* ---- Page shell: light background so cards/tables pop.
+            Login keeps its gradient via the higher-specificity body:has(.auth-screen). ---- */
+    body {
+        background-color: #f1f5f9;
+    }
+    .content-wrapper.fullscreen {
+        margin: 0;
+        padding: 70px 22px 28px 22px;
+    }
+    .tabset > .tab-content {
+        margin-top: 16px;
+    }
+
+    /* ---- Tables rendered as clean white cards ---- */
+    .table {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, .05);
+        overflow: hidden;
+        margin-bottom: 18px;
+    }
+    .table > thead > tr > th:first-child { border-top-left-radius: 14px; }
+    .table > thead > tr > th:last-child { border-top-right-radius: 14px; }
+    .table > tbody > tr:last-child > td { border-bottom: none; }
 }
