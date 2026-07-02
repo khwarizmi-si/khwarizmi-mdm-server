@@ -217,6 +217,18 @@ public interface DeviceMapper {
             "ORDER BY LOWER(deviceApps.app ->> 'name')")
     List<DeviceInstalledApp> getDeviceAllInstalledApplications(@Param("deviceId") int deviceId);
 
+    @Select("SELECT " +
+            "    ev.event ->> 'pkg' AS pkg, " +
+            "    ev.event ->> 'name' AS name, " +
+            "    (ev.event ->> 'ts')::bigint AS ts " +
+            "FROM (" +
+            "    SELECT jsonb_array_elements(infojson -> 'appUsageEvents') AS event " +
+            "    FROM devices " +
+            "    WHERE id = #{deviceId}" +
+            ") ev " +
+            "ORDER BY (ev.event ->> 'ts')::bigint DESC")
+    List<DeviceAppUsageEvent> getDeviceAppUsageEvents(@Param("deviceId") int deviceId);
+
     @Update("INSERT INTO deviceStatuses (deviceId, configFilesStatus, applicationsStatus) " +
             "VALUES (#{deviceId}, #{filesStatus}, #{appsStatus})" +
             "ON CONFLICT ON CONSTRAINT deviceStatuses_pr_key DO " +

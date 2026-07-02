@@ -267,6 +267,23 @@ public class DeviceDAO extends AbstractDAO<Device> {
     }
 
     /**
+     * <p>Gets the lightweight app-usage history (foreground events, newest first) for
+     * the specified device.</p>
+     *
+     * @param deviceId an ID of a device.
+     * @return a list of app-usage events reported for the specified device.
+     */
+    @Transactional
+    public List<DeviceAppUsageEvent> getDeviceAppUsageEvents(int deviceId) {
+        final Device dbDevice = getDeviceById(deviceId);
+        if (dbDevice != null) {
+            return this.mapper.getDeviceAppUsageEvents(dbDevice.getId());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * <p>Gets the lookup list of devices matching the specified filter.</p>
      *
      * @param filter a filter to be used for filtering the records.
