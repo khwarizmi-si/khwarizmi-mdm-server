@@ -237,9 +237,11 @@
         margin-bottom: 15px;
     }
     .field-hint {
-        color: #94a3b8;
+        /* slate-500 (#64748b, ~4.76:1 on white) — meets WCAG AA for body
+           text while staying visibly subordinate. Was #94a3b8 (~2.6:1, fail). */
+        color: #64748b;
         font-size: 12.5px;
-        line-height: 1.4;
+        line-height: 1.45;
     }
     .content-wrapper.width-1000 .delimiter {
         border-top: 1px solid #eef2f7;
@@ -340,3 +342,45 @@
         color: rgba(255, 255, 255, .82);
     }
     .auth-footer a { color: #ffffff; font-weight: 600; }
+
+    /* ============================================================
+       Accessibility polish (added on top of the brand component layer).
+       1) Keyboard focus: mouse hover states alone leave keyboard users
+          without a visible indicator. Add an on-brand teal focus ring to
+          the interactive components that lacked one (WCAG 2.4.7). Uses
+          :focus-visible so mouse clicks don't show the ring.
+       2) Reduced motion: honor the OS "reduce motion" setting by
+          neutralizing transitions/animations (WCAG 2.3.3 / vestibular).
+       ============================================================ */
+    .btn:focus-visible,
+    .nav-tabs > li > a:focus-visible,
+    .pagination > li > a:focus-visible,
+    .pagination > li > span:focus-visible,
+    .dropdown-menu > li > a:focus-visible,
+    .table .sortable:focus-visible,
+    .content-wrapper a:focus-visible {
+        outline: 2px solid var(--brand-teal);
+        outline-offset: 2px;
+        border-radius: 8px;
+    }
+    /* Inputs already render a teal box-shadow ring on focus; suppress the
+       default UA outline only for pointer focus, keep the branded ring. */
+    .form-control:focus-visible,
+    .auth-field:focus-visible {
+        outline: none;
+    }
+    .auth-submit:focus-visible {
+        outline: 2px solid #ffffff;
+        outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: .001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .001ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
