@@ -2609,4 +2609,47 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="alkhwarizmi-id-seed-2026" author="alkhwarizmi" context="common">
+        <comment>Localize seed data (roles, group, default config, plugins, permission descriptions) to Indonesian</comment>
+        <sql>
+            UPDATE userroles SET name='Super-Admin', description='Dapat masuk sebagai pengguna mana pun. Di mode berbagi, mengelola akun korporat.' WHERE id=1;
+            UPDATE userroles SET name='Admin', description='Akses penuh ke panel kontrol.' WHERE id=2;
+            UPDATE userroles SET name='Pengguna', description='Akses terbatas ke panel kontrol.' WHERE id=3;
+            UPDATE userroles SET name='Pengamat', description='Akses hanya-baca ke panel kontrol.' WHERE id=100;
+
+            UPDATE groups SET name='Umum' WHERE id=1;
+
+            UPDATE configurations SET name='Bawaan', description='Konfigurasi dasar untuk semua perangkat' WHERE name='По умолчанию';
+
+            -- Plugin display names come from each plugin i18n bundle (localization.key.name),
+            -- not the plugins table (created later by the plugin platform changelog).
+
+            UPDATE permissions SET description='Fungsi super-administrator untuk seluruh aplikasi' WHERE id=1;
+            UPDATE permissions SET description='Akses ke pengaturan dan menampilkannya di menu' WHERE id=2;
+            UPDATE permissions SET description='Akses ke konfigurasi, aplikasi, dan berkas serta menampilkannya di menu' WHERE id=3;
+            UPDATE permissions SET description='Akses untuk menyunting dan menambah perangkat' WHERE id=4;
+            UPDATE permissions SET description='Menambah konfigurasi kosong baru' WHERE id=5;
+            UPDATE permissions SET description='Menggandakan/menyalin konfigurasi' WHERE id=6;
+            UPDATE permissions SET description='Akses untuk menyunting deskripsi perangkat' WHERE id=100;
+            UPDATE permissions SET description='Akses untuk menyunting dan menambah pengaturan aplikasi perangkat' WHERE id=101;
+            UPDATE permissions SET description='Mengirim pesan Push ke perangkat via REST API' WHERE id=102;
+            UPDATE permissions SET description='Dapat memperbarui aplikasi secara otomatis' WHERE id=103;
+            UPDATE permissions SET description='Melihat tab aplikasi' WHERE id=104;
+            UPDATE permissions SET description='Menambah dan menyunting aplikasi' WHERE id=105;
+            UPDATE permissions SET description='Menambah dan menyunting versi aplikasi yang ada' WHERE id=106;
+            UPDATE permissions SET description='Melihat tab berkas' WHERE id=107;
+            UPDATE permissions SET description='Menambah dan menyunting berkas' WHERE id=108;
+            UPDATE permissions SET description='Dapat mendaftarkan perangkat via kode QR' WHERE id=109;
+            UPDATE permissions SET description='Akses untuk mengelola daftar plugin di tingkat akun organisasi' WHERE id=110;
+            UPDATE permissions SET description='Akses ke audit tindakan pengguna' WHERE id=111;
+            UPDATE permissions SET description='Akses ke informasi rinci dan dinamis perangkat' WHERE id=112;
+            UPDATE permissions SET description='Akses ke log perangkat' WHERE id=113;
+            UPDATE permissions SET description='Dapat mengirim pesan ke perangkat' WHERE id=114;
+            UPDATE permissions SET description='Dapat menghapus dan memperbarui riwayat pesan' WHERE id=115;
+            UPDATE permissions SET description='Dapat mengirim pesan push ke perangkat' WHERE id=116;
+            UPDATE permissions SET description='Dapat menghapus dan memperbarui riwayat pesan Push' WHERE id=117;
+            UPDATE permissions SET description='Akses ke plugin permintaan versi Premium' WHERE id=118;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
