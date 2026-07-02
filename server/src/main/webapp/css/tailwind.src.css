@@ -8,8 +8,9 @@
    configurations, customers, settings) is refreshed at once,
    without rewriting each view. Uses the brand CSS variables
    from main.css. Kept tasteful/conservative to avoid layout shifts.
+   Written as plain CSS (outside @layer) so these overrides of Bootstrap
+   classes are never tree-shaken by Tailwind's content purge.
    ============================================================ */
-@layer components {
 
     /* ---- Data tables ---- */
     .table {
@@ -177,4 +178,26 @@
     .table > thead > tr > th:first-child { border-top-left-radius: 14px; }
     .table > thead > tr > th:last-child { border-top-right-radius: 14px; }
     .table > tbody > tr:last-child > td { border-bottom: none; }
-}
+
+    /* ---- Modals (angular-ui-bootstrap $uibModal) ---- */
+    .modal-content {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 28px 70px -14px rgba(15, 23, 42, .4);
+        overflow: hidden;
+    }
+    .modal-header {
+        border-bottom: 1px solid #eef2f7;
+        padding: 16px 22px;
+    }
+    .modal-header .modal-title {
+        font-weight: 600;
+        color: #0f172a;
+    }
+    .modal-body {
+        padding: 22px;
+    }
+    .modal-footer {
+        border-top: 1px solid #eef2f7;
+        padding: 14px 22px;
+    }
