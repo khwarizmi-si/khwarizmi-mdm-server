@@ -1,3 +1,154 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================================
+   Brand modernization of shared Bootstrap components.
+   Applied globally so every data page (devices, applications,
+   configurations, customers, settings) is refreshed at once,
+   without rewriting each view. Uses the brand CSS variables
+   from main.css. Kept tasteful/conservative to avoid layout shifts.
+   ============================================================ */
+@layer components {
+
+    /* ---- Data tables ---- */
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .table > thead > tr > th {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        border-bottom: 1px solid #e2e8f0;
+        border-top: none;
+        padding: 11px 14px;
+        vertical-align: middle;
+    }
+    .table > tbody > tr > td {
+        padding: 10px 14px;
+        border-top: 1px solid #f1f5f9;
+        color: #334155;
+        vertical-align: middle;
+    }
+    .table > tbody > tr:hover > td {
+        background: rgba(18, 137, 122, .05);
+    }
+    .table .sortable { cursor: pointer; }
+    .table .sortable:hover { color: var(--brand-teal-dark); }
+
+    /* ---- Buttons ---- */
+    .btn {
+        border-radius: 9px;
+        font-weight: 500;
+        transition: background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease;
+    }
+    .btn-default {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+    }
+    .btn-default:hover,
+    .btn-default:focus {
+        background: rgba(18, 137, 122, .06);
+        border-color: rgba(18, 137, 122, .45);
+        color: var(--brand-teal-dark);
+    }
+    .btn-primary {
+        background: var(--brand-teal);
+        border: 1px solid var(--brand-teal);
+        color: #fff;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background: var(--brand-teal-dark);
+        border-color: var(--brand-teal-dark);
+        color: #fff;
+    }
+
+    /* ---- Form controls ---- */
+    .form-control {
+        border-radius: 9px;
+        border: 1.5px solid #e2e8f0;
+        box-shadow: none;
+        color: #0f172a;
+        transition: border-color .16s ease, box-shadow .16s ease;
+    }
+    .form-control:focus {
+        border-color: var(--brand-teal);
+        box-shadow: 0 0 0 3px rgba(18, 137, 122, .15);
+    }
+
+    /* ---- Pagination (angular-ui-bootstrap) ---- */
+    .pagination > li > a,
+    .pagination > li > span {
+        color: var(--brand-teal-dark);
+        border-color: #e2e8f0;
+    }
+    .pagination > li:first-child > a,
+    .pagination > li:first-child > span { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    .pagination > li:last-child > a,
+    .pagination > li:last-child > span { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+    .pagination > li > a:hover,
+    .pagination > li > span:hover {
+        background: rgba(18, 137, 122, .08);
+        color: var(--brand-teal-dark);
+        border-color: #e2e8f0;
+    }
+    .pagination > .active > a,
+    .pagination > .active > span,
+    .pagination > .active > a:hover,
+    .pagination > .active > span:hover {
+        background: var(--brand-teal);
+        border-color: var(--brand-teal);
+        color: #fff;
+    }
+
+    /* ---- Tabs (angular-ui-bootstrap tabset) ---- */
+    .nav-tabs {
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-tabs > li > a {
+        border: none;
+        color: #64748b;
+        font-weight: 500;
+        border-radius: 0;
+        margin-right: 4px;
+        border-bottom: 2px solid transparent;
+    }
+    .nav-tabs > li > a:hover {
+        background: transparent;
+        color: var(--brand-teal-dark);
+        border-color: transparent transparent rgba(18, 137, 122, .4);
+    }
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid var(--brand-teal);
+        color: var(--brand-teal-dark);
+        font-weight: 600;
+    }
+
+    /* ---- Dropdown menus (global, e.g. path/action menus) ---- */
+    .dropdown-menu {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 12px 32px -8px rgba(15, 23, 42, .22);
+        padding: 6px;
+    }
+    .dropdown-menu > li > a {
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: #334155;
+    }
+    .dropdown-menu > li > a:hover,
+    .dropdown-menu > li > a:focus {
+        background: rgba(18, 137, 122, .08);
+        color: var(--brand-teal-dark);
+    }
+}
