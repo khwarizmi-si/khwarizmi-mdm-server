@@ -201,3 +201,47 @@
         border-top: 1px solid #eef2f7;
         padding: 14px 22px;
     }
+
+    /* ---- Editor pages (configuration editor & other width-1000 forms) ---- */
+    .content-wrapper.width-1000 {
+        max-width: 940px;
+        padding: 84px 16px 40px 16px;
+        margin: 0 auto;
+    }
+    .content-wrapper.width-1000 h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+    /* Wrap the editor's tabset (tabs + form) into a clean white card */
+    .content-wrapper.width-1000 .tabset {
+        display: block;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, .05);
+        padding: 4px 26px 24px 26px;
+        margin-top: 10px;
+    }
+    .content-wrapper.width-1000 .tabset .nav-tabs {
+        margin-bottom: 22px;
+    }
+    /* Horizontal form rows */
+    .content-wrapper.width-1000 .control-label {
+        text-align: right;
+        color: #334155;
+        font-weight: 500;
+        padding-top: 9px;
+    }
+    .content-wrapper.width-1000 .form-group {
+        margin-bottom: 15px;
+    }
+    .field-hint {
+        color: #94a3b8;
+        font-size: 12.5px;
+        line-height: 1.4;
+    }
+    .content-wrapper.width-1000 .delimiter {
+        border-top: 1px solid #eef2f7;
+        margin: 18px 0;
+    }
