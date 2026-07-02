@@ -463,6 +463,9 @@
                         <li role="menuitem">
                             <a ng-click="showInstalledApps(device)" localized>button.installed.apps</a>
                         </li>
+                        <li role="menuitem">
+                            <a ng-click="showAppUsage(device)" localized>button.app.usage</a>
+                        </li>
                         <li role="menuitem" ng-repeat="plugin in plugins" ng-if="plugins && plugins.length > 0">
                             <a ng-click="notifyPluginOnDevice(plugin, device)">{{plugin.nameLocalizationKey | localize}}</a>
                         </li>

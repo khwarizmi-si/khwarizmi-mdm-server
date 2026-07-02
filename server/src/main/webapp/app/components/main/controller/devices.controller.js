@@ -1014,6 +1014,19 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.showAppUsage = function (device) {
+            $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.appUsage.html',
+                controller: 'DeviceAppUsageModalController',
+                size: 'lg',
+                resolve: {
+                    device: function () {
+                        return device;
+                    }
+                }
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {
@@ -1469,6 +1482,39 @@ angular.module('headwind-kiosk')
             $scope.loading = false;
             if (response.status === 'OK') {
                 allApps = response.data || [];
+            } else {
+                $scope.errorMessage = localization.localize(response.message);
+            }
+        }, function (failure) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            alertService.onRequestFailure(failure);
+        });
+
+    })
+
+    .controller('DeviceAppUsageModalController', function ($scope, $modalInstance,
+                                                           localization, deviceService,
+                                                           alertService, device) {
+
+        $scope.device = device;
+        $scope.loading = true;
+        $scope.errorMessage = undefined;
+        $scope.events = [];
+
+        // The newest event (events[0]) is what the user is currently / was last using.
+        $scope.getCurrent = function () {
+            return $scope.events.length > 0 ? $scope.events[0] : null;
+        };
+
+        $scope.close = function () {
+            $modalInstance.dismiss();
+        };
+
+        deviceService.getDeviceAppUsage({id: device.id}, function (response) {
+            $scope.loading = false;
+            if (response.status === 'OK') {
+                $scope.events = response.data || [];
             } else {
                 $scope.errorMessage = localization.localize(response.message);
             }

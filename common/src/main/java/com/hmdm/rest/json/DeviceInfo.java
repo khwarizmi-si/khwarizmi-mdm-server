@@ -30,6 +30,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hmdm.persistence.domain.Application;
+import com.hmdm.persistence.domain.DeviceAppUsageEvent;
 import com.hmdm.persistence.domain.DeviceInstalledApp;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -52,6 +53,11 @@ public class DeviceInfo implements Serializable {
     @ApiModelProperty("The full inventory of applications present on device (every package, " +
             "including user-installed and system apps), as opposed to the managed apps above")
     private List<DeviceInstalledApp> installedApplications = new LinkedList<>();
+
+    @ApiModelProperty("Lightweight app-usage history (foreground events); the most recent " +
+            "event is the app the user is currently/was last using. Reported only when the " +
+            "device has granted usage-access permission")
+    private List<DeviceAppUsageEvent> appUsageEvents = new LinkedList<>();
 
     @ApiModelProperty("A list of configuraiton files installed on device")
     private List<DeviceConfigurationFile> files = new LinkedList<>();
@@ -158,6 +164,14 @@ public class DeviceInfo implements Serializable {
 
     public void setInstalledApplications(List<DeviceInstalledApp> installedApplications) {
         this.installedApplications = installedApplications;
+    }
+
+    public List<DeviceAppUsageEvent> getAppUsageEvents() {
+        return this.appUsageEvents;
+    }
+
+    public void setAppUsageEvents(List<DeviceAppUsageEvent> appUsageEvents) {
+        this.appUsageEvents = appUsageEvents;
     }
 
     public String getDeviceId() {

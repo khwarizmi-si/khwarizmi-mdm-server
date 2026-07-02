@@ -400,6 +400,25 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get app usage history",
+            notes = "Get the lightweight app-usage history (foreground events, newest first); " +
+                    "the first entry is the app the user is currently/was last using"
+    )
+    @GET
+    @Path("/{id}/appUsage")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDeviceAppUsage(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final List<DeviceAppUsageEvent> events = this.deviceDAO.getDeviceAppUsageEvents(id);
+            return Response.OK(events);
+        } catch (Exception e) {
+            log.error("Failed to retrieve the app usage history for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device application settings",
             notes = "Save application settings set at device level"
     )

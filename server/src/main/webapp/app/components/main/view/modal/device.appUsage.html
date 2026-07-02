@@ -1,0 +1,51 @@
+<!-- Localization completed -->
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span localized>device.appusage.title</span>
+        <span ng-if="device"> &mdash; {{device.number}}</span>
+    </h4>
+</div>
+
+<div class="modal-body">
+
+    <div ng-show="errorMessage" class="error tw-mb-3"><span>{{errorMessage}}</span></div>
+
+    <div ng-show="loading" class="tw-py-6 tw-text-center tw-text-slate-500" localized>
+        device.appusage.loading
+    </div>
+
+    <div ng-hide="loading || errorMessage">
+
+        <div ng-if="getCurrent()" class="tw-mb-4 tw-rounded-xl tw-border tw-border-brand-teal/30 tw-bg-brand-teal/5 tw-p-4">
+            <div class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-brand-tealDark"
+                 localized>device.appusage.current</div>
+            <div class="tw-mt-1 tw-text-lg tw-font-semibold tw-text-slate-900">{{getCurrent().name}}</div>
+            <div class="tw-text-xs tw-font-mono tw-text-slate-500">{{getCurrent().pkg}}</div>
+            <div class="tw-text-xs tw-text-slate-500">{{getCurrent().ts | date:'medium'}}</div>
+        </div>
+
+        <div ng-if="events.length === 0" class="tw-py-6 tw-text-center tw-text-slate-500"
+             localized>device.appusage.empty</div>
+
+        <table ng-if="events.length > 0" class="table">
+            <thead>
+            <tr>
+                <th localized>device.appusage.col.time</th>
+                <th localized>device.appusage.col.name</th>
+                <th localized>device.appusage.col.package</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="ev in events">
+                <td class="tw-whitespace-nowrap tw-text-slate-500">{{ev.ts | date:'short'}}</td>
+                <td>{{ev.name}}</td>
+                <td class="tw-text-slate-500 tw-font-mono tw-text-xs">{{ev.pkg}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="close()" localized>button.close</button>
+</div>
