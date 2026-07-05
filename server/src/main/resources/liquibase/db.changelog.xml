@@ -2652,4 +2652,16 @@
         </sql>
     </changeSet>
 
+    <changeSet id="alkhwarizmi-default-settings-2026" author="alkhwarizmi" context="common">
+        <comment>Seed a default settings row so changelog-only installs (e.g. Docker) are functional out of the box: enable device auto-registration into the default configuration and default the panel to Indonesian. Skipped when a settings row already exists (e.g. installer-based setups).</comment>
+        <sql>
+            INSERT INTO settings (customerid, createnewdevices, newdeviceconfigurationid, usedefaultlanguage, language)
+            SELECT 1, true, 1, false, 'id_ID'
+            WHERE NOT EXISTS (SELECT 1 FROM settings WHERE customerid = 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE customerid = 1 AND language = 'id_ID';
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
