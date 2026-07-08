@@ -384,3 +384,181 @@
             scroll-behavior: auto !important;
         }
     }
+
+    /* ============================================================
+       Bold brand refresh (2026). Layered last so it overrides the
+       earlier conservative brand layer. Scope the "primary navigation
+       as pills" strictly to the fullscreen shell so the configuration
+       editor's own tabset (.content-wrapper.width-1000) is untouched.
+       ============================================================ */
+
+    /* ---- Atmosphere: very soft teal/orange wash behind the app ---- */
+    body {
+        background-color: #eef3f4;
+        background-image:
+            radial-gradient(1100px 620px at 100% -8%, rgba(18, 137, 122, .09), transparent 58%),
+            radial-gradient(820px 520px at -6% 2%, rgba(238, 123, 46, .05), transparent 55%);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+
+    /* ---- Primary navigation rebuilt as a pill bar ---- */
+    .content-wrapper.fullscreen .nav-tabs {
+        border-bottom: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        background: rgba(255, 255, 255, .9);
+        backdrop-filter: blur(6px);
+        padding: 6px;
+        border-radius: 16px;
+        border: 1px solid #e4edee;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px -18px rgba(12, 97, 87, .5);
+    }
+    .content-wrapper.fullscreen .nav-tabs > li { float: none; margin: 0; }
+    .content-wrapper.fullscreen .nav-tabs > li > a,
+    .content-wrapper.fullscreen .nav-tabs > li.dropdown > a {
+        border: none !important;
+        border-radius: 10px;
+        margin: 0;
+        padding: 8px 16px;
+        color: #64748b;
+        font-weight: 500;
+        line-height: 1.2;
+        transition: background-color .16s ease, color .16s ease, box-shadow .16s ease;
+    }
+    .content-wrapper.fullscreen .nav-tabs > li > a:hover,
+    .content-wrapper.fullscreen .nav-tabs > li.dropdown.open > a,
+    .content-wrapper.fullscreen .nav-tabs > li.dropdown > a:hover {
+        background: rgba(18, 137, 122, .09) !important;
+        color: var(--brand-teal-dark) !important;
+        border: none !important;
+    }
+    .content-wrapper.fullscreen .nav-tabs > li.active > a,
+    .content-wrapper.fullscreen .nav-tabs > li.active > a:hover,
+    .content-wrapper.fullscreen .nav-tabs > li.active > a:focus {
+        background: linear-gradient(135deg, var(--brand-teal), var(--brand-teal-dark)) !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-weight: 600;
+        box-shadow: 0 6px 16px -4px rgba(18, 137, 122, .5);
+    }
+    .content-wrapper.fullscreen .nav-tabs > li.active > a .glyphicon { opacity: 1 !important; }
+    .content-wrapper.fullscreen .nav-tabs > li > a:focus-visible {
+        outline: 2px solid var(--brand-teal);
+        outline-offset: 2px;
+    }
+
+    /* ---- Tables: lift rows on hover for a more tactile feel ---- */
+    .content-wrapper.fullscreen .table > tbody > tr {
+        transition: background-color .14s ease;
+    }
+    .content-wrapper.fullscreen .table > tbody > tr:hover > td {
+        background: rgba(18, 137, 122, .06);
+    }
+
+    /* ---- Reusable stat tile + empty-state helpers (used by refreshed views) ---- */
+    .stat-tile {
+        position: relative;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #e6edef;
+        border-radius: 18px;
+        padding: 18px 20px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .stat-tile:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 40px -22px rgba(12, 97, 87, .5);
+    }
+    .stat-tile .stat-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: #64748b;
+    }
+    .stat-tile .stat-value {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #0f172a;
+        margin-top: 4px;
+    }
+    .stat-tile .stat-accent {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 4px;
+        border-radius: 4px 0 0 4px;
+        background: var(--brand-teal);
+    }
+    .empty-state {
+        text-align: center;
+        padding: 44px 20px;
+        color: #64748b;
+    }
+    .empty-state .empty-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: rgba(18, 137, 122, .1);
+        color: var(--brand-teal-dark);
+        font-size: 26px;
+        margin-bottom: 14px;
+    }
+    .empty-state .empty-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    /* ---- Brand all checkboxes/radios; undo the Bootstrap .form-control
+            box that stretches checkboxes into full-width blocks ---- */
+    input[type="checkbox"],
+    input[type="radio"] {
+        accent-color: var(--brand-teal);
+        cursor: pointer;
+    }
+    input[type="checkbox"].form-control,
+    input[type="radio"].form-control {
+        width: 18px;
+        height: 18px;
+        min-height: 18px;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* ---- Plain "nothing found" messages get breathing room + a muted tone.
+            Views that opt into the richer .empty-state markup override this. ---- */
+    .content-wrapper.fullscreen .center:not(.empty-state),
+    .content-wrapper.fullscreen [localized].center {
+        padding: 32px 16px;
+        text-align: center;
+        color: #64748b;
+    }
+
+    /* ---- Primary "Add" action: make it a filled brand button so the main
+            create action on each list page reads as primary, not neutral ---- */
+    .device-search-buttons .btn-default,
+    .btn.btn-add-primary {
+        background: linear-gradient(135deg, var(--brand-teal), var(--brand-teal-dark));
+        border-color: var(--brand-teal-dark);
+        color: #ffffff;
+    }
+    .device-search-buttons .btn-default:hover,
+    .device-search-buttons .btn-default:focus,
+    .btn.btn-add-primary:hover,
+    .btn.btn-add-primary:focus {
+        background: var(--brand-teal-dark);
+        border-color: var(--brand-teal-dark);
+        color: #ffffff;
+        box-shadow: 0 6px 16px -4px rgba(18, 137, 122, .5);
+    }

@@ -5,6 +5,30 @@
         <span>{{errorMessage}}</span>
     </div>
 
+    <!-- Stat tiles: quick command-center overview from existing chart data -->
+    <div class="tw-grid tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4">
+        <div class="stat-tile">
+            <span class="stat-accent" style="background: var(--brand-teal)"></span>
+            <div class="stat-label" localized>summary.devices.enrolled.total</div>
+            <div class="stat-value">{{ (enrollmentData[0] + enrollmentData[1]) || 0 }}</div>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-accent" style="background: {{statusColors[2] || '#12897A'}}"></span>
+            <div class="stat-label" localized>summary.devices.active</div>
+            <div class="stat-value" style="color: {{statusColors[2]}}">{{ statusData[2] || 0 }}</div>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-accent" style="background: {{statusColors[1] || '#F5A44B'}}"></span>
+            <div class="stat-label" localized>summary.devices.idle</div>
+            <div class="stat-value" style="color: {{statusColors[1]}}">{{ statusData[1] || 0 }}</div>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-accent" style="background: {{statusColors[0] || '#94a3b8'}}"></span>
+            <div class="stat-label" localized>summary.devices.offline</div>
+            <div class="stat-value" style="color: {{statusColors[0]}}">{{ statusData[0] || 0 }}</div>
+        </div>
+    </div>
+
     <!-- Enrollment -->
     <div class="tw-bg-white tw-rounded-2xl tw-shadow-sm tw-border tw-border-slate-100 tw-p-6">
         <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-3 tw-gap-8 tw-items-center">
