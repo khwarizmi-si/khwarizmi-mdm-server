@@ -28,6 +28,7 @@ import com.hmdm.service.DeviceApplicationsStatus;
 import com.hmdm.service.DeviceConfigFilesStatus;
 import org.apache.ibatis.annotations.*;
 import com.hmdm.rest.json.DeviceLookupItem;
+import com.hmdm.rest.json.DeviceLocation;
 
 public interface DeviceMapper {
 
@@ -216,6 +217,18 @@ public interface DeviceMapper {
             ") deviceApps " +
             "ORDER BY LOWER(deviceApps.app ->> 'name')")
     List<DeviceInstalledApp> getDeviceAllInstalledApplications(@Param("deviceId") int deviceId);
+
+    @Select("SELECT " +
+            "    (loc.item ->> 'lat')::double precision AS lat, " +
+            "    (loc.item ->> 'lon')::double precision AS lon, " +
+            "    (loc.item ->> 'ts')::bigint AS ts " +
+            "FROM (" +
+            "    SELECT jsonb_array_elements(infojson -> 'locationHistory') AS item " +
+            "    FROM devices " +
+            "    WHERE id = #{deviceId}" +
+            ") loc " +
+            "ORDER BY (loc.item ->> 'ts')::bigint ASC")
+    List<DeviceLocation> getDeviceLocationHistory(@Param("deviceId") int deviceId);
 
     @Update("INSERT INTO deviceStatuses (deviceId, configFilesStatus, applicationsStatus) " +
             "VALUES (#{deviceId}, #{filesStatus}, #{appsStatus})" +

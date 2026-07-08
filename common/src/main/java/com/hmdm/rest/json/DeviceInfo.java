@@ -83,6 +83,10 @@ public class DeviceInfo implements Serializable {
     @ApiModelProperty(value = "The details on device location")
     private DeviceLocation location;
 
+    @ApiModelProperty(value = "Server-maintained history of recent device locations (newest last). " +
+            "Not sent by the agent; appended on the server from the current location on each sync.")
+    private List<DeviceLocation> locationHistory;
+
     @ApiModelProperty(value = "Headwind MDM launcher build variant")
     private String launcherType;
 
@@ -230,6 +234,14 @@ public class DeviceInfo implements Serializable {
 
     public void setLocation(DeviceLocation location) {
         this.location = location;
+    }
+
+    public List<DeviceLocation> getLocationHistory() {
+        return locationHistory;
+    }
+
+    public void setLocationHistory(List<DeviceLocation> locationHistory) {
+        this.locationHistory = locationHistory;
     }
 
     public String getLauncherType() {

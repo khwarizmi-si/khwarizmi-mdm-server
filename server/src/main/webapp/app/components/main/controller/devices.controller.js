@@ -1014,6 +1014,19 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.showLocation = function (device) {
+            $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.location.html',
+                controller: 'DeviceLocationModalController',
+                size: 'lg',
+                resolve: {
+                    device: function () {
+                        return device;
+                    }
+                }
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {
@@ -1476,6 +1489,76 @@ angular.module('headwind-kiosk')
             $scope.loading = false;
             $scope.errorMessage = localization.localize('error.request.failure');
             alertService.onRequestFailure(failure);
+        });
+
+    })
+
+    .controller('DeviceLocationModalController', function ($scope, $modalInstance, $ocLazyLoad,
+                                                           $timeout, localization, deviceService,
+                                                           alertService, device) {
+
+        $scope.device = device;
+        $scope.loading = true;
+        $scope.errorMessage = undefined;
+        $scope.pointCount = 0;
+        $scope.lastSeen = null;
+
+        var mapObj = null;
+
+        $scope.close = function () {
+            $modalInstance.dismiss();
+        };
+
+        var renderMap = function (locs) {
+            mapObj = L.map('deviceLocationMap');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap',
+                maxZoom: 19
+            }).addTo(mapObj);
+
+            var points = locs.map(function (l) { return [l.lat, l.lon]; });
+            if (points.length > 1) {
+                L.polyline(points, {color: '#12897A', weight: 3, opacity: 0.65}).addTo(mapObj);
+            }
+            locs.forEach(function (l, i) {
+                var isLast = i === locs.length - 1;
+                var when = l.ts ? new Date(l.ts).toLocaleString() : '';
+                L.circleMarker([l.lat, l.lon], {
+                    radius: isLast ? 9 : 5,
+                    color: isLast ? '#EE7B2E' : '#0C6157',
+                    fillColor: isLast ? '#EE7B2E' : '#12897A',
+                    fillOpacity: 0.9,
+                    weight: 2
+                }).bindPopup(when).addTo(mapObj);
+            });
+            mapObj.fitBounds(points, {padding: [30, 30]});
+        };
+
+        deviceService.getDeviceLocations({id: device.id}, function (response) {
+            if (response.status === 'OK') {
+                var locs = response.data || [];
+                $scope.pointCount = locs.length;
+                $scope.loading = false;
+                if (locs.length > 0) {
+                    var last = locs[locs.length - 1];
+                    $scope.lastSeen = last.ts ? new Date(last.ts) : null;
+                    // Load Leaflet lazily, then render once the map container is in the DOM.
+                    $ocLazyLoad.load('leaflet').then(function () {
+                        $timeout(function () { renderMap(locs); }, 120);
+                    });
+                }
+            } else {
+                $scope.loading = false;
+                $scope.errorMessage = localization.localize(response.message);
+            }
+        }, function (failure) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            alertService.onRequestFailure(failure);
+        });
+
+        $scope.$on('$destroy', function () {
+            if (mapObj) { mapObj.remove(); }
         });
 
     });

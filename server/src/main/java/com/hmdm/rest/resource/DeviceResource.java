@@ -400,6 +400,24 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get device location history",
+            notes = "Get the server-maintained history of recent device locations (oldest first)"
+    )
+    @GET
+    @Path("/{id}/locations")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDeviceLocations(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final List<DeviceLocation> locations = this.deviceDAO.getDeviceLocationHistory(id);
+            return Response.OK(locations);
+        } catch (Exception e) {
+            log.error("Failed to retrieve the location history for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device application settings",
             notes = "Save application settings set at device level"
     )

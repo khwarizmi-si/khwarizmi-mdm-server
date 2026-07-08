@@ -563,6 +563,9 @@ public class SyncResource {
                         !prevInfo.getImei().equals(deviceInfo.getImei())) {
                     dbDevice.setImeiUpdateTs(System.currentTimeMillis());
                 }
+                // Maintain a bounded server-side location history inside the stored info JSON,
+                // carried across syncs (the agent only sends the current location).
+                mergeLocationHistory(prevInfo, deviceInfo);
                 this.unsecureDAO.updateDeviceInfo(dbDevice.getId(),
                         objectMapper.writeValueAsString(deviceInfo),
                         dbDevice.getImeiUpdateTs(),
@@ -610,6 +613,38 @@ public class SyncResource {
             logger.error("Unexpected error when processing info submitted by device", e);
             return Response.INTERNAL_ERROR();
         }
+    }
+
+    // Cap on the number of retained location points per device (in the info JSON).
+    private static final int MAX_LOCATION_HISTORY = 500;
+
+    /**
+     * Maintains a bounded, server-side history of device locations inside the info JSON.
+     * The agent only sends the current {@code location}; here we carry the previous history
+     * forward and append the new point when the position actually changed.
+     */
+    private void mergeLocationHistory(DeviceInfo prevInfo, DeviceInfo deviceInfo) {
+        List<DeviceLocation> history = (prevInfo != null && prevInfo.getLocationHistory() != null)
+                ? new LinkedList<>(prevInfo.getLocationHistory())
+                : new LinkedList<>();
+
+        DeviceLocation loc = deviceInfo.getLocation();
+        if (loc != null && loc.getLat() != null && loc.getLon() != null) {
+            DeviceLocation last = history.isEmpty() ? null : history.get(history.size() - 1);
+            boolean changed = last == null
+                    || !loc.getLat().equals(last.getLat())
+                    || !loc.getLon().equals(last.getLon());
+            if (changed) {
+                if (loc.getTs() == null) {
+                    loc.setTs(System.currentTimeMillis());
+                }
+                history.add(loc);
+            }
+        }
+        while (history.size() > MAX_LOCATION_HISTORY) {
+            history.remove(0);
+        }
+        deviceInfo.setLocationHistory(history);
     }
 
     // =================================================================================================================
