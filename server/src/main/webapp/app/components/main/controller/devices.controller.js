@@ -977,6 +977,41 @@ angular.module('headwind-kiosk')
             });
         };
 
+        var sendDeviceCommand = function (device, cmd) {
+            deviceService.sendDeviceCommand({id: device.id, cmd: cmd}, {}, function (response) {
+                if (response.status === 'OK') {
+                    alertService.showAlertMessage(localization.localize('success.device.command.sent'));
+                } else {
+                    alertService.showAlertMessage(localization.localize(response.message));
+                }
+            }, alertService.onRequestFailure);
+        };
+
+        $scope.rebootDevice = function (device) {
+            var text = localization.localize('question.device.reboot').replace('${deviceNumber}', device.number);
+            confirmModal.getUserConfirmation(text, function () {
+                sendDeviceCommand(device, 'reboot');
+            });
+        };
+
+        $scope.lockDevice = function (device) {
+            var text = localization.localize('question.device.lock').replace('${deviceNumber}', device.number);
+            confirmModal.getUserConfirmation(text, function () {
+                sendDeviceCommand(device, 'lock');
+            });
+        };
+
+        $scope.wipeDevice = function (device) {
+            // Factory reset is destructive and irreversible: require a double confirmation.
+            var text1 = localization.localize('question.device.wipe').replace('${deviceNumber}', device.number);
+            var text2 = localization.localize('question.device.wipe.confirm').replace('${deviceNumber}', device.number);
+            confirmModal.getUserConfirmation(text1, function () {
+                confirmModal.getUserConfirmation(text2, function () {
+                    sendDeviceCommand(device, 'wipe');
+                });
+            });
+        };
+
         $scope.notifyPluginOnDevice = function (plugin, device) {
             $rootScope.$emit('plugin-' + plugin.identifier + '-device-selected', device);
         };

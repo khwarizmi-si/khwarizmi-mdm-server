@@ -46,6 +46,11 @@ public class PushMessage implements Serializable {
     public static final String TYPE_APP_CONFIG_UPDATED = "appConfigUpdated";
     public static final String TYPE_CONFIG_UPDATED = "configUpdated";
     public static final String TYPE_RUN_APP = "runApp";
+    // Remote device commands (handled by the agent's PushNotificationProcessor).
+    // Values must match the agent-side com.hmdm.launcher.json.PushMessage constants.
+    public static final String TYPE_REBOOT = "reboot";
+    public static final String TYPE_LOCK = "lockDevice";
+    public static final String TYPE_WIPE = "wipeDevice";
 
     /**
      * <p>Constructs new <code>PushMessage</code> instance. This implementation does nothing.</p>

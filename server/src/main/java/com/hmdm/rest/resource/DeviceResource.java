@@ -39,6 +39,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.hmdm.notification.PushService;
+import com.hmdm.notification.persistence.domain.PushMessage;
 import com.hmdm.persistence.*;
 import com.hmdm.persistence.domain.*;
 import com.hmdm.rest.json.*;
@@ -432,6 +433,44 @@ public class DeviceResource {
             return Response.OK();
         } catch (Exception e) {
             log.error("Failed to send notification on application settings update to device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
+            value = "Send a remote command to a device",
+            notes = "Sends a remote command (reboot, lock, wipe) to the device via push. " +
+                    "The agent executes it using device-owner privileges."
+    )
+    @POST
+    @Path("/{id}/command/{cmd}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendDeviceCommand(@PathParam("id") @ApiParam("Device ID") Integer id,
+                                      @PathParam("cmd") @ApiParam("Command: reboot|lock|wipe") String cmd) {
+        if (!SecurityContext.get().hasPermission("edit_devices")) {
+            log.error("Unauthorized attempt to send a command to device",
+                    SecurityException.onCustomerDataAccessViolation(id, "device"));
+            return Response.PERMISSION_DENIED();
+        }
+        final String messageType;
+        switch (cmd == null ? "" : cmd) {
+            case "reboot": messageType = PushMessage.TYPE_REBOOT; break;
+            case "lock":   messageType = PushMessage.TYPE_LOCK;   break;
+            case "wipe":   messageType = PushMessage.TYPE_WIPE;   break;
+            default:
+                return Response.ERROR("error.device.command.invalid");
+        }
+        try {
+            final Device dbDevice = this.deviceDAO.getDeviceById(id);
+            if (dbDevice == null) {
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+            this.pushService.sendSimpleMessage(id, messageType);
+            log.info("Remote command '{}' sent to device #{} ({})", cmd, id, dbDevice.getNumber());
+            return Response.OK();
+        } catch (Exception e) {
+            log.error("Failed to send command '{}' to device #{}", cmd, id, e);
             return Response.INTERNAL_ERROR();
         }
     }

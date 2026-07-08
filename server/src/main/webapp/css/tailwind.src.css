@@ -166,18 +166,29 @@
         margin-top: 16px;
     }
 
-    /* ---- Tables rendered as clean white cards ---- */
+    /* ---- Tables rendered as clean white cards ----
+       overflow is 'visible' (not hidden) so a row's action dropdown can
+       extend beyond the card without being clipped; the rounded look is
+       kept via border-radius on the corner cells instead of clipping. */
     .table {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 14px;
         box-shadow: 0 1px 3px rgba(15, 23, 42, .05);
-        overflow: hidden;
+        overflow: visible;
         margin-bottom: 18px;
     }
     .table > thead > tr > th:first-child { border-top-left-radius: 14px; }
     .table > thead > tr > th:last-child { border-top-right-radius: 14px; }
     .table > tbody > tr:last-child > td { border-bottom: none; }
+    .table > tbody > tr:last-child > td:first-child { border-bottom-left-radius: 14px; }
+    .table > tbody > tr:last-child > td:last-child { border-bottom-right-radius: 14px; }
+    /* Row action menus above sibling rows */
+    .dropdown-menu-devices { z-index: 1060; }
+    /* Destructive action (factory reset) reads as dangerous */
+    .dropdown-menu-devices > li > a.tw-text-red-600 { color: #dc2626; }
+    .dropdown-menu-devices > li > a.tw-text-red-600:hover,
+    .dropdown-menu-devices > li > a.tw-text-red-600:focus { background: #fef2f2; color: #b91c1c; }
 
     /* ---- Modals (angular-ui-bootstrap $uibModal) ---- */
     .modal-content {
