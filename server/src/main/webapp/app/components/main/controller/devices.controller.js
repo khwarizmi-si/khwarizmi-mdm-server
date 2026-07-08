@@ -1027,6 +1027,22 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.exportDevices = function () {
+            // The private endpoint is authorized by the session cookie; a relative
+            // URL resolves against the context path (the #-fragment is ignored).
+            $window.open('rest/private/devices/export', '_self');
+        };
+
+        $scope.importDevices = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.import.html',
+                controller: 'DeviceImportModalController'
+            });
+            modalInstance.result.then(function () {
+                $scope.search();
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {
@@ -1524,4 +1540,56 @@ angular.module('headwind-kiosk')
             alertService.onRequestFailure(failure);
         });
 
+    })
+
+    .controller('DeviceImportModalController', function ($scope, $modalInstance, $http,
+                                                         localization, alertService) {
+        $scope.uploading = false;
+        $scope.result = null;
+        $scope.errorMessage = undefined;
+        $scope.fileName = null;
+
+        $scope.onFileSelected = function () {
+            var input = document.getElementById('deviceImportFile');
+            $scope.$applyAsync(function () {
+                $scope.fileName = (input && input.files && input.files.length) ? input.files[0].name : null;
+                $scope.result = null;
+                $scope.errorMessage = undefined;
+            });
+        };
+
+        $scope.upload = function () {
+            var input = document.getElementById('deviceImportFile');
+            if (!input || !input.files || !input.files.length) {
+                $scope.errorMessage = localization.localize('error.device.import.nofile');
+                return;
+            }
+            var fd = new FormData();
+            fd.append('file', input.files[0]);
+            $scope.uploading = true;
+            $scope.errorMessage = undefined;
+            $http.post('rest/private/devices/import', fd, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }).then(function (response) {
+                $scope.uploading = false;
+                if (response.data && response.data.status === 'OK') {
+                    $scope.result = response.data.data;
+                } else {
+                    $scope.errorMessage = localization.localize(response.data ? response.data.message : 'error.request.failure');
+                }
+            }, function (failure) {
+                $scope.uploading = false;
+                $scope.errorMessage = localization.localize('error.request.failure');
+                alertService.onRequestFailure(failure);
+            });
+        };
+
+        $scope.done = function () {
+            $modalInstance.close();
+        };
+
+        $scope.close = function () {
+            $modalInstance.dismiss();
+        };
     });

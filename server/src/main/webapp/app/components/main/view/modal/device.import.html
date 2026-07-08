@@ -1,0 +1,39 @@
+<!-- Localization completed -->
+<div class="modal-header">
+    <h4 class="modal-title" localized>device.import.title</h4>
+</div>
+
+<div class="modal-body">
+    <div ng-show="errorMessage" class="error tw-mb-3"><span>{{errorMessage}}</span></div>
+
+    <p class="tw-text-sm tw-text-slate-600" localized>device.import.hint</p>
+    <pre class="tw-text-xs tw-bg-slate-50 tw-border tw-border-slate-200 tw-rounded-lg tw-p-2 tw-text-slate-500">number,description</pre>
+
+    <div class="tw-mt-3">
+        <input id="deviceImportFile" type="file" accept=".csv,text/csv" ng-change="onFileSelected()"
+               onchange="angular.element(this).scope().onFileSelected()"/>
+        <span ng-if="fileName" class="tw-ml-2 tw-text-sm tw-text-slate-700">{{fileName}}</span>
+    </div>
+
+    <div ng-if="uploading" class="tw-mt-4 tw-text-slate-500" localized>device.import.uploading</div>
+
+    <div ng-if="result" class="tw-mt-4 tw-rounded-xl tw-border tw-border-slate-200 tw-p-4">
+        <div class="tw-flex tw-gap-6 tw-text-sm">
+            <div><span class="tw-text-slate-500" localized>device.import.created</span>: <strong class="tw-text-brand-tealDark">{{result.created}}</strong></div>
+            <div><span class="tw-text-slate-500" localized>device.import.updated</span>: <strong>{{result.updated}}</strong></div>
+            <div><span class="tw-text-slate-500" localized>device.import.skipped</span>: <strong>{{result.skipped}}</strong></div>
+        </div>
+        <div ng-if="result.errors && result.errors.length" class="tw-mt-3">
+            <div class="tw-text-xs tw-font-semibold tw-text-red-600 tw-mb-1" localized>device.import.errors</div>
+            <ul class="tw-text-xs tw-text-red-600 tw-list-disc tw-pl-5">
+                <li ng-repeat="e in result.errors">{{e}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="upload()" ng-disabled="uploading" ng-if="!result" localized>device.import.upload</button>
+    <button type="button" class="btn btn-default" ng-click="close()" ng-if="!result" localized>button.cancel</button>
+    <button type="button" class="btn btn-default" ng-click="done()" ng-if="result" localized>button.close</button>
+</div>

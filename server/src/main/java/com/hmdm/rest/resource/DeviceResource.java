@@ -39,6 +39,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.hmdm.notification.PushService;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
 import com.hmdm.persistence.*;
 import com.hmdm.persistence.domain.*;
 import com.hmdm.rest.json.*;
@@ -415,6 +423,154 @@ public class DeviceResource {
             log.error("Failed to retrieve the app usage history for device #{}", id, e);
             return Response.INTERNAL_ERROR();
         }
+    }
+
+    // =================================================================================================================
+    private static final String CSV_HEADER = "number,description,configuration,imei,phone,custom1,custom2,custom3,lastSeen";
+
+    private static String csv(String v) {
+        if (v == null) {
+            return "";
+        }
+        if (v.contains(",") || v.contains("\"") || v.contains("\n") || v.contains("\r")) {
+            return "\"" + v.replace("\"", "\"\"") + "\"";
+        }
+        return v;
+    }
+
+    /** Splits a single CSV line honoring double-quoted fields with escaped quotes. */
+    private static List<String> parseCsvLine(String line) {
+        List<String> out = new ArrayList<>();
+        StringBuilder cur = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (inQuotes) {
+                if (c == '"') {
+                    if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                        cur.append('"');
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    cur.append(c);
+                }
+            } else {
+                if (c == '"') {
+                    inQuotes = true;
+                } else if (c == ',') {
+                    out.add(cur.toString());
+                    cur.setLength(0);
+                } else {
+                    cur.append(c);
+                }
+            }
+        }
+        out.add(cur.toString());
+        return out;
+    }
+
+    @ApiOperation(value = "Export devices as CSV")
+    @GET
+    @Path("/export")
+    @Produces("text/csv")
+    public javax.ws.rs.core.Response exportDevices() {
+        if (!SecurityContext.get().hasPermission("edit_devices")) {
+            return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.FORBIDDEN).build();
+        }
+        try {
+            final List<Device> devices = this.deviceDAO.getAllDevices();
+            StringBuilder sb = new StringBuilder();
+            sb.append(CSV_HEADER).append("\r\n");
+            for (Device d : devices) {
+                sb.append(csv(d.getNumber())).append(',')
+                  .append(csv(d.getDescription())).append(',')
+                  .append(csv(d.getConfigName())).append(',')
+                  .append(csv(d.getImei())).append(',')
+                  .append(csv(d.getPhone())).append(',')
+                  .append(csv(d.getCustom1())).append(',')
+                  .append(csv(d.getCustom2())).append(',')
+                  .append(csv(d.getCustom3())).append(',')
+                  .append(d.getLastUpdate() != null && d.getLastUpdate() > 0 ? new Date(d.getLastUpdate()).toString() : "")
+                  .append("\r\n");
+            }
+            return javax.ws.rs.core.Response.ok(sb.toString())
+                    .header("Content-Disposition", "attachment; filename=\"devices.csv\"")
+                    .build();
+        } catch (Exception e) {
+            log.error("Failed to export devices", e);
+            return javax.ws.rs.core.Response.serverError().build();
+        }
+    }
+
+    @ApiOperation(value = "Import devices from CSV",
+            notes = "Creates missing devices (by number) and updates the description of existing ones. " +
+                    "Expected columns: number,description[,configuration,imei,phone,custom1,custom2,custom3]")
+    @POST
+    @Path("/import")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response importDevices(@FormDataParam("file") InputStream uploadedInputStream) {
+        if (!SecurityContext.get().hasPermission("edit_devices")) {
+            return Response.PERMISSION_DENIED();
+        }
+        if (uploadedInputStream == null) {
+            return Response.ERROR("error.device.import.nofile");
+        }
+        int created = 0, updated = 0, skipped = 0;
+        List<String> errors = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(uploadedInputStream, StandardCharsets.UTF_8))) {
+            String line;
+            int lineNo = 0;
+            while ((line = reader.readLine()) != null) {
+                lineNo++;
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                List<String> cols = parseCsvLine(line);
+                String number = cols.isEmpty() ? "" : cols.get(0).trim();
+                // Skip a header row (first line whose first column is literally "number")
+                if (lineNo == 1 && number.equalsIgnoreCase("number")) {
+                    continue;
+                }
+                if (number.isEmpty()) {
+                    skipped++;
+                    continue;
+                }
+                String description = cols.size() > 1 ? cols.get(1) : null;
+                try {
+                    Device existing = this.unsecureDAO.getDeviceByNumber(number);
+                    if (existing != null) {
+                        if (description != null && !description.isEmpty()) {
+                            this.deviceDAO.updateDeviceDescription(existing.getId(), description);
+                        }
+                        updated++;
+                    } else {
+                        Device nd = this.unsecureDAO.createNewDeviceOnDemand(number);
+                        if (nd == null) {
+                            errors.add("line " + lineNo + ": could not create device '" + number + "' (auto-registration disabled?)");
+                            continue;
+                        }
+                        if (description != null && !description.isEmpty()) {
+                            this.deviceDAO.updateDeviceDescription(nd.getId(), description);
+                        }
+                        created++;
+                    }
+                } catch (Exception rowEx) {
+                    errors.add("line " + lineNo + " (" + number + "): " + rowEx.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to import devices", e);
+            return Response.INTERNAL_ERROR();
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("created", created);
+        result.put("updated", updated);
+        result.put("skipped", skipped);
+        result.put("errors", errors);
+        return Response.OK(result);
     }
 
     // =================================================================================================================

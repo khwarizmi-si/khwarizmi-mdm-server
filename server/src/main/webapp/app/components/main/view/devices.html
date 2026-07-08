@@ -194,6 +194,10 @@
             <button type='button' ng-if="hasPermission('edit_devices')"
                     ng-disabled='commonSettings.deviceLimit > 0 && commonSettings.deviceCount >= commonSettings.deviceLimit'
                     class='btn btn-default' ng-click='editDevice( {} )' localized>button.add</button>
+            <button type='button' ng-if="hasPermission('edit_devices')"
+                    class='btn btn-default' ng-click='exportDevices()' localized>button.device.export</button>
+            <button type='button' ng-if="hasPermission('edit_devices')"
+                    class='btn btn-default' ng-click='importDevices()' localized>button.device.import</button>
         </div>
     </div>
 
