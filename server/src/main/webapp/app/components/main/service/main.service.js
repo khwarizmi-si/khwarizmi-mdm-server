@@ -12,7 +12,8 @@ angular.module('headwind-kiosk')
             saveDeviceApplicationSettings: {url: 'rest/private/devices/:id/applicationSettings', method: 'POST'},
             notifyDeviceOnAppSettingsUpdate: {url: 'rest/private/devices/:id/applicationSettings/notify', method: 'POST'},
             getDeviceInstalledApps: {url: 'rest/private/devices/:id/installedApps', method: 'GET'},
-            getDeviceAppUsage: {url: 'rest/private/devices/:id/appUsage', method: 'GET'}
+            getDeviceAppUsage: {url: 'rest/private/devices/:id/appUsage', method: 'GET'},
+            getDevicePhotos: {url: 'rest/private/devices/:id/photos', method: 'GET'}
         });
     })
     .factory('configurationService', function ($resource) {

@@ -1027,6 +1027,19 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.showPhotos = function (device) {
+            $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.photos.html',
+                controller: 'DevicePhotosModalController',
+                size: 'lg',
+                resolve: {
+                    device: function () {
+                        return device;
+                    }
+                }
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {
@@ -1524,4 +1537,47 @@ angular.module('headwind-kiosk')
             alertService.onRequestFailure(failure);
         });
 
+    })
+
+    .controller('DevicePhotosModalController', function ($scope, $modalInstance,
+                                                         localization, deviceService,
+                                                         alertService, device) {
+        $scope.device = device;
+        $scope.loading = true;
+        $scope.errorMessage = undefined;
+        $scope.photos = [];
+        $scope.selected = null; // enlarged photo
+
+        $scope.select = function (photo) {
+            $scope.selected = photo;
+        };
+        $scope.back = function () {
+            $scope.selected = null;
+        };
+        $scope.close = function () {
+            $modalInstance.dismiss();
+        };
+
+        deviceService.getDevicePhotos({id: device.id}, function (response) {
+            $scope.loading = false;
+            if (response.status === 'OK' && response.data) {
+                var number = response.data.number;
+                var list = response.data.photos || [];
+                // Newest first; build the static URL served by /files/*.
+                $scope.photos = list.map(function (p) {
+                    return {
+                        name: p.name,
+                        ts: p.ts,
+                        size: p.size,
+                        url: 'files/photos/' + encodeURIComponent(number) + '/' + encodeURIComponent(p.name)
+                    };
+                }).reverse();
+            } else {
+                $scope.errorMessage = localization.localize(response.message);
+            }
+        }, function (failure) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            alertService.onRequestFailure(failure);
+        });
     });

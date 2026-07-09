@@ -49,6 +49,14 @@ import com.hmdm.event.DeviceLocationUpdatedEvent;
 import com.hmdm.event.EventService;
 import com.hmdm.persistence.CustomerDAO;
 import com.hmdm.persistence.DeviceDAO;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import com.hmdm.persistence.domain.DevicePhoto;
 import com.hmdm.persistence.domain.ApplicationSetting;
 import com.hmdm.persistence.domain.ApplicationSettingType;
 import com.hmdm.persistence.domain.ApplicationVersion;
@@ -116,6 +124,7 @@ public class SyncResource {
 
     private String mobileAppName;
     private String vendor;
+    private String filesDirectory;
 
     /**
      * <p>A constructor required by Swagger.</p>
@@ -139,7 +148,8 @@ public class SyncResource {
                         @Named("rebranding.mobile.name") String mobileAppName,
                         @Named("rebranding.vendor.name") String vendor,
                         @Named("proxy.addresses") String proxyIps,
-                        @Named("proxy.ip.header") String ipHeader) {
+                        @Named("proxy.ip.header") String ipHeader,
+                        @Named("files.directory") String filesDirectory) {
         this.unsecureDAO = unsecureDAO;
         this.eventService = eventService;
         this.customerDAO = customerDAO;
@@ -150,6 +160,7 @@ public class SyncResource {
         this.preventDuplicateEnrollment = preventDuplicateEnrollment;
         this.mobileAppName = mobileAppName;
         this.vendor = vendor;
+        this.filesDirectory = filesDirectory;
         this.remoteAddrResolver = new BaseIPFilter("", proxyIps, ipHeader);
 
         Set<SyncResponseHook> allYourInterfaces = new HashSet<>();
@@ -559,6 +570,11 @@ public class SyncResource {
                     prevInfo = objectMapper.readValue(dbDevice.getInfo(), DeviceInfo.class);
                 } catch (Exception e) {
                 }
+                // Carry the server-maintained photo metadata forward: the agent does not
+                // resend it in /sync/info, so without this it would be wiped on each sync.
+                if (prevInfo != null && prevInfo.getPhotos() != null && deviceInfo.getPhotos() == null) {
+                    deviceInfo.setPhotos(prevInfo.getPhotos());
+                }
                 if (prevInfo != null && prevInfo.getImei() != null && deviceInfo.getImei() != null &&
                         !prevInfo.getImei().equals(deviceInfo.getImei())) {
                     dbDevice.setImeiUpdateTs(System.currentTimeMillis());
@@ -608,6 +624,108 @@ public class SyncResource {
             }
         } catch (Exception e) {
             logger.error("Unexpected error when processing info submitted by device", e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // ---- Device photo upload -------------------------------------------------------------------
+    private static final int MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+    private static final int MAX_PHOTOS_PER_DEVICE = 50;
+    // Allow only a safe device-number charset in the path (no separators, no "..").
+    private static final java.util.regex.Pattern SAFE_NUMBER = java.util.regex.Pattern.compile("[A-Za-z0-9._~-]{1,64}");
+
+    private static byte[] readCapped(InputStream in, int max) throws Exception {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buf = new byte[8192];
+        int n, total = 0;
+        while ((n = in.read(buf)) != -1) {
+            total += n;
+            if (total > max) {
+                return null; // exceeds the cap
+            }
+            bos.write(buf, 0, n);
+        }
+        return bos.toByteArray();
+    }
+
+    /** Returns the file extension if the bytes are a real JPEG/PNG (magic bytes), else null. */
+    private static String detectImage(byte[] d) {
+        if (d.length >= 3 && (d[0] & 0xFF) == 0xFF && (d[1] & 0xFF) == 0xD8 && (d[2] & 0xFF) == 0xFF) {
+            return "jpg";
+        }
+        if (d.length >= 8 && (d[0] & 0xFF) == 0x89 && d[1] == 0x50 && d[2] == 0x4E && d[3] == 0x47) {
+            return "png";
+        }
+        return null;
+    }
+
+    @ApiOperation(value = "Upload a photo from the device")
+    @POST
+    @Path("/photo/{number}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response uploadPhoto(@PathParam("number") String number,
+                               @FormDataParam("file") InputStream uploadedInputStream,
+                               @Context HttpServletRequest request) {
+        try {
+            if (number == null || !SAFE_NUMBER.matcher(number).matches()) {
+                return Response.ERROR("error.device.photo.invalid");
+            }
+            Device dbDevice = this.unsecureDAO.getDeviceByNumber(number);
+            if (dbDevice == null) {
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+            if (uploadedInputStream == null) {
+                return Response.ERROR("error.device.photo.nofile");
+            }
+
+            byte[] data = readCapped(uploadedInputStream, MAX_PHOTO_BYTES);
+            if (data == null) {
+                return Response.ERROR("error.device.photo.toolarge");
+            }
+            String ext = detectImage(data);
+            if (ext == null) {
+                return Response.ERROR("error.device.photo.type");
+            }
+
+            long ts = System.currentTimeMillis();
+            String fileName = ts + "." + ext; // server-generated; never a client name
+            java.nio.file.Path dir = Paths.get(this.filesDirectory, "photos", number).normalize();
+            Files.createDirectories(dir);
+            java.nio.file.Path target = dir.resolve(fileName).normalize();
+            // Defense in depth: the resolved file must stay inside the device's photo dir.
+            if (!target.startsWith(dir)) {
+                return Response.ERROR("error.device.photo.invalid");
+            }
+            try (FileOutputStream fos = new FileOutputStream(target.toFile())) {
+                fos.write(data);
+            }
+
+            // Append metadata to the device info JSON and prune to the newest N.
+            ObjectMapper om = new ObjectMapper();
+            DeviceInfo info;
+            try {
+                info = om.readValue(dbDevice.getInfo(), DeviceInfo.class);
+            } catch (Exception e) {
+                info = new DeviceInfo();
+            }
+            List<DevicePhoto> photos = info.getPhotos() != null ? new LinkedList<>(info.getPhotos()) : new LinkedList<>();
+            photos.add(new DevicePhoto(fileName, ts, (long) data.length));
+            while (photos.size() > MAX_PHOTOS_PER_DEVICE) {
+                DevicePhoto old = photos.remove(0);
+                try {
+                    Files.deleteIfExists(dir.resolve(old.getName()));
+                } catch (Exception ignore) {
+                }
+            }
+            info.setPhotos(photos);
+            this.unsecureDAO.updateDeviceInfo(dbDevice.getId(), om.writeValueAsString(info),
+                    dbDevice.getImeiUpdateTs(), remoteAddrResolver.getRemoteAddr(request));
+
+            logger.info("Stored photo {} ({} bytes) for device {}", fileName, data.length, number);
+            return Response.OK();
+        } catch (Exception e) {
+            logger.error("Failed to store device photo for {}", number, e);
             return Response.INTERNAL_ERROR();
         }
     }

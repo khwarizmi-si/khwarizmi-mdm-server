@@ -89,6 +89,10 @@ public class DeviceInfo implements Serializable {
     @ApiModelProperty(value = "The details on device location")
     private DeviceLocation location;
 
+    @ApiModelProperty(value = "Server-maintained metadata of photos uploaded by the device. " +
+            "Not sent by the agent in /sync/info; appended by the photo upload endpoint and carried across syncs.")
+    private java.util.List<com.hmdm.persistence.domain.DevicePhoto> photos;
+
     @ApiModelProperty(value = "Headwind MDM launcher build variant")
     private String launcherType;
 
@@ -244,6 +248,14 @@ public class DeviceInfo implements Serializable {
 
     public void setLocation(DeviceLocation location) {
         this.location = location;
+    }
+
+    public java.util.List<com.hmdm.persistence.domain.DevicePhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(java.util.List<com.hmdm.persistence.domain.DevicePhoto> photos) {
+        this.photos = photos;
     }
 
     public String getLauncherType() {

@@ -419,6 +419,41 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get device photos",
+            notes = "Returns the metadata of photos uploaded by the device. The panel builds the " +
+                    "image URLs as files/photos/<number>/<name>."
+    )
+    @GET
+    @Path("/{id}/photos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDevicePhotos(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final Device device = this.deviceDAO.getDeviceById(id);
+            java.util.Map<String, Object> result = new HashMap<>();
+            java.util.List<DevicePhoto> photos = new java.util.ArrayList<>();
+            if (device != null) {
+                result.put("number", device.getNumber());
+                if (device.getInfo() != null) {
+                    try {
+                        DeviceInfo info = new com.fasterxml.jackson.databind.ObjectMapper()
+                                .readValue(device.getInfo(), DeviceInfo.class);
+                        if (info.getPhotos() != null) {
+                            photos = info.getPhotos();
+                        }
+                    } catch (Exception ignore) {
+                    }
+                }
+            }
+            result.put("photos", photos);
+            return Response.OK(result);
+        } catch (Exception e) {
+            log.error("Failed to retrieve photos for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device application settings",
             notes = "Save application settings set at device level"
     )
