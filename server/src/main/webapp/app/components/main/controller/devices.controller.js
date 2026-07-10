@@ -977,6 +977,31 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.sendDeviceCommand = function (device, command) {
+            var commandTitle = localization.localize('button.device.command.' + command);
+            var localizedText = localization.localize('question.device.command')
+                .replace('${command}', commandTitle)
+                .replace('${deviceNumber}', device.number);
+            var sendCommand = function () {
+                deviceService.sendDeviceCommand({id: device.id, command: command}, {}, function () {
+                    alertService.showAlertMessage(localization.localize('success.device.command.sent'));
+                }, alertService.onRequestFailure);
+            };
+
+            if (command === 'wipe') {
+                confirmModal.getUserConfirmation(localizedText, function () {
+                    confirmModal.getUserConfirmation(
+                        localization.localize('question.device.command.wipe.final')
+                            .replace('${deviceNumber}', device.number),
+                        sendCommand,
+                        'button.device.command.wipe'
+                    );
+                }, 'button.device.command.wipe');
+            } else {
+                confirmModal.getUserConfirmation(localizedText, sendCommand);
+            }
+        };
+
         $scope.notifyPluginOnDevice = function (plugin, device) {
             $rootScope.$emit('plugin-' + plugin.identifier + '-device-selected', device);
         };
