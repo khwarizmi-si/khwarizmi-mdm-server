@@ -55,6 +55,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * <p>A resource used for uploading configuration files to server.</p>
@@ -70,6 +73,31 @@ public class ConfigurationFileResource {
     private String filesDirectory;
     private UploadedFileDAO uploadedFileDAO;
     private String baseUrl;
+
+    static String sanitizeUploadedFileName(String submittedFileName) {
+        if (submittedFileName == null) {
+            throw new IllegalArgumentException("Missing file name");
+        }
+
+        String fileName = new String(submittedFileName.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).trim();
+        if (fileName.isEmpty() || ".".equals(fileName) || "..".equals(fileName) || fileName.indexOf('\0') >= 0) {
+            throw new IllegalArgumentException("Invalid file name");
+        }
+        if (fileName.contains("/") || fileName.contains("\\")) {
+            throw new IllegalArgumentException("File name must not contain path separators");
+        }
+
+        try {
+            Path path = Paths.get(fileName);
+            if (path.isAbsolute() || path.getNameCount() != 1) {
+                throw new IllegalArgumentException("File name must not include a path");
+            }
+        } catch (InvalidPathException e) {
+            throw new IllegalArgumentException("Invalid file name", e);
+        }
+
+        return fileName;
+    }
 
     /**
      * <p>Constructs new <code>ConfigurationFileResource</code> instance.</p>
@@ -117,11 +145,12 @@ public class ConfigurationFileResource {
                     if (!customerFilesDirectory.exists()) {
                         customerFilesDirectory.mkdirs();
                     }
-                    // For some reason, the browser sends the file name in ISO_8859_1, so we use a workaround to convert
-                    // it to UTF_8 and enable non-ASCII characters
-                    // https://stackoverflow.com/questions/50582435/jersey-filename-encoded
-                    String fileName = new String(fileDetail.getFileName().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                    String fileName = sanitizeUploadedFileName(fileDetail != null ? fileDetail.getFileName() : null);
                     File configFile = new File(customerFilesDirectory, fileName);
+                    if (!configFile.getCanonicalFile().toPath().startsWith(customerFilesDirectory.getCanonicalFile().toPath())) {
+                        logger.warn("Rejected configuration file upload outside customer directory: {}", fileName);
+                        return Response.ERROR("error.invalid.file.name");
+                    }
 
                     if (configFile.exists()) {
                         logger.warn("The file already exists and will be overwritten: {}", configFile.getAbsolutePath());
@@ -165,6 +194,9 @@ public class ConfigurationFileResource {
 
                     return Response.OK(uploadedFile);
 
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Rejected configuration file upload: {}", e.getMessage());
+                    return Response.ERROR("error.invalid.file.name");
                 } catch (Exception e) {
                     logger.error("Unexpected error when handling icon file upload", e);
                     return Response.INTERNAL_ERROR();

@@ -15,6 +15,10 @@
     <!-- URL used to open Headwind MDM control panel -->
     <Parameter name="base.url" value="_PROTOCOL_://_BASE_HOST__BASE_PATH_"/>
 
+    <!-- Optional comma-separated list of browser origins allowed to call REST APIs.
+         Leave empty for same-origin deployments. -->
+    <Parameter name="cors.allowed.origins" value=""/>
+
     <!-- private / shared; shared can be used only in Enterprise solution -->
     <Parameter name="usage.scenario" value="private" />
 
@@ -31,8 +35,8 @@
          0 or empty value does not require request signature which is less secure -->
     <Parameter name="secure.enrollment" value="0"/>
     <!-- A shared secret between mobile app and control panel. 
-         Don't change this unless you know what you're doing -->
-    <Parameter name="hash.secret" value="20089b856964c5b5f71f1d0b"/>
+         Must match the Android build-time HMDM_REQUEST_SIGNATURE value. -->
+    <Parameter name="hash.secret" value="_HASH_SECRET_"/>
     <!-- If set to 1, Strict-Transport-Security (HSTS) is turned on -->
 <!--    <Parameter name="strict.transport.security" value="${strict.transport.security}"/> -->
 

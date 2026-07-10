@@ -20,6 +20,7 @@ DEFAULT_PROTOCOL=https
 DEFAULT_BASE_DOMAIN=
 DEFAULT_BASE_PATH="ROOT"
 DEFAULT_PORT=""
+DEFAULT_HASH_SECRET=$(openssl rand -hex 24 2>/dev/null)
 TEMP_DIRECTORY="/tmp"
 TEMP_SQL_FILE="$TEMP_DIRECTORY/hmdm_init.sql"
 TOMCAT_USER=$(ls -ld $TOMCAT_HOME/webapps | awk '{print $3}')
@@ -261,6 +262,12 @@ while [ -z $BASE_DOMAIN ]; do
 done
 read -e -p "Port (e.g. 8080, leave empty for default ports 80 or 443): " -i "$DEFAULT_PORT" PORT
 read -e -p "Project path on server (e.g. /hmdm) or ROOT: " -i "$DEFAULT_BASE_PATH" BASE_PATH
+while [ -z "$HASH_SECRET" ]; do
+    read -e -p "Enrollment shared secret: " -i "$DEFAULT_HASH_SECRET" HASH_SECRET
+    if [ -z "$HASH_SECRET" ]; then
+        echo "Please enter a non-empty enrollment shared secret"
+    fi
+done
 
 # Nobody changes it!
 # read -e -p "Tomcat virtual host [$TOMCAT_HOST]: " -i "$TOMCAT_HOST" TOMCAT_HOST
@@ -329,7 +336,7 @@ if [ ! -d $TOMCAT_CONFIG_PATH ]; then
     chown root:$TOMCAT_USER $TOMCAT_CONFIG_PATH
     chmod 755 $TOMCAT_CONFIG_PATH
 fi
-cat ./install/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_BASE_DIRECTORY_|$LOCATION|g; s|_PROTOCOL_|$PROTOCOL|g; s|_BASE_HOST_|$BASE_HOST|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g; s|_BASE_PATH_|$BASE_PATH|g; s|_INSTALL_FLAG_|$INSTALL_FLAG_FILE|g; s|_SMTP_HOST_|$SMTP_HOST|g; s|_SMTP_PORT_|$SMTP_PORT|g;  s|_SMTP_SSL_|$SMTP_SSL|g; s|_SMTP_STARTTLS_|$SMTP_STARTTLS|g; s|_SMTP_USERNAME_|$SMTP_USERNAME|g; s|_SMTP_PASSWORD_|$SMTP_PASSWORD|g; s|_SMTP_FROM_|$SMTP_FROM|g;" > $TOMCAT_CONFIG_PATH/$TOMCAT_DEPLOY_PATH.xml
+cat ./install/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_BASE_DIRECTORY_|$LOCATION|g; s|_PROTOCOL_|$PROTOCOL|g; s|_BASE_HOST_|$BASE_HOST|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g; s|_BASE_PATH_|$BASE_PATH|g; s|_HASH_SECRET_|$HASH_SECRET|g; s|_INSTALL_FLAG_|$INSTALL_FLAG_FILE|g; s|_SMTP_HOST_|$SMTP_HOST|g; s|_SMTP_PORT_|$SMTP_PORT|g;  s|_SMTP_SSL_|$SMTP_SSL|g; s|_SMTP_STARTTLS_|$SMTP_STARTTLS|g; s|_SMTP_USERNAME_|$SMTP_USERNAME|g; s|_SMTP_PASSWORD_|$SMTP_PASSWORD|g; s|_SMTP_FROM_|$SMTP_FROM|g;" > $TOMCAT_CONFIG_PATH/$TOMCAT_DEPLOY_PATH.xml
 if [ "$?" -ne 0 ]; then
     echo "Failed to create a Tomcat config file $TOMCAT_CONFIG_PATH/$TOMCAT_DEPLOY_PATH.xml!"
     exit 1
@@ -488,6 +495,4 @@ echo "$PROTOCOL://$BASE_HOST$BASE_PATH"
 echo "Login: admin:admin"
 echo "======================================"
 echo
-
-
 

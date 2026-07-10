@@ -23,14 +23,22 @@ package com.hmdm.rest.filter;
 
 import com.google.inject.Singleton;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>$</p>
@@ -39,17 +47,44 @@ import java.io.IOException;
  */
 @Singleton
 public class ApiOriginFilter implements Filter {
+    private final Set<String> allowedOrigins;
+
+    public ApiOriginFilter() {
+        this("");
+    }
+
+    @Inject
+    public ApiOriginFilter(@Named("cors.allowed.origins") String allowedOrigins) {
+        if (allowedOrigins == null || allowedOrigins.trim().isEmpty()) {
+            this.allowedOrigins = Collections.emptySet();
+        } else {
+            this.allowedOrigins = Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .filter(origin -> !origin.isEmpty())
+                    .collect(Collectors.toCollection(HashSet::new));
+        }
+    }
+
     /**
      * doFilter
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        res.addHeader("Access-Control-Allow-Origin", "*");
-        res.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-        res.addHeader("Access-Control-Allow-Headers", "Content-Type, api_key, Authorization");
+        String origin = req.getHeader("Origin");
+        if (origin != null && isAllowedOrigin(origin)) {
+            res.setHeader("Access-Control-Allow-Origin", origin);
+            res.setHeader("Vary", "Origin");
+            res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type, api_key, Authorization");
+        }
         chain.doFilter(request, response);
+    }
+
+    boolean isAllowedOrigin(String origin) {
+        return this.allowedOrigins.contains(origin);
     }
 
     /**

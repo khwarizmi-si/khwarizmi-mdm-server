@@ -16,6 +16,10 @@
     <!-- base url -->
     <Parameter name="base.url" value="${base.url}"/>
 
+    <!-- Optional comma-separated list of browser origins allowed to call REST APIs.
+         Leave empty for same-origin deployments. -->
+    <Parameter name="cors.allowed.origins" value="${cors.allowed.origins}"/>
+
     <Parameter name="usage.scenario" value="${usage.scenario}"/>
 
     <!-- Rebranding: brand identity shown in the web panel and pushed to devices.

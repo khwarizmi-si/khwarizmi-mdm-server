@@ -13,10 +13,11 @@
     <Parameter name="plugins.files.directory" value="/opt/hmdm/plugins"/>
 
     <Parameter name="base.url" value="http://localhost:8080/hmdm"/>
+    <Parameter name="cors.allowed.origins" value=""/>
 
     <Parameter name="usage.scenario" value="private"/>
     <Parameter name="secure.enrollment" value="0"/>
-    <Parameter name="hash.secret" value="20089b856964c5b5f71f1d0b"/>
+    <Parameter name="hash.secret" value="local-dev-only-change-me"/>
 
     <!-- Rebranding -->
     <Parameter name="rebranding.name" value="Al-Khwarizmi MDM"/>

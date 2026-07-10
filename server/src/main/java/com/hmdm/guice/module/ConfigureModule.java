@@ -38,6 +38,7 @@ public class ConfigureModule extends AbstractModule {
     private final String secureEnrollmentParameter = "secure.enrollment";
     private final String hashSecretParameter = "hash.secret";
     private final String hstsParameter = "strict.transport.security";
+    private final String corsAllowedOriginsParameter = "cors.allowed.origins";
     private final String preventDuplicateParameter = "prevent.duplicate.enrollment";
     private final String transmitPasswordParameter = "transmit.password";
     private final String authClassParameter = "auth.class";
@@ -117,6 +118,10 @@ public class ConfigureModule extends AbstractModule {
         String hsts = this.context.getInitParameter(hstsParameter);
         this.bindConstant().annotatedWith(Names.named(hstsParameter)).to(
                 hsts != null && (hsts.equals("1") || hsts.equalsIgnoreCase("true"))
+        );
+        String corsAllowedOrigins = this.context.getInitParameter(corsAllowedOriginsParameter);
+        this.bindConstant().annotatedWith(Names.named(corsAllowedOriginsParameter)).to(
+                corsAllowedOrigins != null ? corsAllowedOrigins : ""
         );
         String preventDuplicate = this.context.getInitParameter(preventDuplicateParameter);
         this.bindConstant().annotatedWith(Names.named(preventDuplicateParameter)).to(
