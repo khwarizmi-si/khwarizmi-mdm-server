@@ -675,9 +675,34 @@ angular.module('headwind-kiosk')
                 });
             };
 
+            // ---- Contacts pushed to the device (JSON list of {name, phone}) ----
+            $scope.contactsList = [];
+            function parseContacts(str) {
+                if (!str) { return []; }
+                try {
+                    var arr = JSON.parse(str);
+                    return angular.isArray(arr) ? arr : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+            $scope.addContact = function () {
+                $scope.contactsList.push({name: '', phone: ''});
+            };
+            $scope.removeContact = function (index) {
+                $scope.contactsList.splice(index, 1);
+            };
+
             $scope.save = function (doClose) {
                 $scope.errorMessage = '';
                 $scope.saved = false;
+
+                // Serialize the contacts list, keeping only rows with a phone number.
+                $scope.configuration.contacts = JSON.stringify(
+                    ($scope.contactsList || []).filter(function (c) {
+                        return c && c.phone && c.phone.trim() !== '';
+                    })
+                );
 
                 if (!$scope.configuration.pushOptions) {
                     $scope.errorMessage = localization.localize('error.empty.push.options');
@@ -1294,6 +1319,9 @@ angular.module('headwind-kiosk')
                 configurationService.getById({"id": configId}, function (response) {
                     if (response.data) {
                         $scope.configuration = response.data;
+
+                        // Contacts are stored as a JSON string column; edit them as a list.
+                        $scope.contactsList = parseContacts($scope.configuration.contacts);
 
                         filterApplicationSettings();
                         filterFiles();

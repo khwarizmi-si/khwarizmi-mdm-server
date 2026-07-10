@@ -2609,4 +2609,14 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="alkhwarizmi-config-contacts-2026" author="alkhwarizmi" context="common">
+        <comment>Column,new: configurations#contacts (JSON array of {name, phone} pushed to devices)</comment>
+        <sql>
+            ALTER TABLE configurations ADD COLUMN contacts TEXT;
+        </sql>
+        <rollback>
+            ALTER TABLE configurations DROP COLUMN contacts;
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

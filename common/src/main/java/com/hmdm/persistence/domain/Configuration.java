@@ -154,6 +154,8 @@ public class Configuration implements CustomerData, Serializable {
     private String qrParameters;
     @ApiModelProperty("Admin extras in QR code")
     private String adminExtras;
+    @ApiModelProperty("Contacts (JSON array of {name, phone}) to be pushed to the device")
+    private String contacts;
     @ApiModelProperty("Prefer mobile data for provisioning")
     private boolean mobileEnrollment;
     @ApiModelProperty("Flag enabling Home button in kiosk mode")
@@ -466,6 +468,14 @@ public class Configuration implements CustomerData, Serializable {
 
     public void setAdminExtras(String adminExtras) {
         this.adminExtras = adminExtras;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
     }
 
     public boolean isMobileEnrollment() {

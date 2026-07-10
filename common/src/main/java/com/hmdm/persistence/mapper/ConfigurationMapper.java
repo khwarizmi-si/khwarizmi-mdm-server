@@ -118,6 +118,7 @@ public interface ConfigurationMapper {
             "encryptDevice=#{encryptDevice}, " +
             "qrParameters=#{qrParameters}, " +
             "adminExtras=#{adminExtras}, " +
+            "contacts=#{contacts}, " +
             "mobileEnrollment=#{mobileEnrollment}, " +
             "kioskHome=#{kioskHome}, " +
             "kioskRecents=#{kioskRecents}, " +
