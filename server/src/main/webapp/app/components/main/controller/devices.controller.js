@@ -1052,6 +1052,19 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.showDeviceLocation = function (device) {
+            $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.location.html',
+                controller: 'DeviceLocationModalController',
+                size: 'lg',
+                resolve: {
+                    device: function () {
+                        return device;
+                    }
+                }
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {
@@ -1507,6 +1520,83 @@ angular.module('headwind-kiosk')
             $scope.loading = false;
             if (response.status === 'OK') {
                 allApps = response.data || [];
+            } else {
+                $scope.errorMessage = localization.localize(response.message);
+            }
+        }, function (failure) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            alertService.onRequestFailure(failure);
+        });
+
+    })
+
+    .controller('DeviceLocationModalController', function ($scope, $modalInstance, $timeout,
+                                                           localization, deviceService,
+                                                           externalLibLoader, alertService, device) {
+
+        var map;
+        $scope.device = device;
+        $scope.loading = true;
+        $scope.errorMessage = undefined;
+        $scope.location = null;
+        $scope.openStreetMapUrl = null;
+
+        var renderMap = function () {
+            externalLibLoader.getLoader('leaflet').load().then(function () {
+                $timeout(function () {
+                    var location = $scope.location;
+                    if (!location) {
+                        return;
+                    }
+
+                    map = L.map('device-location-map', {
+                        center: [location.lat, location.lon],
+                        zoom: 15
+                    });
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        minZoom: 2
+                    }).addTo(map);
+                    L.marker([location.lat, location.lon], {
+                        icon: L.divIcon({
+                            className: 'device-location-marker',
+                            html: '<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>',
+                            iconSize: [34, 34],
+                            iconAnchor: [17, 30],
+                            popupAnchor: [0, -30]
+                        })
+                    })
+                        .addTo(map)
+                        .bindPopup(localization.localize('device.location.marker'))
+                        .openPopup();
+                    map.invalidateSize();
+                }, 0);
+            });
+        };
+
+        $scope.close = function () {
+            $modalInstance.dismiss();
+        };
+
+        $scope.$on('$destroy', function () {
+            if (map) {
+                map.remove();
+            }
+        });
+
+        deviceService.getDeviceLocation({id: device.id}, function (response) {
+            $scope.loading = false;
+            if (response.status === 'OK') {
+                $scope.location = response.data || null;
+                if ($scope.location) {
+                    $scope.openStreetMapUrl = 'https://www.openstreetmap.org/?mlat='
+                        + encodeURIComponent($scope.location.lat)
+                        + '&mlon=' + encodeURIComponent($scope.location.lon)
+                        + '#map=16/' + encodeURIComponent($scope.location.lat)
+                        + '/' + encodeURIComponent($scope.location.lon);
+                    renderMap();
+                }
             } else {
                 $scope.errorMessage = localization.localize(response.message);
             }

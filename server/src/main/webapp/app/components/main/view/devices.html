@@ -467,6 +467,9 @@
                         <li role="menuitem">
                             <a ng-click="showAppUsage(device)" localized>button.app.usage</a>
                         </li>
+                        <li role="menuitem">
+                            <a ng-click="showDeviceLocation(device)" localized>button.device.location</a>
+                        </li>
                         <li class="divider" ng-if="hasPermission('edit_devices')"></li>
                         <li role="menuitem" ng-if="hasPermission('edit_devices')">
                             <a ng-click="sendDeviceCommand(device, 'lock')" localized>button.device.command.lock</a>

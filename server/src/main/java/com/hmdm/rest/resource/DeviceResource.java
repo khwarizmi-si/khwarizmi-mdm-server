@@ -427,6 +427,24 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get latest device location",
+            notes = "Get the latest latitude/longitude reported by the device"
+    )
+    @GET
+    @Path("/{id}/location")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDeviceLocation(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final DeviceLocation location = this.deviceDAO.getDeviceLocation(id);
+            return Response.OK(isDeviceLocationUsable(location) ? location : null);
+        } catch (Exception e) {
+            log.error("Failed to retrieve the latest location for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device application settings",
             notes = "Save application settings set at device level"
     )
@@ -507,6 +525,15 @@ public class DeviceResource {
             return null;
         }
         return DEVICE_COMMAND_TO_PUSH_TYPE.get(command);
+    }
+
+    static boolean isDeviceLocationUsable(DeviceLocation location) {
+        if (location == null || location.getLat() == null || location.getLon() == null) {
+            return false;
+        }
+
+        return location.getLat() >= -90 && location.getLat() <= 90
+                && location.getLon() >= -180 && location.getLon() <= 180;
     }
 
     // =================================================================================================================

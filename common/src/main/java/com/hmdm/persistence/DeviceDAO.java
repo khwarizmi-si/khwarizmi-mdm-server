@@ -284,6 +284,22 @@ public class DeviceDAO extends AbstractDAO<Device> {
     }
 
     /**
+     * <p>Gets the latest location reported by the specified device.</p>
+     *
+     * @param deviceId an ID of a device.
+     * @return the latest device location, or {@code null} when the device has not reported one yet.
+     */
+    @Transactional
+    public DeviceLocation getDeviceLocation(int deviceId) {
+        final Device dbDevice = getDeviceById(deviceId);
+        if (dbDevice != null) {
+            return this.mapper.getDeviceLocation(dbDevice.getId());
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * <p>Gets the lookup list of devices matching the specified filter.</p>
      *
      * @param filter a filter to be used for filtering the records.
