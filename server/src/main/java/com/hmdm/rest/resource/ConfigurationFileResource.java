@@ -56,7 +56,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -88,7 +87,7 @@ public class ConfigurationFileResource {
         }
 
         try {
-            Path path = Paths.get(fileName);
+            java.nio.file.Path path = Paths.get(fileName);
             if (path.isAbsolute() || path.getNameCount() != 1) {
                 throw new IllegalArgumentException("File name must not include a path");
             }
