@@ -1,7 +1,7 @@
 {
   "breadcrumb.plugin.xtra.main": "Другие плагины",
   "plugin.xtra.localization.key.name": "Другие плагины...",
-  "plugin.xtra.tab.title": "Больше возможностей в Headwind MDM Enterprise!",
+  "plugin.xtra.tab.title": "Al-Khwarizmi Enterprise features",
   "plugin.xtra.feature.kiosk": "Режим киоска (однозадачный)",
   "plugin.xtra.feature.location": "Отслеживание местоположения устройства",
   "plugin.xtra.feature.reset": "Удаленная перезагрузка, блокировка и сброс настроек",
@@ -12,6 +12,7 @@
   "plugin.xtra.feature.export": "Экспорт и импорт устройств",
   "plugin.xtra.feature.contacts": "Управление контактами устройства",
   "plugin.xtra.feature.rebranding": "Программное обеспечение White-label (ребрендинг)",
-  "plugin.xtra.upgrade.free": "Обновиться до пробной версии - очень просто и абсолютно БЕСПЛАТНО!",
-  "plugin.xtra.request.trial": "Получить пробную версию!"
+  "plugin.xtra.upgrade.free": "Explore enterprise implementation options with Khwarizmi.",
+  "plugin.xtra.request.trial": "Contact Khwarizmi",
+  "plugin.xtra.kicker": "Al-Khwarizmi Enterprise"
 }

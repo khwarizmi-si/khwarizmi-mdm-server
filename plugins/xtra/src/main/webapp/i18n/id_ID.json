@@ -1,0 +1,18 @@
+{
+  "breadcrumb.plugin.xtra.main": "Fitur tambahan",
+  "plugin.xtra.localization.key.name": "Fitur tambahan...",
+  "plugin.xtra.kicker": "Al-Khwarizmi Enterprise",
+  "plugin.xtra.tab.title": "Perluas pusat kendali MDM Anda",
+  "plugin.xtra.feature.kiosk": "Mode kiosk (tugas-tunggal)",
+  "plugin.xtra.feature.location": "Pelacakan lokasi perangkat",
+  "plugin.xtra.feature.reset": "Boot ulang, kunci, dan reset pabrik jarak jauh",
+  "plugin.xtra.feature.photo": "Unggah foto dari perangkat",
+  "plugin.xtra.feature.remote": "Kendali jarak jauh",
+  "plugin.xtra.feature.filtering": "Penyaringan lalu lintas jaringan",
+  "plugin.xtra.feature.ldap": "Integrasi LDAP",
+  "plugin.xtra.feature.export": "Ekspor dan impor perangkat",
+  "plugin.xtra.feature.contacts": "Pengelolaan kontak perangkat",
+  "plugin.xtra.feature.rebranding": "Perangkat lunak white-label (rebranding)",
+  "plugin.xtra.upgrade.free": "Tambahkan kapabilitas enterprise yang dibutuhkan tim operasional Anda, dengan jalur implementasi Khwarizmi.",
+  "plugin.xtra.request.trial": "Hubungi Khwarizmi"
+}

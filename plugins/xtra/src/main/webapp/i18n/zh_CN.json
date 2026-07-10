@@ -1,7 +1,7 @@
 {
   "breadcrumb.plugin.xtra.main": "更多插件",
   "plugin.xtra.localization.key.name": "更多插件...",
-  "plugin.xtra.tab.title": "Headwind MDM Enterprise 中的更多功能！",
+  "plugin.xtra.tab.title": "Al-Khwarizmi Enterprise features",
   "plugin.xtra.feature.kiosk": "Kiosk（单任务）模式",
   "plugin.xtra.feature.location": "设备位置追踪",
   "plugin.xtra.feature.reset": "远程重启、锁定和恢复出厂设置",
@@ -12,6 +12,7 @@
   "plugin.xtra.feature.export": "导出和导入设备",
   "plugin.xtra.feature.contacts": "设备联系人管理",
   "plugin.xtra.feature.rebranding": "白标软件（品牌重塑）",
-  "plugin.xtra.upgrade.free": "将您的实例升级到试用版非常简单而且完全免费！",
-  "plugin.xtra.request.trial": "免费试用！"
+  "plugin.xtra.upgrade.free": "Explore enterprise implementation options with Khwarizmi.",
+  "plugin.xtra.request.trial": "Contact Khwarizmi",
+  "plugin.xtra.kicker": "Al-Khwarizmi Enterprise"
 }

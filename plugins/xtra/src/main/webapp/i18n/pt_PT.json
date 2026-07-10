@@ -1,7 +1,7 @@
 {
   "breadcrumb.plugin.xtra.main": "Mais plugins",
   "plugin.xtra.localization.key.name": "Mais plugins...",
-  "plugin.xtra.tab.title": "Mais recursos no Headwind MDM Enterprise!",
+  "plugin.xtra.tab.title": "Al-Khwarizmi Enterprise features",
   "plugin.xtra.feature.kiosk": "Modo quiosque (tarefa única)",
   "plugin.xtra.feature.location": "Rastreamento de localização do dispositivo",
   "plugin.xtra.feature.reset": "Reinicialização remota, bloqueio e redefinição de fábrica",
@@ -12,6 +12,7 @@
   "plugin.xtra.feature.export": "Exportar e importar dispositivos",
   "plugin.xtra.feature.contacts": "Gerenciamento de contatos do dispositivo",
   "plugin.xtra.feature.rebranding": "Software de marca branca (rebranding)",
-  "plugin.xtra.upgrade.free": "Atualizar sua instância para uma versão de avaliação é muito fácil e totalmente GRÁTIS!",
-  "plugin.xtra.request.trial": "Faça um teste grátis!"
+  "plugin.xtra.upgrade.free": "Explore enterprise implementation options with Khwarizmi.",
+  "plugin.xtra.request.trial": "Contact Khwarizmi",
+  "plugin.xtra.kicker": "Al-Khwarizmi Enterprise"
 }

@@ -1,7 +1,7 @@
 {
   "breadcrumb.plugin.xtra.main": "その他のプラグイン",
   "plugin.xtra.localization.key.name": "その他のプラグイン...",
-  "plugin.xtra.tab.title": "Headwind MDM Enterprise のさらなる機能!",
+  "plugin.xtra.tab.title": "Al-Khwarizmi Enterprise features",
   "plugin.xtra.feature.kiosk": "キオスク (シングルタスク) モード",
   "plugin.xtra.feature.location": "デバイスの位置追跡",
   "plugin.xtra.feature.reset": "リモート再起動、ロック、出荷時設定へのリセット",
@@ -12,6 +12,7 @@
   "plugin.xtra.feature.export": "デバイスのエクスポートとインポート",
   "plugin.xtra.feature.contacts": "デバイスの連絡先の管理",
   "plugin.xtra.feature.rebranding": "ホワイトラベル ソフトウェア (リブランディング)",
-  "plugin.xtra.upgrade.free": "インスタンスを試用版にアップグレードするのは非常に簡単で、完全に無料です!",
-  "plugin.xtra.request.trial": "無料トライアルを入手してください!"
+  "plugin.xtra.upgrade.free": "Explore enterprise implementation options with Khwarizmi.",
+  "plugin.xtra.request.trial": "Contact Khwarizmi",
+  "plugin.xtra.kicker": "Al-Khwarizmi Enterprise"
 }
