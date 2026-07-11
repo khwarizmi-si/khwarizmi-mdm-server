@@ -119,6 +119,8 @@ document.localization ['en_US'] = {
     'device.location.time': 'Time',
     'device.location.time.unknown': 'unknown',
     'device.location.history.points': 'History points',
+    'plugin.deviceinfo.localization.key.name': 'Detailed information',
+    'button.plugin.deviceinfo.dynamic': 'Parameter history',
     'button.device.lock': 'Lock device',
     'button.device.reboot': 'Reboot device',
     'button.device.wipe': 'Factory reset',

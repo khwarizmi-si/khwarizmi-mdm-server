@@ -1,6 +1,6 @@
 {    
   "breadcrumb.plugin.deviceinfo.main": "Detailed info",
-  "breadcrumb.plugin.deviceinfo.dynamic.main": "Dynamic Information",
+  "breadcrumb.plugin.deviceinfo.dynamic.main": "Parameter history",
 
   "plugin.deviceinfo.localization.key.name": "Detailed information",
   "plugin.deviceinfo.title": "Detailed information",
@@ -142,15 +142,18 @@
   "plugin.deviceinfo.title.apps.ver1": "Installed version",
   "plugin.deviceinfo.title.apps.ver2": "Required version",
 
-  "plugin.deviceinfo.dynamic.tab.title": "Dynamic Information",
+  "plugin.deviceinfo.dynamic.tab.title": "Parameter history",
   "plugin.deviceinfo.dynamic.period": "Interval",
   "plugin.deviceinfo.dynamic.period.1": "1 hour",
   "plugin.deviceinfo.dynamic.period.6": "6 hours",
   "plugin.deviceinfo.dynamic.period.24": "24 hours",
   "plugin.deviceinfo.dynamic.period.48": "48 hours",
-  "plugin.deviceinfo.dynamic.period.any": "Any",
+  "plugin.deviceinfo.dynamic.period.any": "Custom range",
 
-  "plugin.deviceinfo.dynamic.params.all": "Settings",
+  "plugin.deviceinfo.dynamic.params.all": "Filters and columns",
+  "plugin.deviceinfo.dynamic.records": "Records",
+  "plugin.deviceinfo.dynamic.empty": "No parameter history exists for this filter.",
+  "plugin.deviceinfo.dynamic.no.fields": "Select at least one parameter to display.",
 
   "plugin.deviceinfo.exporting": "Export file is generated ...",
 
@@ -170,5 +173,5 @@
 
   "button.plugin.deviceinfo.export": "Export",
   "button.plugin.deviceinfo.view": "View",
-  "button.plugin.deviceinfo.dynamic": "Dynamic data"
+  "button.plugin.deviceinfo.dynamic": "Parameter history"
 }

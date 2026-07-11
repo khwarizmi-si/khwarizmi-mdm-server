@@ -433,6 +433,7 @@ angular.module('plugin-deviceinfo', ['ngResource', 'ui.bootstrap', 'ui.router', 
             clearMessages();
 
             loading = true;
+            $scope.loading = true;
 
             spinnerService.show('spinner2');
 
@@ -440,6 +441,7 @@ angular.module('plugin-deviceinfo', ['ngResource', 'ui.bootstrap', 'ui.router', 
 
             pluginDeviceInfoService.searchDynamicData(request, function (response) {
                 loading = false;
+                $scope.loading = false;
                 spinnerService.close('spinner2');
                 if (response.status === 'OK') {
                     $scope.data = response.data.items;
@@ -449,6 +451,7 @@ angular.module('plugin-deviceinfo', ['ngResource', 'ui.bootstrap', 'ui.router', 
                 }
             }, function () {
                 loading = false;
+                $scope.loading = false;
                 spinnerService.close('spinner2');
                 $scope.errorMessage = localization.localize("error.request.failure");
             });
@@ -458,6 +461,14 @@ angular.module('plugin-deviceinfo', ['ngResource', 'ui.bootstrap', 'ui.router', 
         $scope.errorMessage = undefined;
 
         $scope.parseDynamicInfoRecord = parseDynamicInfoRecord;
+        $scope.hasSelectedFields = function () {
+            for (var p in $scope.fieldsSelection) {
+                if ($scope.fieldsSelection.hasOwnProperty(p) && $scope.fieldsSelection[p] === true) {
+                    return true;
+                }
+            }
+            return false;
+        };
 
         $scope.deviceFields = [].concat(DEVICE_PARAMS);
         $scope.wifiFields = [].concat(WIFI_PARAMS);
@@ -694,5 +705,4 @@ angular.module('plugin-deviceinfo', ['ngResource', 'ui.bootstrap', 'ui.router', 
         localization.loadPluginResourceBundles("deviceinfo");
     })
 ;
-
 

@@ -243,6 +243,9 @@
     <div class="text-left margin-top">
         <button type='submit' class='btn btn-default' ng-click='doExport()' ng-disabled="loading"
                 localized>button.plugin.deviceinfo.export</button>
+        <span class="margin-left" ng-if="data && formData.totalItems !== undefined">
+            <span localized>plugin.deviceinfo.dynamic.records</span>: {{formData.totalItems}}
+        </span>
     </div>
 
     <div class="text-center margin-top" ng-if="formData.totalItems > formData.pageSize">
@@ -256,7 +259,15 @@
                 last-text='&raquo;'></pagination>
     </div>
 
-    <div ng-if="data" class="row margin-top-40">
+    <div ng-if="data && data.length === 0" class="text-center margin-top-40">
+        <span localized>plugin.deviceinfo.dynamic.empty</span>
+    </div>
+
+    <div ng-if="data && data.length > 0 && !hasSelectedFields()" class="text-center margin-top-40">
+        <span localized>plugin.deviceinfo.dynamic.no.fields</span>
+    </div>
+
+    <div ng-if="data && data.length > 0 && hasSelectedFields()" class="row margin-top-40">
         <div class="col-sm-12">
             <table class="table">
                 <tr>
@@ -270,9 +281,10 @@
                     <td>{{record.latestUpdateTime | date:'dd.MM.yy HH:mm:ss'}}</td>
 
                     <td ng-repeat="fieldName in allFields" ng-if="fieldsSelection[fieldName] === true">
-                        <span ng-if="item[fieldName].isBoolean">{{('plugin.deviceinfo.boolean.' + item[fieldName].value) | localize}}</span>
-                        <span ng-if="item[fieldName].isEnumerated">{{('plugin.deviceinfo.state.' + fieldName + '.' + item[fieldName].value) | localize}}</span>
-                        <span ng-if="!item[fieldName].isBoolean && !item[fieldName].isEnumerated">{{item[fieldName].value}}</span>
+                        <span ng-if="item[fieldName] && item[fieldName].isBoolean">{{('plugin.deviceinfo.boolean.' + item[fieldName].value) | localize}}</span>
+                        <span ng-if="item[fieldName] && item[fieldName].isEnumerated">{{('plugin.deviceinfo.state.' + fieldName + '.' + item[fieldName].value) | localize}}</span>
+                        <span ng-if="item[fieldName] && !item[fieldName].isBoolean && !item[fieldName].isEnumerated">{{item[fieldName].value}}</span>
+                        <span ng-if="!item[fieldName] || item[fieldName].value === null || item[fieldName].value === undefined">-</span>
                     </td>
                 </tr>
             </table>

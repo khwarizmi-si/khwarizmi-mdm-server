@@ -119,6 +119,8 @@ document.localization ['id_ID'] = {
     'device.location.time': 'Waktu',
     'device.location.time.unknown': 'tidak diketahui',
     'device.location.history.points': 'Titik histori',
+    'plugin.deviceinfo.localization.key.name': 'Informasi detail',
+    'button.plugin.deviceinfo.dynamic': 'Riwayat parameter',
     'button.device.lock': 'Kunci perangkat',
     'button.device.reboot': 'Boot ulang perangkat',
     'button.device.wipe': 'Reset pabrik',
