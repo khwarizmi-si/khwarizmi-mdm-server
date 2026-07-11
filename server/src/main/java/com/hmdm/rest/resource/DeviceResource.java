@@ -536,6 +536,38 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get device location history",
+            notes = "Returns the location history reported by a device, ordered from oldest to newest.",
+            response = DeviceLocation.class,
+            responseContainer = "List"
+    )
+    @GET
+    @Path("/{id}/locations")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDeviceLocationHistory(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final Device device = this.deviceDAO.getDeviceById(id);
+            if (device == null) {
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+
+            final List<DeviceLocation> locations = this.deviceDAO.getDeviceLocationHistory(id);
+            if (locations.isEmpty()) {
+                final DeviceLocation latestLocation = this.deviceDAO.getDeviceLocation(id);
+                if (latestLocation != null) {
+                    locations.add(latestLocation);
+                }
+            }
+
+            return Response.OK(locations);
+        } catch (Exception e) {
+            log.error("Failed to get location history for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device description",
             notes = "Updates existing device description"
     )

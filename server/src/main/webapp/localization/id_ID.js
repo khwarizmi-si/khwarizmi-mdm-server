@@ -118,6 +118,7 @@ document.localization ['id_ID'] = {
     'device.location.longitude': 'Longitude',
     'device.location.time': 'Waktu',
     'device.location.time.unknown': 'tidak diketahui',
+    'device.location.history.points': 'Titik histori',
     'button.device.lock': 'Kunci perangkat',
     'button.device.reboot': 'Boot ulang perangkat',
     'button.device.wipe': 'Reset pabrik',

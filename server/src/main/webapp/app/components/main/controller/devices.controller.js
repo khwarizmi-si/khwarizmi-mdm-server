@@ -1565,6 +1565,7 @@ angular.module('headwind-kiosk')
         $scope.loading = true;
         $scope.errorMessage = undefined;
         $scope.location = undefined;
+        $scope.locations = [];
 
         var tileServerUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
@@ -1610,17 +1611,31 @@ angular.module('headwind-kiosk')
                         device.number,
                         popupTemplate
                     ).openPopup();
-                    leafletMap.setView([$scope.location.lat, $scope.location.lon], 15);
+
+                    if ($scope.locations.length > 1) {
+                        var points = $scope.locations.map(function (location) {
+                            return [location.lat, location.lon];
+                        });
+                        map.addPolyline('device-route-' + device.id, points, {color: '#2563eb', weight: 3, opacity: 0.85});
+                        leafletMap.fitBounds(points, {padding: [30, 30]});
+                    } else {
+                        leafletMap.setView([$scope.location.lat, $scope.location.lon], 15);
+                    }
                     leafletMap.invalidateSize();
                 }, 100);
             });
         };
 
-        deviceService.getDeviceLocation({id: device.id}, function (response) {
+        deviceService.getDeviceLocations({id: device.id}, function (response) {
             $scope.loading = false;
             if (response.status === 'OK') {
-                $scope.location = response.data;
-                renderMap();
+                $scope.locations = response.data || [];
+                $scope.location = $scope.locations.length > 0 ? $scope.locations[$scope.locations.length - 1] : undefined;
+                if ($scope.location) {
+                    renderMap();
+                } else {
+                    $scope.errorMessage = localization.localize('error.notfound.device.location');
+                }
             } else {
                 $scope.errorMessage = localization.localize(response.message);
             }

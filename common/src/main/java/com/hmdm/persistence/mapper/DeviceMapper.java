@@ -241,6 +241,25 @@ public interface DeviceMapper {
             "  AND infojson #>> '{location,lon}' IS NOT NULL")
     DeviceLocation getDeviceLocation(@Param("deviceId") int deviceId);
 
+    @Select("SELECT " +
+            "    (loc.item ->> 'lat')::double precision AS lat, " +
+            "    (loc.item ->> 'lon')::double precision AS lon, " +
+            "    (loc.item ->> 'ts')::bigint AS ts " +
+            "FROM (" +
+            "    SELECT jsonb_array_elements(" +
+            "        CASE " +
+            "            WHEN jsonb_typeof(infojson -> 'locationHistory') = 'array' THEN infojson -> 'locationHistory' " +
+            "            ELSE '[]'::jsonb " +
+            "        END" +
+            "    ) AS item " +
+            "    FROM devices " +
+            "    WHERE id = #{deviceId}" +
+            ") loc " +
+            "WHERE loc.item ->> 'lat' IS NOT NULL " +
+            "  AND loc.item ->> 'lon' IS NOT NULL " +
+            "ORDER BY COALESCE((loc.item ->> 'ts')::bigint, 0) ASC")
+    List<DeviceLocation> getDeviceLocationHistory(@Param("deviceId") int deviceId);
+
     @Update("INSERT INTO deviceStatuses (deviceId, configFilesStatus, applicationsStatus) " +
             "VALUES (#{deviceId}, #{filesStatus}, #{appsStatus})" +
             "ON CONFLICT ON CONSTRAINT deviceStatuses_pr_key DO " +

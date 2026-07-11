@@ -14,6 +14,7 @@ angular.module('headwind-kiosk')
             getDeviceInstalledApps: {url: 'rest/private/devices/:id/installedApps', method: 'GET'},
             getDeviceAppUsage: {url: 'rest/private/devices/:id/appUsage', method: 'GET'},
             getDeviceLocation: {url: 'rest/private/devices/:id/location', method: 'GET'},
+            getDeviceLocations: {url: 'rest/private/devices/:id/locations', method: 'GET'},
             sendDeviceCommand: {url: 'rest/private/devices/:id/command/:cmd', method: 'POST'}
         });
     })

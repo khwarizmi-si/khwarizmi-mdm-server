@@ -118,6 +118,7 @@ document.localization ['en_US'] = {
     'device.location.longitude': 'Longitude',
     'device.location.time': 'Time',
     'device.location.time.unknown': 'unknown',
+    'device.location.history.points': 'History points',
     'button.device.lock': 'Lock device',
     'button.device.reboot': 'Reboot device',
     'button.device.wipe': 'Factory reset',

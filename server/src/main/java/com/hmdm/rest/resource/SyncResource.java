@@ -81,6 +81,7 @@ public class SyncResource {
 
 
     private static final Logger logger = LoggerFactory.getLogger(SyncResource.class);
+    private static final int DEVICE_LOCATION_HISTORY_LIMIT = 500;
 
     /**
      * <p>DAO objects</p>
@@ -563,6 +564,7 @@ public class SyncResource {
                         !prevInfo.getImei().equals(deviceInfo.getImei())) {
                     dbDevice.setImeiUpdateTs(System.currentTimeMillis());
                 }
+                appendLocationHistory(deviceInfo, prevInfo);
                 this.unsecureDAO.updateDeviceInfo(dbDevice.getId(),
                         objectMapper.writeValueAsString(deviceInfo),
                         dbDevice.getImeiUpdateTs(),
@@ -652,6 +654,42 @@ public class SyncResource {
             logger.error("Unexpected error when saving device application settings for device {}", deviceNumber, e);
             return Response.INTERNAL_ERROR();
         }
+    }
+
+    private void appendLocationHistory(DeviceInfo deviceInfo, DeviceInfo prevInfo) {
+        final DeviceLocation currentLocation = deviceInfo.getLocation();
+        if (currentLocation == null) {
+            if (prevInfo != null) {
+                deviceInfo.setLocationHistory(prevInfo.getLocationHistory());
+            }
+            return;
+        }
+
+        List<DeviceLocation> locationHistory = new LinkedList<>();
+        if (prevInfo != null && prevInfo.getLocationHistory() != null) {
+            locationHistory.addAll(prevInfo.getLocationHistory());
+        } else if (prevInfo != null && prevInfo.getLocation() != null) {
+            locationHistory.add(prevInfo.getLocation());
+        }
+
+        if (locationHistory.isEmpty() || !sameLocation(locationHistory.get(locationHistory.size() - 1), currentLocation)) {
+            locationHistory.add(currentLocation);
+        }
+
+        while (locationHistory.size() > DEVICE_LOCATION_HISTORY_LIMIT) {
+            locationHistory.remove(0);
+        }
+
+        deviceInfo.setLocationHistory(locationHistory);
+    }
+
+    private boolean sameLocation(DeviceLocation a, DeviceLocation b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        return Objects.equals(a.getLat(), b.getLat())
+                && Objects.equals(a.getLon(), b.getLon())
+                && Objects.equals(a.getTs(), b.getTs());
     }
 
     /**
