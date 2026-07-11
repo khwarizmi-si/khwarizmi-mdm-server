@@ -291,7 +291,7 @@ public class SyncResponse implements Serializable, SyncResponseInt {
             }
         }
 
-        this.password = CryptoUtil.getMD5String(password);
+        this.password = hashPassword(password);
         this.applications = (
                 applications != null ?
                         applications.stream().map(SyncApplication::new).collect(Collectors.toList())
@@ -317,12 +317,16 @@ public class SyncResponse implements Serializable, SyncResponseInt {
             }
         }
 
-        this.password = CryptoUtil.getMD5String(settings.getPassword());
+        this.password = hashPassword(settings.getPassword());
         this.applications = (
                 applications != null ?
                         applications.stream().map(SyncApplication::new).collect(Collectors.toList())
                         : new LinkedList<>()
         );
+    }
+
+    private static String hashPassword(String password) {
+        return CryptoUtil.getMD5String(password != null ? password : "");
     }
 
     @Override
