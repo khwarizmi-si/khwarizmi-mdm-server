@@ -39,6 +39,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.hmdm.notification.PushService;
+import com.hmdm.notification.persistence.domain.PushMessage;
 import com.hmdm.persistence.*;
 import com.hmdm.persistence.domain.*;
 import com.hmdm.rest.json.*;
@@ -59,6 +60,13 @@ import org.slf4j.LoggerFactory;
 public class DeviceResource {
 
     private static final Logger log = LoggerFactory.getLogger(DeviceResource.class);
+    private static final Map<String, String> DEVICE_COMMAND_TO_PUSH_TYPE = new HashMap<>();
+
+    static {
+        DEVICE_COMMAND_TO_PUSH_TYPE.put("reboot", PushMessage.TYPE_REBOOT);
+        DEVICE_COMMAND_TO_PUSH_TYPE.put("lock", PushMessage.TYPE_LOCK);
+        DEVICE_COMMAND_TO_PUSH_TYPE.put("wipe", PushMessage.TYPE_WIPE);
+    }
 
     private DeviceDAO deviceDAO;
     private ConfigurationDAO configurationDAO;
@@ -453,6 +461,49 @@ public class DeviceResource {
             log.error("Failed to send notification on application settings update to device #{}", id, e);
             return Response.INTERNAL_ERROR();
         }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
+            value = "Send remote command to device",
+            notes = "Sends a remote command to a device. Supported commands: reboot, lock, wipe.",
+            response = Void.class
+    )
+    @POST
+    @Path("/{id}/command/{cmd}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendDeviceCommand(@PathParam("id") @ApiParam("Device ID") Integer id,
+                                      @PathParam("cmd") @ApiParam("Command: reboot, lock, wipe") String command) {
+        try {
+            if (!SecurityContext.get().hasPermission("edit_devices")) {
+                log.error("Unauthorized attempt to send remote command '{}' to device #{}",
+                        command, id, SecurityException.onCustomerDataAccessViolation(id, "device"));
+                return Response.PERMISSION_DENIED();
+            }
+
+            final String pushType = getDeviceCommandPushType(command);
+            if (pushType == null) {
+                return Response.ERROR("error.invalid.device.command");
+            }
+
+            final Device device = this.deviceDAO.getDeviceById(id);
+            if (device == null) {
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+
+            this.pushService.sendSimpleMessage(id, pushType);
+            return Response.OK("success.device.command.sent");
+        } catch (Exception e) {
+            log.error("Failed to send remote command '{}' to device #{}", command, id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    static String getDeviceCommandPushType(String command) {
+        if (command == null) {
+            return null;
+        }
+        return DEVICE_COMMAND_TO_PUSH_TYPE.get(command);
     }
 
     // =================================================================================================================

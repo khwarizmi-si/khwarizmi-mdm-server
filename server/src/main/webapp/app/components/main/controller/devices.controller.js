@@ -1027,6 +1027,23 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.sendDeviceCommand = function (device, command) {
+            var messageKey = command === 'wipe'
+                ? 'question.device.command.wipe'
+                : 'question.device.command.' + command;
+            var localizedText = localization.localize(messageKey).replace('${deviceNumber}', device.number);
+
+            confirmModal.getUserConfirmation(localizedText, function () {
+                deviceService.sendDeviceCommand({id: device.id, cmd: command}, function (response) {
+                    if (response.status === 'OK') {
+                        alertService.showAlertMessage(localization.localize(response.message));
+                    } else {
+                        alertService.showAlertMessage(localization.localizeServerResponse(response));
+                    }
+                }, alertService.onRequestFailure);
+            });
+        };
+
         pluginService.getAvailablePlugins(function (response) {
             if (response.status === 'OK') {
                 if (response.data) {

@@ -451,7 +451,7 @@
                         localized-title="button.delete" ng-if="hasPermission('edit_devices')">
                     <span class='glyphicon glyphicon-trash'></span>
                 </button>
-                <span class="btn-group dropdown" uib-dropdown ng-if="plugins && plugins.length > 0 || hasPermission('edit_device_app_settings')">
+                <span class="btn-group dropdown" uib-dropdown ng-if="plugins && plugins.length > 0 || hasPermission('edit_device_app_settings') || hasPermission('edit_devices')">
                     <button id="single-button-{{device.id}}" uib-dropdown-toggle type="button" localized-title="button.more"
                             class="btn btn-default dropdown-toggle">
                         <span class='glyphicon glyphicon-option-horizontal'></span> <span style="padding-bottom: 3px" class="caret"></span>
@@ -465,6 +465,16 @@
                         </li>
                         <li role="menuitem">
                             <a ng-click="showAppUsage(device)" localized>button.app.usage</a>
+                        </li>
+                        <li role="separator" class="divider" ng-if="hasPermission('edit_devices')"></li>
+                        <li role="menuitem" ng-if="hasPermission('edit_devices')">
+                            <a ng-click="sendDeviceCommand(device, 'lock')" localized>button.device.lock</a>
+                        </li>
+                        <li role="menuitem" ng-if="hasPermission('edit_devices')">
+                            <a ng-click="sendDeviceCommand(device, 'reboot')" localized>button.device.reboot</a>
+                        </li>
+                        <li role="menuitem" ng-if="hasPermission('edit_devices')">
+                            <a ng-click="sendDeviceCommand(device, 'wipe')" localized>button.device.wipe</a>
                         </li>
                         <li role="menuitem" ng-repeat="plugin in plugins" ng-if="plugins && plugins.length > 0">
                             <a ng-click="notifyPluginOnDevice(plugin, device)">{{plugin.nameLocalizationKey | localize}}</a>
