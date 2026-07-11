@@ -45,6 +45,7 @@ public interface CommonMapper {
     @Insert({
             "INSERT INTO settings (" +
                     "backgroundColor, " +
+                    "customName, " +
                     "textColor, " +
                     "backgroundImageUrl, " +
                     "iconSize, " +
@@ -53,6 +54,7 @@ public interface CommonMapper {
                     "customerId" +
                     ") VALUES (" +
                     "#{backgroundColor}, " +
+                    "#{customName}, " +
                     "#{textColor}, " +
                     "#{backgroundImageUrl}, " +
                     "#{iconSize}, " +
@@ -63,6 +65,7 @@ public interface CommonMapper {
                     "ON CONFLICT ON CONSTRAINT settings_customer_unique DO " +
                     "UPDATE SET " +
                     "backgroundColor = EXCLUDED.backgroundColor, " +
+                    "customName = EXCLUDED.customName, " +
                     "textColor = EXCLUDED.textColor, " +
                     "backgroundImageUrl = EXCLUDED.backgroundImageUrl, " +
                     "iconSize = EXCLUDED.iconSize, " +

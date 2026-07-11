@@ -2609,4 +2609,14 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="alkhwarizmi-settings-customname-2026" author="alkhwarizmi" context="common">
+        <comment>Column,new: settings#customName (panel-editable app name override for rebranding)</comment>
+        <sql>
+            ALTER TABLE settings ADD COLUMN customName TEXT;
+        </sql>
+        <rollback>
+            ALTER TABLE settings DROP COLUMN customName;
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

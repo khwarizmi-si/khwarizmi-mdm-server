@@ -42,6 +42,8 @@ public class Settings implements CustomerData, Serializable {
     // This group of settings corresponds to Default Design
     @ApiModelProperty("A background color for Default Design of mobile application")
     private String backgroundColor;
+    @ApiModelProperty("A custom application name for Default Design of mobile application")
+    private String customName;
     @ApiModelProperty("A text color for Default Design of mobile application")
     private String textColor;
     @ApiModelProperty("An URL for background image color for Default Design of mobile application")
@@ -116,6 +118,14 @@ public class Settings implements CustomerData, Serializable {
     private int sizeLimit;
 
     public Settings() {
+    }
+
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
     public String getBackgroundColor() {
@@ -403,6 +413,7 @@ public class Settings implements CustomerData, Serializable {
         return "Settings{" +
                 "id=" + id +
                 ", backgroundColor='" + backgroundColor + '\'' +
+                ", customName='" + customName + '\'' +
                 ", textColor='" + textColor + '\'' +
                 ", backgroundImageUrl='" + backgroundImageUrl + '\'' +
                 ", iconSize=" + iconSize +
