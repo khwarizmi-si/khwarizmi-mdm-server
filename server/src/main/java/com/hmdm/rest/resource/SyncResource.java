@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -67,6 +68,7 @@ import com.hmdm.persistence.UnsecureDAO;
 import com.hmdm.persistence.domain.Application;
 import com.hmdm.persistence.domain.Configuration;
 import com.hmdm.persistence.domain.Device;
+import com.hmdm.persistence.domain.DeviceAppUsageEvent;
 import com.hmdm.persistence.domain.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +84,7 @@ public class SyncResource {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncResource.class);
     private static final int DEVICE_LOCATION_HISTORY_LIMIT = 500;
+    private static final int APP_USAGE_HISTORY_LIMIT = 1000;
 
     /**
      * <p>DAO objects</p>
@@ -565,6 +568,7 @@ public class SyncResource {
                     dbDevice.setImeiUpdateTs(System.currentTimeMillis());
                 }
                 appendLocationHistory(deviceInfo, prevInfo);
+                appendAppUsageHistory(deviceInfo, prevInfo != null ? prevInfo.getAppUsageEvents() : null);
                 this.unsecureDAO.updateDeviceInfo(dbDevice.getId(),
                         objectMapper.writeValueAsString(deviceInfo),
                         dbDevice.getImeiUpdateTs(),
@@ -610,6 +614,59 @@ public class SyncResource {
             }
         } catch (Exception e) {
             logger.error("Unexpected error when processing info submitted by device", e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
+            value = "Save app usage history",
+            notes = "Appends app usage sessions collected by the device. Devices may submit this in batches after being offline.",
+            response = Response.class
+    )
+    @PUT
+    @Path("/appUsage/{deviceId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveAppUsage(@PathParam("deviceId")
+                                     @ApiParam("An identifier of device within MDM server")
+                                             String deviceNumber,
+                                 List<DeviceAppUsageEvent> appUsageEvents,
+                                 @Context HttpServletRequest request) {
+        logger.debug("/public/sync/appUsage/{} --> {} events", deviceNumber,
+                appUsageEvents != null ? appUsageEvents.size() : 0);
+
+        try {
+            Device dbDevice = this.unsecureDAO.getDeviceByNumber(deviceNumber);
+            if (dbDevice == null) {
+                dbDevice = this.unsecureDAO.getDeviceByOldNumber(deviceNumber);
+            }
+            if (dbDevice == null) {
+                logger.warn("Requested device {} was not found", deviceNumber);
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            DeviceInfo deviceInfo = null;
+            try {
+                deviceInfo = objectMapper.readValue(dbDevice.getInfo(), DeviceInfo.class);
+            } catch (Exception e) {
+            }
+            if (deviceInfo == null) {
+                deviceInfo = new DeviceInfo();
+                deviceInfo.setDeviceId(dbDevice.getNumber());
+            }
+
+            appendAppUsageHistory(deviceInfo, appUsageEvents);
+            this.unsecureDAO.updateDeviceInfo(dbDevice.getId(),
+                    objectMapper.writeValueAsString(deviceInfo),
+                    dbDevice.getImeiUpdateTs(),
+                    remoteAddrResolver.getRemoteAddr(request));
+            this.eventService.fireEvent(new DeviceInfoUpdatedEvent(dbDevice.getId()));
+
+            return Response.OK();
+        } catch (Exception e) {
+            logger.error("Unexpected error when saving app usage for device {}", deviceNumber, e);
             return Response.INTERNAL_ERROR();
         }
     }
@@ -681,6 +738,52 @@ public class SyncResource {
         }
 
         deviceInfo.setLocationHistory(locationHistory);
+    }
+
+    private void appendAppUsageHistory(DeviceInfo deviceInfo, List<DeviceAppUsageEvent> newEvents) {
+        List<DeviceAppUsageEvent> combined = new LinkedList<>();
+        if (deviceInfo.getAppUsageEvents() != null) {
+            combined.addAll(deviceInfo.getAppUsageEvents());
+        }
+        if (newEvents != null) {
+            combined.addAll(newEvents);
+        }
+
+        List<DeviceAppUsageEvent> history = new LinkedList<>();
+        Set<String> seen = new HashSet<>();
+        combined.stream()
+                .filter(this::isValidAppUsageEvent)
+                .forEach(event -> {
+                    if (event.getTs() == null) {
+                        event.setTs(event.getStartedAt());
+                    }
+                    if (event.getStartedAt() == null) {
+                        event.setStartedAt(event.getTs());
+                    }
+                    if (event.getDurationMs() == null && event.getStartedAt() != null && event.getEndedAt() != null) {
+                        event.setDurationMs(Math.max(0, event.getEndedAt() - event.getStartedAt()));
+                    }
+                    String key = event.getPkg() + ":" + event.getStartedAt() + ":" + event.getEndedAt();
+                    if (seen.add(key)) {
+                        history.add(event);
+                    }
+                });
+
+        history.sort(Comparator.comparing(event ->
+                Optional.ofNullable(event.getStartedAt()).orElse(Optional.ofNullable(event.getTs()).orElse(0L))));
+        while (history.size() > APP_USAGE_HISTORY_LIMIT) {
+            history.remove(0);
+        }
+        deviceInfo.setAppUsageEvents(history);
+    }
+
+    private boolean isValidAppUsageEvent(DeviceAppUsageEvent event) {
+        if (event == null || event.getPkg() == null || event.getPkg().trim().isEmpty()) {
+            return false;
+        }
+        Long start = event.getStartedAt() != null ? event.getStartedAt() : event.getTs();
+        Long end = event.getEndedAt();
+        return start != null && (end == null || end >= start);
     }
 
     private boolean sameLocation(DeviceLocation a, DeviceLocation b) {

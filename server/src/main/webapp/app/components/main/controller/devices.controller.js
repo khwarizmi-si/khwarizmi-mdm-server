@@ -1537,6 +1537,23 @@ angular.module('headwind-kiosk')
             return $scope.events.length > 0 ? $scope.events[0] : null;
         };
 
+        $scope.formatDuration = function (durationMs) {
+            if (!durationMs) {
+                return '-';
+            }
+            var totalSeconds = Math.floor(durationMs / 1000);
+            var hours = Math.floor(totalSeconds / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
+            if (hours > 0) {
+                return hours + 'h ' + minutes + 'm';
+            }
+            if (minutes > 0) {
+                return minutes + 'm ' + seconds + 's';
+            }
+            return seconds + 's';
+        };
+
         $scope.close = function () {
             $modalInstance.dismiss();
         };

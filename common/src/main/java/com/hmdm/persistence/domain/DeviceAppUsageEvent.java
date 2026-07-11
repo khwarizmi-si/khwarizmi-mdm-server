@@ -50,6 +50,9 @@ public class DeviceAppUsageEvent implements Serializable {
      * <p>The time (epoch millis) the application was brought to foreground.</p>
      */
     private Long ts;
+    private Long startedAt;
+    private Long endedAt;
+    private Long durationMs;
 
     public DeviceAppUsageEvent() {
     }
@@ -78,12 +81,39 @@ public class DeviceAppUsageEvent implements Serializable {
         this.ts = ts;
     }
 
+    public Long getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(Long startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public Long getEndedAt() {
+        return endedAt;
+    }
+
+    public void setEndedAt(Long endedAt) {
+        this.endedAt = endedAt;
+    }
+
+    public Long getDurationMs() {
+        return durationMs;
+    }
+
+    public void setDurationMs(Long durationMs) {
+        this.durationMs = durationMs;
+    }
+
     @Override
     public String toString() {
         return "DeviceAppUsageEvent{" +
                 "pkg='" + pkg + '\'' +
                 ", name='" + name + '\'' +
                 ", ts=" + ts +
+                ", startedAt=" + startedAt +
+                ", endedAt=" + endedAt +
+                ", durationMs=" + durationMs +
                 '}';
     }
 }

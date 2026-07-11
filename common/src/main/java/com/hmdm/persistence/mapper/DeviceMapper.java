@@ -221,13 +221,16 @@ public interface DeviceMapper {
     @Select("SELECT " +
             "    ev.event ->> 'pkg' AS pkg, " +
             "    ev.event ->> 'name' AS name, " +
-            "    (ev.event ->> 'ts')::bigint AS ts " +
+            "    COALESCE(ev.event ->> 'ts', ev.event ->> 'startedAt')::bigint AS ts, " +
+            "    COALESCE(ev.event ->> 'startedAt', ev.event ->> 'ts')::bigint AS startedAt, " +
+            "    NULLIF(ev.event ->> 'endedAt', '')::bigint AS endedAt, " +
+            "    NULLIF(ev.event ->> 'durationMs', '')::bigint AS durationMs " +
             "FROM (" +
             "    SELECT jsonb_array_elements(infojson -> 'appUsageEvents') AS event " +
             "    FROM devices " +
             "    WHERE id = #{deviceId}" +
             ") ev " +
-            "ORDER BY (ev.event ->> 'ts')::bigint DESC")
+            "ORDER BY COALESCE(ev.event ->> 'startedAt', ev.event ->> 'ts')::bigint DESC")
     List<DeviceAppUsageEvent> getDeviceAppUsageEvents(@Param("deviceId") int deviceId);
 
     @Select("SELECT " +
