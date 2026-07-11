@@ -508,6 +508,34 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get device location",
+            notes = "Returns the last location reported by a device.",
+            response = DeviceLocation.class
+    )
+    @GET
+    @Path("/{id}/location")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDeviceLocation(@PathParam("id") @ApiParam("Device ID") Integer id) {
+        try {
+            final Device device = this.deviceDAO.getDeviceById(id);
+            if (device == null) {
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+
+            final DeviceLocation location = this.deviceDAO.getDeviceLocation(id);
+            if (location == null) {
+                return Response.ERROR("error.notfound.device.location");
+            }
+
+            return Response.OK(location);
+        } catch (Exception e) {
+            log.error("Failed to get location for device #{}", id, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Save device description",
             notes = "Updates existing device description"
     )

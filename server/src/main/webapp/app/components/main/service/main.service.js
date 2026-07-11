@@ -13,6 +13,7 @@ angular.module('headwind-kiosk')
             notifyDeviceOnAppSettingsUpdate: {url: 'rest/private/devices/:id/applicationSettings/notify', method: 'POST'},
             getDeviceInstalledApps: {url: 'rest/private/devices/:id/installedApps', method: 'GET'},
             getDeviceAppUsage: {url: 'rest/private/devices/:id/appUsage', method: 'GET'},
+            getDeviceLocation: {url: 'rest/private/devices/:id/location', method: 'GET'},
             sendDeviceCommand: {url: 'rest/private/devices/:id/command/:cmd', method: 'POST'}
         });
     })

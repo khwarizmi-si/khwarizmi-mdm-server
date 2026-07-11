@@ -24,6 +24,7 @@ package com.hmdm.persistence.mapper;
 import java.util.List;
 
 import com.hmdm.persistence.domain.*;
+import com.hmdm.rest.json.DeviceLocation;
 import com.hmdm.service.DeviceApplicationsStatus;
 import com.hmdm.service.DeviceConfigFilesStatus;
 import org.apache.ibatis.annotations.*;
@@ -228,6 +229,17 @@ public interface DeviceMapper {
             ") ev " +
             "ORDER BY (ev.event ->> 'ts')::bigint DESC")
     List<DeviceAppUsageEvent> getDeviceAppUsageEvents(@Param("deviceId") int deviceId);
+
+    @Select("SELECT " +
+            "    (infojson #>> '{location,lat}')::double precision AS lat, " +
+            "    (infojson #>> '{location,lon}')::double precision AS lon, " +
+            "    (infojson #>> '{location,ts}')::bigint AS ts " +
+            "FROM devices " +
+            "WHERE id = #{deviceId} " +
+            "  AND infojson -> 'location' IS NOT NULL " +
+            "  AND infojson #>> '{location,lat}' IS NOT NULL " +
+            "  AND infojson #>> '{location,lon}' IS NOT NULL")
+    DeviceLocation getDeviceLocation(@Param("deviceId") int deviceId);
 
     @Update("INSERT INTO deviceStatuses (deviceId, configFilesStatus, applicationsStatus) " +
             "VALUES (#{deviceId}, #{filesStatus}, #{appsStatus})" +
