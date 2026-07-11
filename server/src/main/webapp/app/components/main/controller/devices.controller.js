@@ -66,6 +66,15 @@ angular.module('headwind-kiosk')
 
         $scope.localization = localization;
         $scope.dateFormat = localization.localize('devices.date.format');
+        $scope.androidVersions = [];
+
+        deviceService.getAndroidVersions(function (response) {
+            if (response.status === 'OK') {
+                $scope.androidVersions = response.data || [];
+            }
+        }, function (failure) {
+            alertService.onRequestFailure(failure);
+        });
 
         $scope.toggleAdditionalParams = function () {
             $scope.additionalParams.enabled = !$scope.additionalParams.enabled;

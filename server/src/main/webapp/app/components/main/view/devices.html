@@ -158,8 +158,12 @@
                 <input type='text'
                        ng-enter='initSearch()'
                        ng-model='additionalParams.androidVersion'
+                       list='android-version-options'
                        localized-placeholder='form.settings.common.android.version'
                        class='form-control'>
+                <datalist id='android-version-options'>
+                    <option ng-repeat='version in androidVersions' value='{{version}}'></option>
+                </datalist>
             </div>
         </div>
 

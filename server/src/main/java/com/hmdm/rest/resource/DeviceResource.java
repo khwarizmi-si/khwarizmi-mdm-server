@@ -164,6 +164,23 @@ public class DeviceResource {
 
     // =================================================================================================================
     @ApiOperation(
+            value = "Get Android versions",
+            notes = "Get Android OS versions reported by devices available to the current user"
+    )
+    @GET
+    @Path("/androidVersions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAndroidVersions() {
+        try {
+            return Response.OK(this.deviceDAO.getAndroidVersions());
+        } catch (Exception e) {
+            log.error("Failed to retrieve Android versions", e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    // =================================================================================================================
+    @ApiOperation(
             value = "Get the device info by number",
             notes = "Get the device info by number",
             response = DeviceListView.class

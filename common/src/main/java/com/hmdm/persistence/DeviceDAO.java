@@ -148,6 +148,12 @@ public class DeviceDAO extends AbstractDAO<Device> {
         return new PaginatedData<>(devices, totalItemsCount);
     }
 
+    public List<String> getAndroidVersions() {
+        return SecurityContext.get().getCurrentUser()
+                .map(u -> this.mapper.getAndroidVersions(u.getId(), u.getCustomerId()))
+                .orElse(new ArrayList<>());
+    }
+
     public List<Device> getDeviceIdsByConfigurationId(int configurationId) {
         return getList(customerId -> this.mapper.getDeviceIdsByConfigurationId(customerId, configurationId));
     }

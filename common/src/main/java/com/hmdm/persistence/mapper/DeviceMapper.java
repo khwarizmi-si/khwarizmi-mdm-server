@@ -96,6 +96,20 @@ public interface DeviceMapper {
             "WHERE devices.lastUpdate >= extract(epoch from now()) * 1000 - 3600000"})
     Long countOnlineDevices();
 
+    @Select({"SELECT DISTINCT devices.infojson ->> 'androidVersion' " +
+            "FROM devices " +
+            "INNER JOIN users ON users.id = #{userId} " +
+            "LEFT JOIN deviceGroups ON devices.id = deviceGroups.deviceId " +
+            "LEFT JOIN groups ON deviceGroups.groupId = groups.id " +
+            "LEFT JOIN userDeviceGroupsAccess access ON groups.id = access.groupId AND access.userId = users.id " +
+            "WHERE devices.customerId = #{customerId} " +
+            "  AND (users.allDevicesAvailable = TRUE OR access.id IS NOT NULL) " +
+            "  AND devices.infojson ->> 'androidVersion' IS NOT NULL " +
+            "  AND TRIM(devices.infojson ->> 'androidVersion') <> '' " +
+            "ORDER BY devices.infojson ->> 'androidVersion' DESC"})
+    List<String> getAndroidVersions(@Param("userId") int userId,
+                                    @Param("customerId") int customerId);
+
     Long countAllDevices(DeviceSearchRequest filter);
 
     Long countAllDevicesForSummary(DeviceSummaryRequest filter);
