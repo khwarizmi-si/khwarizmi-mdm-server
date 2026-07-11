@@ -5,6 +5,15 @@ angular.module('headwind-kiosk')
 
         $scope.localization = localization;
 
+        var pluginIconClasses = {
+            audit: 'glyphicon glyphicon-eye-open',
+            deviceinfo: 'glyphicon glyphicon-info-sign',
+            devicelog: 'glyphicon glyphicon-list-alt',
+            messaging: 'glyphicon glyphicon-envelope',
+            push: 'glyphicon glyphicon-send',
+            xtra: 'glyphicon glyphicon-gift'
+        };
+
         var routes = {
             SUMMARY: 'summary',
             DEVICES: 'main',
@@ -65,6 +74,28 @@ angular.module('headwind-kiosk')
 
         $scope.functionsPlugins = [];
         $scope.settingsPlugins = [];
+
+        $scope.localizedMenuText = function (key, fallback) {
+            var localized = key ? localization.localize(key) : '';
+            if (!localized || localized === key) {
+                return fallback || '';
+            }
+            return localized;
+        };
+
+        $scope.pluginDisplayName = function (plugin) {
+            if (!plugin) {
+                return '';
+            }
+            return $scope.localizedMenuText(plugin.nameLocalizationKey, plugin.name || plugin.identifier);
+        };
+
+        $scope.pluginIconClass = function (plugin) {
+            if (!plugin || !plugin.identifier) {
+                return 'glyphicon glyphicon-puzzle-piece';
+            }
+            return pluginIconClasses[plugin.identifier] || 'glyphicon glyphicon-puzzle-piece';
+        };
 
         $scope.openTab = function (tabName) {
             if (tabName === $scope.activeTab) {

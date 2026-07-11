@@ -2,7 +2,7 @@
 <div class='content-wrapper fullscreen'>
     <tabset class='tabset'>
         <tab active="act.SUMMARY" ng-click="openTab('SUMMARY')">
-            <tab-heading><span class='glyphicon glyphicon-th-large'></span></tab-heading>
+            <tab-heading><span class='glyphicon glyphicon-dashboard'></span><span>{{localizedMenuText('tab.summary', 'Dashboard')}}</span></tab-heading>
             <ng-include src="'app/components/main/view/summary.html'" ng-if="activeTab === 'SUMMARY'"></ng-include>
         </tab>
 
@@ -31,31 +31,31 @@
             <a class="dropdown-toggle" uib-dropdown-toggle href="#"><span class='glyphicon glyphicon-cog'></span><span localized-change-tracking>menu.settings</span><span class="caret"></span></a>
             <ul class="dropdown-menu" uib-dropdown-menu>
                 <tab active="act.DESIGN" ng-click="openTab('DESIGN')">
-                    <tab-heading localized-change-tracking>tab.default.design</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-tint'></span><span localized-change-tracking>tab.default.design</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/design.html'" ng-if="activeTab === 'DESIGN'"></ng-include>
                 </tab>
                 <tab active="act.COMMON" ng-click="openTab('COMMON')">
-                    <tab-heading localized-change-tracking>tab.common.settings</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-list-alt'></span><span localized-change-tracking>tab.common.settings</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/common.html'" ng-if="activeTab === 'COMMON'"></ng-include>
                 </tab>
                 <tab active="act.USERS" ng-click="openTab('USERS')">
-                    <tab-heading localized-change-tracking>tab.users</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-user'></span><span localized-change-tracking>tab.users</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/users.html'" ng-if="activeTab === 'USERS'"></ng-include>
                 </tab>
                 <tab ng-if="canManageRoles()" active="act.ROLES" ng-click="openTab('ROLES')">
-                    <tab-heading localized-change-tracking>tab.roles</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-lock'></span><span localized-change-tracking>tab.roles</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/roles.html'" ng-if="activeTab === 'ROLES'"></ng-include>
                 </tab>
                 <tab  active="act.GROUPS" ng-click="openTab('GROUPS')">
-                    <tab-heading localized-change-tracking>tab.groups</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-tags'></span><span localized-change-tracking>tab.groups</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/groups.html'" ng-if="activeTab === 'GROUPS'"></ng-include>
                 </tab>
                 <tab  active="act.ICONS" ng-click="openTab('ICONS')">
-                    <tab-heading localized-change-tracking>tab.icons</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-picture'></span><span localized-change-tracking>tab.icons</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/icons.html'" ng-if="activeTab === 'ICONS'"></ng-include>
                 </tab>
                 <tab  active="act.LANG" ng-click="openTab('LANG')">
-                    <tab-heading localized-change-tracking>tab.language</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-globe'></span><span localized-change-tracking>tab.language</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/language.html'" ng-if="activeTab === 'LANG'"></ng-include>
                 </tab>
 <!--                <tab  active="act.HINTS" ng-click="openTab('HINTS')">
@@ -63,7 +63,7 @@
                     <ng-include src="'app/components/main/view/settings/hints.html'" ng-if="activeTab === 'HINTS'"></ng-include>
                 </tab> -->
                 <tab active="act.PLUGINS" ng-click="openTab('PLUGINS')" ng-if="hasPermission('plugins_customer_access_management')">
-                    <tab-heading localized-change-tracking>tab.plugins</tab-heading>
+                    <tab-heading><span class='glyphicon glyphicon-puzzle-piece'></span><span localized-change-tracking>tab.plugins</span></tab-heading>
                     <ng-include src="'app/components/main/view/settings/plugins.html'" ng-if="activeTab === 'PLUGINS'"></ng-include>
                 </tab>
 
@@ -71,7 +71,7 @@
                      ng-if="!plugin.settingsPermission || hasPermission(plugin.settingsPermission)"
                      ng-click="openTab('plugin-settings-' + plugin.identifier)">
 
-                    <tab-heading>{{localization.localize(plugin.nameLocalizationKey)}}</tab-heading>
+                    <tab-heading><span ng-class="pluginIconClass(plugin)"></span><span>{{pluginDisplayName(plugin)}}</span></tab-heading>
 
                     <ng-include src="plugin.settingsViewTemplate"
                                 ng-if="activeTab === ('plugin-settings-' + plugin.identifier)"></ng-include>
@@ -88,7 +88,7 @@
                 <tab ng-repeat="plugin in functionsPlugins" active="act['plugin-' + plugin.identifier]"
                      ng-if="!plugin.functionsPermission || hasPermission(plugin.functionsPermission)"
                      ng-click="openTab('plugin-' + plugin.identifier)">
-                    <tab-heading>{{localization.localize(plugin.nameLocalizationKey)}}</tab-heading>
+                    <tab-heading><span ng-class="pluginIconClass(plugin)"></span><span>{{pluginDisplayName(plugin)}}</span></tab-heading>
                     <ng-include src="plugin.functionsViewTemplate"
                                 ng-if="activeTab === ('plugin-' + plugin.identifier)"></ng-include>
                 </tab>
