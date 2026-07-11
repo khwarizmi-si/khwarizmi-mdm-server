@@ -1,0 +1,17 @@
+{
+  "breadcrumb.plugin.xtra.main": "Daha fazla eklenti",
+  "plugin.xtra.localization.key.name": "Daha fazla eklenti...",
+  "plugin.xtra.tab.title": "Al-Khwarizmi MDM icin daha fazla ozellik",
+  "plugin.xtra.feature.kiosk": "Kiosk modu (tek gorev)",
+  "plugin.xtra.feature.location": "Cihaz konumu takibi",
+  "plugin.xtra.feature.reset": "Uzaktan yeniden baslatma, kilitleme ve fabrika ayarlari",
+  "plugin.xtra.feature.photo": "Cihazlardan fotograf yukleme",
+  "plugin.xtra.feature.remote": "Uzaktan kontrol",
+  "plugin.xtra.feature.filtering": "Ag trafigi filtreleme",
+  "plugin.xtra.feature.ldap": "LDAP entegrasyonu",
+  "plugin.xtra.feature.export": "Cihazlari disa/ice aktarma",
+  "plugin.xtra.feature.contacts": "Cihaz kisilerini yonetme",
+  "plugin.xtra.feature.rebranding": "White-label yazilim (yeniden markalama)",
+  "plugin.xtra.upgrade.free": "Ihtiyaciniza uygun ek ozellikleri etkinlestirmek icin bizimle iletisime gecin.",
+  "plugin.xtra.request.trial": "khwarizmi.co.id adresini ziyaret edin"
+}

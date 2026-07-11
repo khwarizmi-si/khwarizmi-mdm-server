@@ -1,0 +1,17 @@
+{
+  "breadcrumb.plugin.xtra.main": "Altri plugin",
+  "plugin.xtra.localization.key.name": "Altri plugin...",
+  "plugin.xtra.tab.title": "Altre funzionalita per Al-Khwarizmi MDM",
+  "plugin.xtra.feature.kiosk": "Modalita kiosk (attivita singola)",
+  "plugin.xtra.feature.location": "Tracciamento della posizione del dispositivo",
+  "plugin.xtra.feature.reset": "Riavvio, blocco e ripristino remoto",
+  "plugin.xtra.feature.photo": "Caricamento foto dai dispositivi",
+  "plugin.xtra.feature.remote": "Controllo remoto",
+  "plugin.xtra.feature.filtering": "Filtraggio del traffico di rete",
+  "plugin.xtra.feature.ldap": "Integrazione LDAP",
+  "plugin.xtra.feature.export": "Esportazione e importazione dispositivi",
+  "plugin.xtra.feature.contacts": "Gestione dei contatti del dispositivo",
+  "plugin.xtra.feature.rebranding": "Software white-label (rebranding)",
+  "plugin.xtra.upgrade.free": "Contattaci per attivare funzionalita aggiuntive adatte alle tue esigenze.",
+  "plugin.xtra.request.trial": "Visita khwarizmi.co.id"
+}

@@ -1,0 +1,17 @@
+{
+  "breadcrumb.plugin.xtra.main": "Them plugin",
+  "plugin.xtra.localization.key.name": "Them plugin...",
+  "plugin.xtra.tab.title": "Them tinh nang cho Al-Khwarizmi MDM",
+  "plugin.xtra.feature.kiosk": "Che do kiosk (mot tac vu)",
+  "plugin.xtra.feature.location": "Theo doi vi tri thiet bi",
+  "plugin.xtra.feature.reset": "Khoi dong lai, khoa va khoi phuc goc tu xa",
+  "plugin.xtra.feature.photo": "Tai anh len tu thiet bi",
+  "plugin.xtra.feature.remote": "Dieu khien tu xa",
+  "plugin.xtra.feature.filtering": "Loc luu luong mang",
+  "plugin.xtra.feature.ldap": "Tich hop LDAP",
+  "plugin.xtra.feature.export": "Xuat va nhap thiet bi",
+  "plugin.xtra.feature.contacts": "Quan ly danh ba thiet bi",
+  "plugin.xtra.feature.rebranding": "Phan mem white-label (doi thuong hieu)",
+  "plugin.xtra.upgrade.free": "Lien he voi chung toi de kich hoat cac tinh nang bo sung phu hop nhu cau.",
+  "plugin.xtra.request.trial": "Truy cap khwarizmi.co.id"
+}
