@@ -2986,3 +2986,223 @@ td.deviceActions .glyphicon,
         width: 100%;
     }
 }
+
+/* Refined cockpit pass: calmer, neater, and more distinctive. */
+body {
+    background:
+            radial-gradient(circle at 8% 8%, rgba(18, 137, 122, 0.13), transparent 30%),
+            radial-gradient(circle at 92% 16%, rgba(238, 123, 46, 0.10), transparent 28%),
+            linear-gradient(180deg, #f7fbfb 0%, #edf4f6 52%, #f8fafb 100%);
+}
+
+.content-wrapper {
+    padding-top: 72px;
+}
+
+.fullscreen,
+.administration {
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+.tabset > .nav-tabs {
+    backdrop-filter: blur(14px);
+    background:
+            linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78));
+    border: 1px solid rgba(207, 223, 226, 0.95);
+    border-left: 5px solid var(--brand-teal);
+    box-shadow: 0 18px 44px rgba(31, 51, 69, 0.08);
+    display: flex;
+    max-width: none;
+    width: 100%;
+}
+
+.tabset > .nav-tabs > li > a,
+.tabset > .nav-tabs > li.dropdown > a {
+    color: #53657d;
+    font-size: 13px;
+    justify-content: center;
+    letter-spacing: 0;
+}
+
+.tabset > .nav-tabs > li > a .glyphicon,
+.tabset > .nav-tabs > li.dropdown > a .glyphicon {
+    margin-right: 2px;
+}
+
+.tabset > .nav-tabs > li:first-child > a .glyphicon {
+    margin-right: 0;
+}
+
+.tabset > .nav-tabs > li.active > a,
+.tabset > .nav-tabs > li.active > a:hover,
+.tabset > .nav-tabs > li.active > a:focus,
+.tabset > .nav-tabs > li.dropdown.active > a {
+    box-shadow: 0 10px 20px rgba(12, 97, 87, 0.20);
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal {
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.86);
+    border-left: 5px solid rgba(18, 137, 122, 0.42);
+    box-shadow: 0 18px 46px rgba(31, 51, 69, 0.07);
+    padding: 16px 24px 8px;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin-bottom: 12px;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > [class*="col-sm-"] {
+    float: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-5 {
+    flex: 1 1 360px;
+    width: auto;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-4 {
+    flex: 1 1 300px;
+    width: auto;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-3 {
+    flex: 0 1 300px;
+    width: auto;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 {
+    align-items: center;
+    display: flex;
+    flex: 1 1 520px;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    justify-content: flex-end;
+    width: auto;
+}
+
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 .btn,
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 input,
+.tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 span {
+    float: none !important;
+    margin: 0 !important;
+}
+
+.collapse-control {
+    color: var(--brand-teal-dark);
+    font-weight: 800;
+}
+
+.fast-search-toggle {
+    align-items: center;
+    background: #f7fbfb;
+    border: 1px solid #d9e6e9;
+    border-radius: 11px;
+    color: #405269;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 9px;
+    min-height: 38px;
+    padding: 0 13px;
+}
+
+.fast-search-toggle input {
+    margin: 0;
+}
+
+.table {
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.table > thead > tr > th {
+    padding-bottom: 13px;
+    padding-top: 13px;
+}
+
+.table > tbody > tr > td {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+td.deviceActions {
+    align-items: center;
+    display: flex;
+    gap: 7px;
+    min-width: 236px;
+    width: 236px;
+}
+
+td.deviceActions .btn-group,
+td.deviceActions span.btn-group {
+    display: inline-flex;
+    flex: 0 0 auto;
+    vertical-align: middle;
+}
+
+td.deviceActions .btn,
+td.deviceActions button {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    margin-right: 0;
+}
+
+.custom-pagination {
+    color: #334b63;
+}
+
+@media (max-width: 900px) {
+    .fullscreen,
+    .administration {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    .tabset > .nav-tabs {
+        border-left-width: 0;
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .tabset > .nav-tabs > li {
+        flex: 0 0 auto;
+    }
+
+    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal {
+        padding: 14px 16px 10px;
+    }
+
+    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+    }
+
+    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > [class*="col-sm-"] {
+        width: 100%;
+    }
+
+    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-content: stretch;
+    }
+
+    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 .btn,
+    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal > .form-group > .col-sm-7 .btn-group {
+        width: 100%;
+    }
+
+    .fast-search-toggle {
+        grid-column: 1 / -1;
+        justify-content: center;
+        text-align: center;
+    }
+}
