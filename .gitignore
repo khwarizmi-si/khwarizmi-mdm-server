@@ -5,10 +5,11 @@ target
 *.iml
 .idea
 
-# node modules for grunt
+# node modules for frontend build tooling
 server/webtarget/node
 server/src/main/webapp/node
 **/node_modules
+server/webtarget/.cache
 
 # Tailwind generated CSS (built by frontend-maven-plugin during the build)
 server/src/main/webapp/css/tailwind.css
@@ -16,7 +17,7 @@ server/src/main/webapp/css/tailwind.css
 # bower modules
 **/bower_components
 
-# grunt bower task lib folder
+# generated legacy web library folder
 server/webtarget/lib
 
 # js generated libs

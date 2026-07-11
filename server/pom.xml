@@ -223,20 +223,20 @@
                     <execution>
                         <id>install js libs</id>
                         <phase>generate-resources</phase>
-                        <goals><goal>grunt</goal></goals>
+                        <goals><goal>npm</goal></goals>
 
                         <configuration>
-                            <arguments>resolve</arguments>
+                            <arguments>run resolve</arguments>
                         </configuration>
                     </execution>
 
 <!--
                     <execution>
                         <id>remove node modules</id>
-                        <goals><goal>grunt</goal></goals>
+                        <goals><goal>npm</goal></goals>
 
                         <configuration>
-                            <arguments>remove-node-modules</arguments>
+                            <arguments>run remove-node-modules</arguments>
                         </configuration>
                     </execution>
 

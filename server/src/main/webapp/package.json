@@ -4,8 +4,8 @@
   "private": true,
   "description": "Tailwind CSS build for the Al-Khwarizmi MDM web panel",
   "scripts": {
-    "build:css": "tailwindcss -i ./css/tailwind.src.css -o ./css/tailwind.css --minify",
-    "watch:css": "tailwindcss -i ./css/tailwind.src.css -o ./css/tailwind.css --watch"
+    "build:css": "BROWSERSLIST_IGNORE_OLD_DATA=1 tailwindcss -i ./css/tailwind.src.css -o ./css/tailwind.css --minify",
+    "watch:css": "BROWSERSLIST_IGNORE_OLD_DATA=1 tailwindcss -i ./css/tailwind.src.css -o ./css/tailwind.css --watch"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
