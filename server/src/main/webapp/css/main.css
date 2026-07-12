@@ -3010,6 +3010,10 @@ body {
     width: 100%;
 }
 
+.tabset > .nav-tabs > li {
+    float: none;
+}
+
 .tabset > .nav-tabs > li > a,
 .tabset > .nav-tabs > li.dropdown > a {
     color: #53657d;
@@ -3156,12 +3160,31 @@ td.deviceActions button {
 
     .tabset > .nav-tabs {
         border-left-width: 0;
-        overflow-x: auto;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: visible;
         width: 100%;
     }
 
     .tabset > .nav-tabs > li {
-        flex: 0 0 auto;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .tabset > .nav-tabs > li > a,
+    .tabset > .nav-tabs > li.dropdown > a {
+        justify-content: flex-start;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .tabset > .nav-tabs > li > a > span:not(.glyphicon):not(.caret),
+    .tabset > .nav-tabs > li.dropdown > a > span:not(.glyphicon):not(.caret) {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal {
@@ -3193,6 +3216,12 @@ td.deviceActions button {
         grid-column: 1 / -1;
         justify-content: center;
         text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabset > .nav-tabs {
+        grid-template-columns: 1fr;
     }
 }
 
