@@ -2778,6 +2778,25 @@ td.deviceActions button {
     backdrop-filter: blur(8px);
 }
 
+.content-wrapper.width-1000 .config-save {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(207, 223, 226, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 16px 36px rgba(31, 51, 69, 0.14);
+    display: inline-flex;
+    gap: 8px;
+    left: auto;
+    margin: 8px auto 0;
+    padding: 10px;
+    position: sticky;
+    width: auto;
+    z-index: 12;
+}
+
+.content-wrapper.width-1000 .config-bottom {
+    height: 22px;
+}
+
 @media (max-width: 900px) {
     .fullscreen,
     .administration {
@@ -3242,14 +3261,14 @@ td.deviceActions button {
         padding-right: 24px;
     }
 
-    .tabset {
+    .content-wrapper.fullscreen > .tabset {
         align-items: start;
         display: grid;
         gap: 22px;
         grid-template-columns: 232px minmax(0, 1fr);
     }
 
-    .tabset > .nav-tabs {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs {
         align-self: start;
         background: rgba(255, 255, 255, 0.94);
         border: 1px solid rgba(197, 215, 219, 0.96);
@@ -3270,12 +3289,12 @@ td.deviceActions button {
         z-index: 9;
     }
 
-    .tabset > .nav-tabs > li {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li {
         width: 100%;
     }
 
-    .tabset > .nav-tabs > li > a,
-    .tabset > .nav-tabs > li.dropdown > a {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li > a,
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li.dropdown > a {
         border-radius: 14px;
         justify-content: flex-start;
         min-height: 46px;
@@ -3284,8 +3303,8 @@ td.deviceActions button {
         width: 100%;
     }
 
-    .tabset > .nav-tabs > li > a .glyphicon,
-    .tabset > .nav-tabs > li.dropdown > a .glyphicon {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li > a .glyphicon,
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li.dropdown > a .glyphicon {
         align-items: center;
         background: #edf7f5;
         border: 1px solid #d6e8e5;
@@ -3299,47 +3318,47 @@ td.deviceActions button {
         width: 30px;
     }
 
-    .tabset > .nav-tabs > li.active > a .glyphicon,
-    .tabset > .nav-tabs > li.dropdown.active > a .glyphicon {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li.active > a .glyphicon,
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li.dropdown.active > a .glyphicon {
         background: rgba(255, 255, 255, 0.20);
         border-color: rgba(255, 255, 255, 0.24);
         color: #ffffff;
     }
 
-    .tabset > .nav-tabs .caret {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs .caret {
         margin-left: auto;
     }
 
-    .tabset > .nav-tabs .dropdown-menu {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs .dropdown-menu {
         border-radius: 16px;
         left: calc(100% + 10px);
         margin-top: 0;
         top: 0;
     }
 
-    .tabset > .tab-content {
+    .content-wrapper.fullscreen > .tabset > .tab-content {
         min-width: 0;
         width: 100%;
     }
 
-    .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal {
+    .content-wrapper.fullscreen > .tabset > .tab-content > .tab-pane > ng-include > div > form.form-horizontal {
         border-left-width: 0;
         border-top: 5px solid rgba(18, 137, 122, 0.42);
     }
 }
 
 @media (min-width: 1280px) and (max-width: 1360px) {
-    .tabset {
+    .content-wrapper.fullscreen > .tabset {
         grid-template-columns: 210px minmax(0, 1fr);
         gap: 16px;
     }
 
-    .tabset > .nav-tabs {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs {
         width: 210px;
     }
 
-    .tabset > .nav-tabs > li > a,
-    .tabset > .nav-tabs > li.dropdown > a {
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li > a,
+    .content-wrapper.fullscreen > .tabset > .nav-tabs > li.dropdown > a {
         font-size: 12px;
         padding-left: 10px;
         padding-right: 10px;
