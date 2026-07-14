@@ -42,11 +42,22 @@
                 <button type="button" class="btn btn-default btn-sm" ng-click="sendRemoteControl('recents')" localized>remote.screen.control.recents</button>
             </div>
 
-            <div ng-if="!session.frameDataUrl" class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">
+            <div ng-if="!session.frameDataUrl && session.status !== 'failed'" class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">
                 <div class="tw-max-w-md tw-p-6">
                     <div class="tw-text-lg tw-font-semibold" localized>remote.screen.waiting.title</div>
                     <div class="tw-mt-2 tw-text-sm tw-leading-6 tw-text-slate-300" localized>
                         remote.screen.waiting.body
+                    </div>
+                </div>
+            </div>
+            <div ng-if="session.status === 'failed'" class="tw-mt-8 tw-grid tw-min-h-[220px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-red-500 tw-bg-red-950 tw-text-center">
+                <div class="tw-max-w-md tw-p-6">
+                    <div class="tw-text-lg tw-font-semibold" localized>remote.screen.failed.title</div>
+                    <div class="tw-mt-2 tw-text-sm tw-leading-6 tw-text-red-100" localized>
+                        remote.screen.failed.body
+                    </div>
+                    <div ng-if="session.statusReason" class="tw-mt-3 tw-font-mono tw-text-xs tw-text-red-200">
+                        {{session.statusReason}}
                     </div>
                 </div>
             </div>
@@ -55,6 +66,6 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="stop()" ng-disabled="!session || session.status === 'ended'" localized>remote.screen.stop</button>
+    <button type="button" class="btn btn-default" ng-click="stop()" ng-disabled="!session || session.status === 'ended' || session.status === 'failed'" localized>remote.screen.stop</button>
     <button type="button" class="btn btn-default" ng-click="close()" localized>button.close</button>
 </div>

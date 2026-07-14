@@ -26,6 +26,7 @@ public class RemoteScreenSessionService {
     private static final String STATUS_ACTIVE = "active";
     private static final String STATUS_ENDED = "ended";
     private static final String STATUS_EXPIRED = "expired";
+    private static final String STATUS_FAILED = "failed";
 
     private final PushService pushService;
     private final Map<String, RemoteScreenSession> sessions = new ConcurrentHashMap<>();
@@ -64,7 +65,8 @@ public class RemoteScreenSessionService {
         if (session == null) {
             return null;
         }
-        if (session.getExpiresAt() < System.currentTimeMillis() && !STATUS_ENDED.equals(session.getStatus())) {
+        if (session.getExpiresAt() < System.currentTimeMillis() &&
+                !STATUS_ENDED.equals(session.getStatus()) && !STATUS_FAILED.equals(session.getStatus())) {
             session.setStatus(STATUS_EXPIRED);
             session.setUpdatedAt(System.currentTimeMillis());
         }
@@ -73,7 +75,8 @@ public class RemoteScreenSessionService {
 
     public RemoteScreenSession updateFrame(String sessionId, RemoteScreenFrame frame) {
         RemoteScreenSession session = get(sessionId);
-        if (session == null || STATUS_ENDED.equals(session.getStatus())) {
+        if (session == null || STATUS_ENDED.equals(session.getStatus()) ||
+                STATUS_FAILED.equals(session.getStatus())) {
             return null;
         }
         String imageData = frame.getImageData();
@@ -83,15 +86,31 @@ public class RemoteScreenSessionService {
         }
         long now = System.currentTimeMillis();
         session.setStatus(STATUS_ACTIVE);
+        session.setStatusReason(null);
         session.setUpdatedAt(now);
         session.setFrameUpdatedAt(now);
         session.setFrameDataUrl(imageData);
         return session;
     }
 
+    public RemoteScreenSession updateStatus(String sessionId, String status, String reason) {
+        RemoteScreenSession session = get(sessionId);
+        if (session == null || STATUS_EXPIRED.equals(session.getStatus())) {
+            return null;
+        }
+        if (!STATUS_FAILED.equals(status) && !STATUS_ENDED.equals(status)) {
+            return null;
+        }
+        session.setStatus(status);
+        session.setStatusReason(reason);
+        session.setUpdatedAt(System.currentTimeMillis());
+        return session;
+    }
+
     public RemoteScreenSession control(String id, RemoteScreenControl control) {
         RemoteScreenSession session = get(id);
-        if (session == null || STATUS_ENDED.equals(session.getStatus()) || STATUS_EXPIRED.equals(session.getStatus())) {
+        if (session == null || STATUS_ENDED.equals(session.getStatus()) ||
+                STATUS_EXPIRED.equals(session.getStatus()) || STATUS_FAILED.equals(session.getStatus())) {
             return null;
         }
         if (!isValidControl(control)) {

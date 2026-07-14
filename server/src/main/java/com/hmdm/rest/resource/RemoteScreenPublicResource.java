@@ -5,6 +5,7 @@ import com.hmdm.persistence.UnsecureDAO;
 import com.hmdm.persistence.domain.Device;
 import com.hmdm.rest.json.RemoteScreenFrame;
 import com.hmdm.rest.json.RemoteScreenSession;
+import com.hmdm.rest.json.RemoteScreenStatus;
 import com.hmdm.rest.json.Response;
 import com.hmdm.service.RemoteScreenSessionService;
 import com.hmdm.util.CryptoUtil;
@@ -56,21 +57,8 @@ public class RemoteScreenPublicResource {
                                 @PathParam("sessionId") String sessionId,
                                 @HeaderParam(SIGNATURE_HEADER) String signature,
                                 RemoteScreenFrame frame) {
-        if (secureEnrollment && !CryptoUtil.checkRequestSignature(signature, hashSecret + deviceNumber)) {
-            log.warn("Remote screen frame rejected for device {}: signature mismatch", deviceNumber);
-            return Response.PERMISSION_DENIED();
-        }
-
-        Device device = unsecureDAO.getDeviceByNumber(deviceNumber);
-        if (device == null) {
-            device = unsecureDAO.getDeviceByOldNumber(deviceNumber);
-        }
-        if (device == null) {
-            return Response.DEVICE_NOT_FOUND_ERROR();
-        }
-
-        RemoteScreenSession session = sessionService.get(sessionId);
-        if (session == null || session.getDeviceId() != device.getId()) {
+        RemoteScreenSession session = getAuthorizedSession(deviceNumber, sessionId, signature);
+        if (session == null) {
             return Response.ERROR("error.remote.screen.session.not.found");
         }
 
@@ -83,5 +71,43 @@ public class RemoteScreenPublicResource {
             return Response.ERROR();
         }
         return Response.OK();
+    }
+
+    @ApiOperation(value = "Update remote screen session status")
+    @POST
+    @Path("/{deviceNumber}/sessions/{sessionId}/status")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateStatus(@PathParam("deviceNumber") String deviceNumber,
+                                 @PathParam("sessionId") String sessionId,
+                                 @HeaderParam(SIGNATURE_HEADER) String signature,
+                                 RemoteScreenStatus status) {
+        RemoteScreenSession session = getAuthorizedSession(deviceNumber, sessionId, signature);
+        if (session == null || status == null) {
+            return Response.ERROR("error.remote.screen.session.not.found");
+        }
+        session = sessionService.updateStatus(sessionId, status.getStatus(), status.getReason());
+        return session != null ? Response.OK() : Response.ERROR();
+    }
+
+    private RemoteScreenSession getAuthorizedSession(String deviceNumber, String sessionId, String signature) {
+        if (secureEnrollment && !CryptoUtil.checkRequestSignature(signature, hashSecret + deviceNumber)) {
+            log.warn("Remote screen request rejected for device {}: signature mismatch", deviceNumber);
+            return null;
+        }
+
+        Device device = unsecureDAO.getDeviceByNumber(deviceNumber);
+        if (device == null) {
+            device = unsecureDAO.getDeviceByOldNumber(deviceNumber);
+        }
+        if (device == null) {
+            return null;
+        }
+
+        RemoteScreenSession session = sessionService.get(sessionId);
+        if (session == null || session.getDeviceId() != device.getId()) {
+            return null;
+        }
+        return session;
     }
 }

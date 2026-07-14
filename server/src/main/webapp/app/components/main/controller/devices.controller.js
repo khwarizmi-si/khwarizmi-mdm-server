@@ -1570,7 +1570,8 @@ angular.module('headwind-kiosk')
             deviceService.getRemoteScreenSession({sessionId: $scope.session.id}, function (response) {
                 if (response.status === 'OK') {
                     $scope.session = response.data;
-                    if ($scope.session.status === 'ended' || $scope.session.status === 'expired') {
+                    if ($scope.session.status === 'ended' || $scope.session.status === 'expired' ||
+                        $scope.session.status === 'failed') {
                         stopPolling();
                     }
                 }
@@ -1610,6 +1611,11 @@ angular.module('headwind-kiosk')
 
         $scope.sendRemoteControl = function (type) {
             if (!$scope.session) {
+                return;
+            }
+            if ($scope.session.status === 'failed' || $scope.session.status === 'expired' ||
+                $scope.session.status === 'ended') {
+                $scope.controlMessage = localization.localize('error.remote.screen.control.invalid');
                 return;
             }
             sendRemoteControl({type: type});

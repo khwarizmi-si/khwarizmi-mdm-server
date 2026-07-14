@@ -14,6 +14,7 @@ public class RemoteScreenSession {
     private long expiresAt;
     private long frameUpdatedAt;
     private String frameDataUrl;
+    private String statusReason;
 
     public String getId() {
         return id;
@@ -93,5 +94,13 @@ public class RemoteScreenSession {
 
     public void setFrameDataUrl(String frameDataUrl) {
         this.frameDataUrl = frameDataUrl;
+    }
+
+    public String getStatusReason() {
+        return statusReason;
+    }
+
+    public void setStatusReason(String statusReason) {
+        this.statusReason = statusReason;
     }
 }
