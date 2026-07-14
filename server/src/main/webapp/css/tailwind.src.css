@@ -175,6 +175,9 @@
         overflow: hidden;
         margin-bottom: 18px;
     }
+    .table.devices-table {
+        overflow: visible;
+    }
     .table > thead > tr > th:first-child { border-top-left-radius: 14px; }
     .table > thead > tr > th:last-child { border-top-right-radius: 14px; }
     .table > tbody > tr:last-child > td { border-bottom: none; }

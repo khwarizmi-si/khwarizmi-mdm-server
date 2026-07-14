@@ -759,7 +759,18 @@ td.app-desc span {
 }
 
 .dropdown-menu-devices {
-    margin-left: -150px !important;
+    margin-left: 0 !important;
+    min-width: 210px;
+}
+
+.devices-action-menu {
+    left: auto !important;
+    right: 0;
+}
+
+.devices-bulk-menu {
+    left: auto;
+    right: 0;
 }
 
 .time-period-select {
@@ -3134,6 +3145,10 @@ body {
     overflow: hidden;
 }
 
+.devices-table {
+    overflow: visible;
+}
+
 .table > thead > tr > th {
     padding-bottom: 13px;
     padding-top: 13px;
@@ -3149,7 +3164,20 @@ td.deviceActions {
     display: flex;
     gap: 7px;
     min-width: 236px;
+    overflow: visible;
+    position: relative;
     width: 236px;
+}
+
+td.deviceActions.open,
+td.deviceActions:has(.btn-group.open) {
+    z-index: 20;
+}
+
+td.deviceActions .btn-group.open,
+td.deviceActions span.btn-group.open {
+    position: relative;
+    z-index: 21;
 }
 
 td.deviceActions .btn-group,
