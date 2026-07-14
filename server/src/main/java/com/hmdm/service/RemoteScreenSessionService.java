@@ -94,15 +94,14 @@ public class RemoteScreenSessionService {
         if (session == null || STATUS_ENDED.equals(session.getStatus()) || STATUS_EXPIRED.equals(session.getStatus())) {
             return null;
         }
-        if (control == null || !"tap".equals(control.getType()) || !isNormalized(control.getX()) || !isNormalized(control.getY())) {
+        if (!isValidControl(control)) {
             return null;
         }
 
         PushMessage message = new PushMessage();
         message.setDeviceId(session.getDeviceId());
         message.setMessageType(PushMessage.TYPE_REMOTE_SCREEN_CONTROL);
-        message.setPayload("{\"sessionId\":\"" + StringUtil.jsonEscape(session.getId()) +
-                "\",\"type\":\"tap\",\"x\":" + control.getX() + ",\"y\":" + control.getY() + "}");
+        message.setPayload(toPayload(session, control));
         pushService.send(message);
 
         session.setUpdatedAt(System.currentTimeMillis());
@@ -130,5 +129,37 @@ public class RemoteScreenSessionService {
 
     private boolean isNormalized(double value) {
         return !Double.isNaN(value) && !Double.isInfinite(value) && value >= 0 && value <= 1;
+    }
+
+    private boolean isValidControl(RemoteScreenControl control) {
+        if (control == null || control.getType() == null) {
+            return false;
+        }
+        if ("back".equals(control.getType()) || "home".equals(control.getType()) || "recents".equals(control.getType())) {
+            return true;
+        }
+        if ("tap".equals(control.getType())) {
+            return isNormalized(control.getX()) && isNormalized(control.getY());
+        }
+        return "swipe".equals(control.getType()) &&
+                isNormalized(control.getX()) && isNormalized(control.getY()) &&
+                isNormalized(control.getX2()) && isNormalized(control.getY2());
+    }
+
+    private String toPayload(RemoteScreenSession session, RemoteScreenControl control) {
+        StringBuilder payload = new StringBuilder("{\"sessionId\":\"")
+                .append(StringUtil.jsonEscape(session.getId()))
+                .append("\",\"type\":\"")
+                .append(control.getType())
+                .append("\"");
+        if ("tap".equals(control.getType()) || "swipe".equals(control.getType())) {
+            payload.append(",\"x\":").append(control.getX())
+                    .append(",\"y\":").append(control.getY());
+        }
+        if ("swipe".equals(control.getType())) {
+            payload.append(",\"x2\":").append(control.getX2())
+                    .append(",\"y2\":").append(control.getY2());
+        }
+        return payload.append("}").toString();
     }
 }

@@ -1596,6 +1596,25 @@ angular.module('headwind-kiosk')
             $modalInstance.dismiss();
         };
 
+        var sendRemoteControl = function (payload) {
+            $scope.controlMessage = localization.localize('remote.screen.control.sending');
+            deviceService.controlRemoteScreen({sessionId: $scope.session.id}, payload, function (response) {
+                $scope.controlMessage = response.status === 'OK' ?
+                    localization.localize('remote.screen.control.sent') :
+                    localization.localizeServerResponse(response);
+            }, function (failure) {
+                $scope.controlMessage = localization.localize('error.request.failure');
+                alertService.onRequestFailure(failure);
+            });
+        };
+
+        $scope.sendRemoteControl = function (type) {
+            if (!$scope.session) {
+                return;
+            }
+            sendRemoteControl({type: type});
+        };
+
         $scope.tapRemoteScreen = function ($event) {
             if (!$scope.session || !$scope.session.frameDataUrl) {
                 return;
@@ -1603,18 +1622,10 @@ angular.module('headwind-kiosk')
             var rect = $event.currentTarget.getBoundingClientRect();
             var x = ($event.clientX - rect.left) / rect.width;
             var y = ($event.clientY - rect.top) / rect.height;
-            $scope.controlMessage = localization.localize('remote.screen.control.sending');
-            deviceService.controlRemoteScreen({sessionId: $scope.session.id}, {
+            sendRemoteControl({
                 type: 'tap',
                 x: Math.max(0, Math.min(1, x)),
                 y: Math.max(0, Math.min(1, y))
-            }, function (response) {
-                $scope.controlMessage = response.status === 'OK' ?
-                    localization.localize('remote.screen.control.sent') :
-                    localization.localizeServerResponse(response);
-            }, function (failure) {
-                $scope.controlMessage = localization.localize('error.request.failure');
-                alertService.onRequestFailure(failure);
             });
         };
 

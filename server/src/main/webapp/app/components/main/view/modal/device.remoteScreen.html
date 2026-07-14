@@ -36,6 +36,11 @@
                 <span localized>remote.screen.control.hint</span>
                 <span ng-if="controlMessage"> · {{controlMessage}}</span>
             </div>
+            <div ng-if="session.frameDataUrl" class="tw-mt-4 tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
+                <button type="button" class="btn btn-default btn-sm" ng-click="sendRemoteControl('back')" localized>remote.screen.control.back</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="sendRemoteControl('home')" localized>remote.screen.control.home</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="sendRemoteControl('recents')" localized>remote.screen.control.recents</button>
+            </div>
 
             <div ng-if="!session.frameDataUrl" class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">
                 <div class="tw-max-w-md tw-p-6">
