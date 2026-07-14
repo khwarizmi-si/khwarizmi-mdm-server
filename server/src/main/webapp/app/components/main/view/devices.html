@@ -474,6 +474,9 @@
                         <li role="menuitem">
                             <a ng-click="showDeviceLocation(device)" localized>button.device.location</a>
                         </li>
+                        <li role="menuitem" ng-if="hasPermission('remote_screen_view')">
+                            <a ng-click="showRemoteScreen(device)" localized>button.remote.screen</a>
+                        </li>
                         <li role="separator" class="divider" ng-if="hasPermission('edit_devices')"></li>
                         <li role="menuitem" ng-if="hasPermission('edit_devices')">
                             <a ng-click="sendDeviceCommand(device, 'lock')" localized>button.device.lock</a>

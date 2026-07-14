@@ -2619,4 +2619,17 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="alkhwarizmi-remote-screen-permission-2026" author="alkhwarizmi" context="common">
+        <comment>Permission,new: remote_screen_view</comment>
+        <sql>
+            INSERT INTO permissions (name, description)
+            VALUES ('remote_screen_view', 'Can start and view live remote screen sessions');
+            INSERT INTO userRolePermissions (roleId, permissionId)
+            SELECT id, currval('permissions_id_seq') FROM userroles WHERE id IN (1, 2);
+        </sql>
+        <rollback>
+            DELETE FROM permissions WHERE name = 'remote_screen_view';
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

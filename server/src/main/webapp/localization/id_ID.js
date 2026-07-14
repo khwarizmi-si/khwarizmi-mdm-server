@@ -1154,6 +1154,16 @@ document.localization ['id_ID'] = {
     'permission.edit_application_versions': 'Kelola versi aplikasi',
     'permission.files': 'Lihat berkas',
     'permission.edit_files': 'Kelola berkas',
+    'permission.remote_screen_view': 'Lihat layar perangkat jarak jauh',
+
+    'button.remote.screen': 'Lihat layar',
+    'remote.screen.title': 'Layar perangkat',
+    'remote.screen.loading': 'Memulai sesi layar...',
+    'remote.screen.session': 'Sesi',
+    'remote.screen.waiting.title': 'Sesi siap untuk streaming',
+    'remote.screen.waiting.body': 'Perintah sudah dikirim ke perangkat. Mesin streaming WebRTC akan dihubungkan pada tahap berikutnya.',
+    'remote.screen.stop': 'Hentikan sesi',
+    'error.remote.screen.session.not.found': 'Sesi layar tidak ditemukan',
 
     'yes': 'ya',
     'no': 'tidak'

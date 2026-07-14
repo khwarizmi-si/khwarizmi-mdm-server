@@ -16,7 +16,10 @@ angular.module('headwind-kiosk')
             getDeviceLocation: {url: 'rest/private/devices/:id/location', method: 'GET'},
             getDeviceLocations: {url: 'rest/private/devices/:id/locations', method: 'GET'},
             getAndroidVersions: {url: 'rest/private/devices/androidVersions', method: 'GET'},
-            sendDeviceCommand: {url: 'rest/private/devices/:id/command/:cmd', method: 'POST'}
+            sendDeviceCommand: {url: 'rest/private/devices/:id/command/:cmd', method: 'POST'},
+            startRemoteScreen: {url: 'rest/private/remote-screen/:id/sessions', method: 'POST'},
+            getRemoteScreenSession: {url: 'rest/private/remote-screen/sessions/:sessionId', method: 'GET'},
+            stopRemoteScreen: {url: 'rest/private/remote-screen/sessions/:sessionId/stop', method: 'POST'}
         });
     })
     .factory('configurationService', function ($resource) {

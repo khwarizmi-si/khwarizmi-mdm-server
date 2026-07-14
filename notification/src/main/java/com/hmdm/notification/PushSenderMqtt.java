@@ -33,6 +33,7 @@ public class PushSenderMqtt implements PushSender {
     private BackgroundTaskRunnerService taskRunner;
     private MemoryPersistence persistence = new MemoryPersistence();
     private long mqttDelay;
+    private String hashSecret;
 
     @Inject
     public PushSenderMqtt(@Named("mqtt.server.uri") String serverUri,
@@ -40,6 +41,7 @@ public class PushSenderMqtt implements PushSender {
                           @Named("mqtt.auth") boolean mqttAuth,
                           @Named("mqtt.admin.password") String mqttAdminPassword,
                           @Named("mqtt.message.delay") long mqttDelay,
+                          @Named("hash.secret") String hashSecret,
                           MqttThrottledSender throttledSender,
                           BackgroundTaskRunnerService taskRunner,
                           UnsecureDAO unsecureDAO) {
@@ -48,6 +50,7 @@ public class PushSenderMqtt implements PushSender {
         this.mqttAuth = mqttAuth;
         this.mqttAdminPassword = mqttAdminPassword;
         this.mqttDelay = mqttDelay;
+        this.hashSecret = hashSecret;
         this.throttledSender = throttledSender;
         this.taskRunner = taskRunner;
         this.unsecureDAO = unsecureDAO;
@@ -93,6 +96,8 @@ public class PushSenderMqtt implements PushSender {
             if (message.getPayload() != null) {
                 strMessage += ", payload: " + message.getPayload();
             }
+            strMessage += ", signature: \"" + CryptoUtil.getSHA1String(hashSecret + message.getMessageType()
+                    + (message.getPayload() != null ? message.getPayload() : "")) + "\"";
             strMessage += "}";
 
             MqttMessage mqttMessage = new MqttMessage(strMessage.getBytes());

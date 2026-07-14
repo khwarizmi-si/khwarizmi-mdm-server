@@ -1049,6 +1049,19 @@ angular.module('headwind-kiosk')
             });
         };
 
+        $scope.showRemoteScreen = function (device) {
+            $modal.open({
+                templateUrl: 'app/components/main/view/modal/device.remoteScreen.html',
+                controller: 'DeviceRemoteScreenModalController',
+                size: 'lg',
+                resolve: {
+                    device: function () {
+                        return device;
+                    }
+                }
+            });
+        };
+
         $scope.sendDeviceCommand = function (device, command) {
             var messageKey = command === 'wipe'
                 ? 'question.device.command.wipe'
@@ -1523,6 +1536,74 @@ angular.module('headwind-kiosk')
                 allApps = response.data || [];
             } else {
                 $scope.errorMessage = localization.localize(response.message);
+            }
+        }, function (failure) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            alertService.onRequestFailure(failure);
+        });
+
+    })
+
+    .controller('DeviceRemoteScreenModalController', function ($scope, $modalInstance, $interval,
+                                                               localization, deviceService,
+                                                               alertService, device) {
+
+        var pollPromise;
+        $scope.device = device;
+        $scope.loading = true;
+        $scope.errorMessage = undefined;
+        $scope.session = undefined;
+
+        var stopPolling = function () {
+            if (pollPromise) {
+                $interval.cancel(pollPromise);
+                pollPromise = undefined;
+            }
+        };
+
+        var loadSession = function () {
+            if (!$scope.session) {
+                return;
+            }
+            deviceService.getRemoteScreenSession({sessionId: $scope.session.id}, function (response) {
+                if (response.status === 'OK') {
+                    $scope.session = response.data;
+                    if ($scope.session.status === 'ended' || $scope.session.status === 'expired') {
+                        stopPolling();
+                    }
+                }
+            }, alertService.onRequestFailure);
+        };
+
+        $scope.stop = function () {
+            if (!$scope.session) {
+                return;
+            }
+            deviceService.stopRemoteScreen({sessionId: $scope.session.id}, function (response) {
+                if (response.status === 'OK') {
+                    $scope.session = response.data;
+                    stopPolling();
+                } else {
+                    $scope.errorMessage = localization.localizeServerResponse(response);
+                }
+            }, alertService.onRequestFailure);
+        };
+
+        $scope.close = function () {
+            $scope.stop();
+            $modalInstance.dismiss();
+        };
+
+        $scope.$on('$destroy', stopPolling);
+
+        deviceService.startRemoteScreen({id: device.id}, function (response) {
+            $scope.loading = false;
+            if (response.status === 'OK') {
+                $scope.session = response.data;
+                pollPromise = $interval(loadSession, 3000);
+            } else {
+                $scope.errorMessage = localization.localizeServerResponse(response);
             }
         }, function (failure) {
             $scope.loading = false;

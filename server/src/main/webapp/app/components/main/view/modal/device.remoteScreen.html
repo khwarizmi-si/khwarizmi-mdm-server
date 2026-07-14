@@ -1,0 +1,44 @@
+<!-- Localization completed -->
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span localized>remote.screen.title</span>
+        <span ng-if="device"> &mdash; {{device.number}}</span>
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div ng-show="errorMessage" class="error tw-mb-3"><span>{{errorMessage}}</span></div>
+
+    <div ng-show="loading" class="tw-py-6 tw-text-center tw-text-slate-500" localized>
+        remote.screen.loading
+    </div>
+
+    <div ng-hide="loading || errorMessage">
+        <div class="tw-rounded-xl tw-border tw-border-slate-200 tw-bg-slate-950 tw-p-6 tw-text-white">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-4">
+                <div>
+                    <div class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-brand-orange"
+                         localized>remote.screen.session</div>
+                    <div class="tw-mt-1 tw-font-mono tw-text-xs tw-text-slate-300">{{session.id}}</div>
+                </div>
+                <span class="tw-rounded-full tw-bg-brand-teal tw-px-3 tw-py-1 tw-text-xs tw-font-semibold">
+                    {{session.status}}
+                </span>
+            </div>
+
+            <div class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">
+                <div class="tw-max-w-md tw-p-6">
+                    <div class="tw-text-lg tw-font-semibold" localized>remote.screen.waiting.title</div>
+                    <div class="tw-mt-2 tw-text-sm tw-leading-6 tw-text-slate-300" localized>
+                        remote.screen.waiting.body
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="stop()" ng-disabled="!session || session.status === 'ended'" localized>remote.screen.stop</button>
+    <button type="button" class="btn btn-default" ng-click="close()" localized>button.close</button>
+</div>

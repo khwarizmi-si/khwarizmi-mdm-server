@@ -1154,6 +1154,16 @@ document.localization ['en_US'] = {
     'permission.edit_application_versions': 'Manage application versions',
     'permission.files': 'View files',
     'permission.edit_files': 'Manage files',
+    'permission.remote_screen_view': 'View live remote device screens',
+
+    'button.remote.screen': 'View screen',
+    'remote.screen.title': 'Device screen',
+    'remote.screen.loading': 'Starting screen session...',
+    'remote.screen.session': 'Session',
+    'remote.screen.waiting.title': 'Session ready for streaming',
+    'remote.screen.waiting.body': 'The command has been sent to the device. The WebRTC streaming engine will be connected in the next phase.',
+    'remote.screen.stop': 'Stop session',
+    'error.remote.screen.session.not.found': 'Remote screen session was not found',
 
     'yes': 'yes',
     'no': 'no'
