@@ -26,7 +26,11 @@
                 </span>
             </div>
 
-            <div class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">
+            <div ng-if="session.frameDataUrl" class="tw-mt-8 tw-overflow-hidden tw-rounded-lg tw-bg-black tw-text-center">
+                <img ng-src="{{session.frameDataUrl}}" class="tw-mx-auto tw-max-h-[520px] tw-w-auto tw-max-w-full" alt="">
+            </div>
+
+            <div ng-if="!session.frameDataUrl" class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">
                 <div class="tw-max-w-md tw-p-6">
                     <div class="tw-text-lg tw-font-semibold" localized>remote.screen.waiting.title</div>
                     <div class="tw-mt-2 tw-text-sm tw-leading-6 tw-text-slate-300" localized>

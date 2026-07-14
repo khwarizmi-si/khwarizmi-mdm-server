@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import com.hmdm.notification.PushService;
 import com.hmdm.notification.persistence.domain.PushMessage;
 import com.hmdm.persistence.domain.Device;
+import com.hmdm.rest.json.RemoteScreenFrame;
 import com.hmdm.rest.json.RemoteScreenSession;
 import com.hmdm.security.SecurityContext;
 import com.hmdm.util.StringUtil;
@@ -19,7 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RemoteScreenSessionService {
     private static final Logger log = LoggerFactory.getLogger(RemoteScreenSessionService.class);
     private static final long SESSION_TTL_MS = 5 * 60 * 1000L;
+    private static final int MAX_FRAME_LENGTH = 2 * 1024 * 1024;
     private static final String STATUS_PENDING = "pending";
+    private static final String STATUS_ACTIVE = "active";
     private static final String STATUS_ENDED = "ended";
 
     private final PushService pushService;
@@ -63,6 +66,24 @@ public class RemoteScreenSessionService {
             session.setStatus("expired");
             session.setUpdatedAt(System.currentTimeMillis());
         }
+        return session;
+    }
+
+    public RemoteScreenSession updateFrame(String sessionId, RemoteScreenFrame frame) {
+        RemoteScreenSession session = get(sessionId);
+        if (session == null || STATUS_ENDED.equals(session.getStatus())) {
+            return null;
+        }
+        String imageData = frame.getImageData();
+        if (imageData == null || imageData.length() > MAX_FRAME_LENGTH ||
+                !imageData.startsWith("data:image/jpeg;base64,")) {
+            return null;
+        }
+        long now = System.currentTimeMillis();
+        session.setStatus(STATUS_ACTIVE);
+        session.setUpdatedAt(now);
+        session.setFrameUpdatedAt(now);
+        session.setFrameDataUrl(imageData);
         return session;
     }
 

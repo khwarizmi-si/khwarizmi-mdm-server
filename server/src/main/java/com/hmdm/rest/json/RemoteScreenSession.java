@@ -12,6 +12,8 @@ public class RemoteScreenSession {
     private long createdAt;
     private long updatedAt;
     private long expiresAt;
+    private long frameUpdatedAt;
+    private String frameDataUrl;
 
     public String getId() {
         return id;
@@ -75,5 +77,21 @@ public class RemoteScreenSession {
 
     public void setExpiresAt(long expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public long getFrameUpdatedAt() {
+        return frameUpdatedAt;
+    }
+
+    public void setFrameUpdatedAt(long frameUpdatedAt) {
+        this.frameUpdatedAt = frameUpdatedAt;
+    }
+
+    public String getFrameDataUrl() {
+        return frameDataUrl;
+    }
+
+    public void setFrameDataUrl(String frameDataUrl) {
+        this.frameDataUrl = frameDataUrl;
     }
 }
