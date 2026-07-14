@@ -65,6 +65,27 @@ public class RemoteScreenResource {
         }
     }
 
+    @ApiOperation(value = "Start a remote screen session by device number", authorizations = {@Authorization("Bearer Token")})
+    @POST
+    @Path("/by-number/{deviceNumber}/sessions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response startByNumber(@PathParam("deviceNumber") @ApiParam("Device number") String deviceNumber) {
+        try {
+            if (!SecurityContext.get().hasPermission("remote_screen_view")) {
+                log.error("Unauthorized remote screen attempt for device {}", deviceNumber);
+                return Response.PERMISSION_DENIED();
+            }
+            Device device = deviceDAO.getDeviceByNumber(deviceNumber);
+            if (device == null) {
+                return Response.DEVICE_NOT_FOUND_ERROR();
+            }
+            return Response.OK(sessionService.start(device));
+        } catch (Exception e) {
+            log.error("Failed to start remote screen session for device {}", deviceNumber, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
     @ApiOperation(value = "Get remote screen session status", authorizations = {@Authorization("Bearer Token")})
     @GET
     @Path("/sessions/{sessionId}")

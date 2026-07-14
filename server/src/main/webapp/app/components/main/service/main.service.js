@@ -18,6 +18,7 @@ angular.module('headwind-kiosk')
             getAndroidVersions: {url: 'rest/private/devices/androidVersions', method: 'GET'},
             sendDeviceCommand: {url: 'rest/private/devices/:id/command/:cmd', method: 'POST'},
             startRemoteScreen: {url: 'rest/private/remote-screen/:id/sessions', method: 'POST'},
+            startRemoteScreenByNumber: {url: 'rest/private/remote-screen/by-number/:number/sessions', method: 'POST'},
             getRemoteScreenSession: {url: 'rest/private/remote-screen/sessions/:sessionId', method: 'GET'},
             stopRemoteScreen: {url: 'rest/private/remote-screen/sessions/:sessionId/stop', method: 'POST'},
             controlRemoteScreen: {url: 'rest/private/remote-screen/sessions/:sessionId/control', method: 'POST'}

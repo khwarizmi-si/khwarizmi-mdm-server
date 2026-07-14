@@ -1631,7 +1631,13 @@ angular.module('headwind-kiosk')
 
         $scope.$on('$destroy', stopPolling);
 
-        deviceService.startRemoteScreen({id: device.id}, function (response) {
+        if (!device || (!device.id && !device.number)) {
+            $scope.loading = false;
+            $scope.errorMessage = localization.localize('error.request.failure');
+            return;
+        }
+
+        var onRemoteScreenStarted = function (response) {
             $scope.loading = false;
             if (response.status === 'OK') {
                 $scope.session = response.data;
@@ -1639,11 +1645,18 @@ angular.module('headwind-kiosk')
             } else {
                 $scope.errorMessage = localization.localizeServerResponse(response);
             }
-        }, function (failure) {
+        };
+        var onRemoteScreenStartFailed = function (failure) {
             $scope.loading = false;
             $scope.errorMessage = localization.localize('error.request.failure');
             alertService.onRequestFailure(failure);
-        });
+        };
+
+        if (device.id) {
+            deviceService.startRemoteScreen({id: device.id}, {}, onRemoteScreenStarted, onRemoteScreenStartFailed);
+        } else {
+            deviceService.startRemoteScreenByNumber({number: device.number}, {}, onRemoteScreenStarted, onRemoteScreenStartFailed);
+        }
 
     })
 
