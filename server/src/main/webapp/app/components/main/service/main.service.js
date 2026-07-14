@@ -19,7 +19,8 @@ angular.module('headwind-kiosk')
             sendDeviceCommand: {url: 'rest/private/devices/:id/command/:cmd', method: 'POST'},
             startRemoteScreen: {url: 'rest/private/remote-screen/:id/sessions', method: 'POST'},
             getRemoteScreenSession: {url: 'rest/private/remote-screen/sessions/:sessionId', method: 'GET'},
-            stopRemoteScreen: {url: 'rest/private/remote-screen/sessions/:sessionId/stop', method: 'POST'}
+            stopRemoteScreen: {url: 'rest/private/remote-screen/sessions/:sessionId/stop', method: 'POST'},
+            controlRemoteScreen: {url: 'rest/private/remote-screen/sessions/:sessionId/control', method: 'POST'}
         });
     })
     .factory('configurationService', function ($resource) {

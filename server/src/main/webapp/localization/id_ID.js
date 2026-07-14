@@ -1161,9 +1161,13 @@ document.localization ['id_ID'] = {
     'remote.screen.loading': 'Memulai sesi layar...',
     'remote.screen.session': 'Sesi',
     'remote.screen.waiting.title': 'Sesi siap untuk streaming',
-    'remote.screen.waiting.body': 'Perintah sudah dikirim ke perangkat. Mesin streaming WebRTC akan dihubungkan pada tahap berikutnya.',
+    'remote.screen.waiting.body': 'Perintah sudah dikirim ke perangkat. Frame live akan muncul setelah aplikasi Android mengizinkan tangkapan layar.',
+    'remote.screen.control.hint': 'Klik gambar layar untuk mengirim tap ke perangkat.',
+    'remote.screen.control.sending': 'Mengirim tap...',
+    'remote.screen.control.sent': 'Tap terkirim',
     'remote.screen.stop': 'Hentikan sesi',
     'error.remote.screen.session.not.found': 'Sesi layar tidak ditemukan',
+    'error.remote.screen.control.invalid': 'Aksi kendali jarak jauh tidak bisa dikirim',
 
     'yes': 'ya',
     'no': 'tidak'

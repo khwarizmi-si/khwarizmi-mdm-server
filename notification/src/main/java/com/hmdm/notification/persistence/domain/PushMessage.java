@@ -51,6 +51,7 @@ public class PushMessage implements Serializable {
     public static final String TYPE_WIPE = "wipeDevice";
     public static final String TYPE_REMOTE_SCREEN_START = "remoteScreenStart";
     public static final String TYPE_REMOTE_SCREEN_STOP = "remoteScreenStop";
+    public static final String TYPE_REMOTE_SCREEN_CONTROL = "remoteScreenControl";
 
     /**
      * <p>Constructs new <code>PushMessage</code> instance. This implementation does nothing.</p>

@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import com.hmdm.notification.PushService;
 import com.hmdm.notification.persistence.domain.PushMessage;
 import com.hmdm.persistence.domain.Device;
+import com.hmdm.rest.json.RemoteScreenControl;
 import com.hmdm.rest.json.RemoteScreenFrame;
 import com.hmdm.rest.json.RemoteScreenSession;
 import com.hmdm.security.SecurityContext;
@@ -24,6 +25,7 @@ public class RemoteScreenSessionService {
     private static final String STATUS_PENDING = "pending";
     private static final String STATUS_ACTIVE = "active";
     private static final String STATUS_ENDED = "ended";
+    private static final String STATUS_EXPIRED = "expired";
 
     private final PushService pushService;
     private final Map<String, RemoteScreenSession> sessions = new ConcurrentHashMap<>();
@@ -63,7 +65,7 @@ public class RemoteScreenSessionService {
             return null;
         }
         if (session.getExpiresAt() < System.currentTimeMillis() && !STATUS_ENDED.equals(session.getStatus())) {
-            session.setStatus("expired");
+            session.setStatus(STATUS_EXPIRED);
             session.setUpdatedAt(System.currentTimeMillis());
         }
         return session;
@@ -87,6 +89,26 @@ public class RemoteScreenSessionService {
         return session;
     }
 
+    public RemoteScreenSession control(String id, RemoteScreenControl control) {
+        RemoteScreenSession session = get(id);
+        if (session == null || STATUS_ENDED.equals(session.getStatus()) || STATUS_EXPIRED.equals(session.getStatus())) {
+            return null;
+        }
+        if (control == null || !"tap".equals(control.getType()) || !isNormalized(control.getX()) || !isNormalized(control.getY())) {
+            return null;
+        }
+
+        PushMessage message = new PushMessage();
+        message.setDeviceId(session.getDeviceId());
+        message.setMessageType(PushMessage.TYPE_REMOTE_SCREEN_CONTROL);
+        message.setPayload("{\"sessionId\":\"" + StringUtil.jsonEscape(session.getId()) +
+                "\",\"type\":\"tap\",\"x\":" + control.getX() + ",\"y\":" + control.getY() + "}");
+        pushService.send(message);
+
+        session.setUpdatedAt(System.currentTimeMillis());
+        return session;
+    }
+
     public RemoteScreenSession stop(String id) {
         RemoteScreenSession session = get(id);
         if (session == null) {
@@ -104,5 +126,9 @@ public class RemoteScreenSessionService {
         log.info("Remote screen session {} stopped by user {}", id,
                 SecurityContext.get().getCurrentUser().get().getId());
         return session;
+    }
+
+    private boolean isNormalized(double value) {
+        return !Double.isNaN(value) && !Double.isInfinite(value) && value >= 0 && value <= 1;
     }
 }

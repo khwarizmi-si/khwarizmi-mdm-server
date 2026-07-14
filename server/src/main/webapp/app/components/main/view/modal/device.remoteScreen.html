@@ -27,7 +27,14 @@
             </div>
 
             <div ng-if="session.frameDataUrl" class="tw-mt-8 tw-overflow-hidden tw-rounded-lg tw-bg-black tw-text-center">
-                <img ng-src="{{session.frameDataUrl}}" class="tw-mx-auto tw-max-h-[520px] tw-w-auto tw-max-w-full" alt="">
+                <img ng-src="{{session.frameDataUrl}}"
+                     ng-click="tapRemoteScreen($event)"
+                     class="tw-mx-auto tw-max-h-[520px] tw-w-auto tw-max-w-full tw-cursor-crosshair"
+                     alt="">
+            </div>
+            <div ng-if="session.frameDataUrl" class="tw-mt-3 tw-text-center tw-text-xs tw-text-slate-300">
+                <span localized>remote.screen.control.hint</span>
+                <span ng-if="controlMessage"> · {{controlMessage}}</span>
             </div>
 
             <div ng-if="!session.frameDataUrl" class="tw-mt-8 tw-grid tw-min-h-[280px] tw-place-items-center tw-rounded-lg tw-border tw-border-dashed tw-border-slate-600 tw-bg-slate-900 tw-text-center">

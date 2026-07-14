@@ -2,6 +2,7 @@ package com.hmdm.rest.resource;
 
 import com.hmdm.persistence.DeviceDAO;
 import com.hmdm.persistence.domain.Device;
+import com.hmdm.rest.json.RemoteScreenControl;
 import com.hmdm.rest.json.RemoteScreenSession;
 import com.hmdm.rest.json.Response;
 import com.hmdm.security.SecurityContext;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -101,6 +103,34 @@ public class RemoteScreenResource {
             return Response.OK(session);
         } catch (Exception e) {
             log.error("Failed to stop remote screen session {}", sessionId, e);
+            return Response.INTERNAL_ERROR();
+        }
+    }
+
+    @ApiOperation(value = "Send a remote screen control action", authorizations = {@Authorization("Bearer Token")})
+    @POST
+    @Path("/sessions/{sessionId}/control")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response control(@PathParam("sessionId") String sessionId, RemoteScreenControl control) {
+        try {
+            if (!SecurityContext.get().hasPermission("remote_screen_view")) {
+                return Response.PERMISSION_DENIED();
+            }
+            RemoteScreenSession session = sessionService.get(sessionId);
+            if (session == null) {
+                return Response.ERROR("error.remote.screen.session.not.found");
+            }
+            if (!canAccess(session)) {
+                return Response.PERMISSION_DENIED();
+            }
+            session = sessionService.control(sessionId, control);
+            if (session == null) {
+                return Response.ERROR("error.remote.screen.control.invalid");
+            }
+            return Response.OK(session);
+        } catch (Exception e) {
+            log.error("Failed to control remote screen session {}", sessionId, e);
             return Response.INTERNAL_ERROR();
         }
     }

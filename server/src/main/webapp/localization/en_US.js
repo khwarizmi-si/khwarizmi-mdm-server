@@ -1161,9 +1161,13 @@ document.localization ['en_US'] = {
     'remote.screen.loading': 'Starting screen session...',
     'remote.screen.session': 'Session',
     'remote.screen.waiting.title': 'Session ready for streaming',
-    'remote.screen.waiting.body': 'The command has been sent to the device. The WebRTC streaming engine will be connected in the next phase.',
+    'remote.screen.waiting.body': 'The command has been sent to the device. A live frame appears here after the Android app allows screen capture.',
+    'remote.screen.control.hint': 'Click the screen image to send a tap to the device.',
+    'remote.screen.control.sending': 'Sending tap...',
+    'remote.screen.control.sent': 'Tap sent',
     'remote.screen.stop': 'Stop session',
     'error.remote.screen.session.not.found': 'Remote screen session was not found',
+    'error.remote.screen.control.invalid': 'Remote control action could not be sent',
 
     'yes': 'yes',
     'no': 'no'

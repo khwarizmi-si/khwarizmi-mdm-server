@@ -1553,6 +1553,7 @@ angular.module('headwind-kiosk')
         $scope.device = device;
         $scope.loading = true;
         $scope.errorMessage = undefined;
+        $scope.controlMessage = undefined;
         $scope.session = undefined;
 
         var stopPolling = function () {
@@ -1593,6 +1594,28 @@ angular.module('headwind-kiosk')
         $scope.close = function () {
             $scope.stop();
             $modalInstance.dismiss();
+        };
+
+        $scope.tapRemoteScreen = function ($event) {
+            if (!$scope.session || !$scope.session.frameDataUrl) {
+                return;
+            }
+            var rect = $event.currentTarget.getBoundingClientRect();
+            var x = ($event.clientX - rect.left) / rect.width;
+            var y = ($event.clientY - rect.top) / rect.height;
+            $scope.controlMessage = localization.localize('remote.screen.control.sending');
+            deviceService.controlRemoteScreen({sessionId: $scope.session.id}, {
+                type: 'tap',
+                x: Math.max(0, Math.min(1, x)),
+                y: Math.max(0, Math.min(1, y))
+            }, function (response) {
+                $scope.controlMessage = response.status === 'OK' ?
+                    localization.localize('remote.screen.control.sent') :
+                    localization.localizeServerResponse(response);
+            }, function (failure) {
+                $scope.controlMessage = localization.localize('error.request.failure');
+                alertService.onRequestFailure(failure);
+            });
         };
 
         $scope.$on('$destroy', stopPolling);
