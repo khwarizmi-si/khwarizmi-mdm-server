@@ -36,7 +36,7 @@
     <Parameter name="aapt.command" value="aapt"/>
 
     <!-- Embedded MQTT broker for push notifications -->
-    <Parameter name="mqtt.server.uri" value="localhost:31000"/>
+    <Parameter name="mqtt.server.uri" value="0.0.0.0:31000"/>
     <Parameter name="mqtt.auth" value="1"/>
 
     <Parameter name="device.fast.search.chars" value="5"/>
