@@ -22,7 +22,7 @@
     <Parameter name="rebranding.name" value="Al-Khwarizmi MDM"/>
     <Parameter name="rebranding.mobile.name" value="Al-Khwarizmi MDM"/>
     <Parameter name="rebranding.vendor.name" value="Al-Khwarizmi"/>
-    <Parameter name="rebranding.vendor.link" value="https://al-khwarizmi.example"/>
+    <Parameter name="rebranding.vendor.link" value="https://khwarizmi.co.id"/>
     <Parameter name="rebranding.logo" value=""/>
 
     <Parameter name="plugin.devicelog.persistence.config.class" value="com.hmdm.plugins.devicelog.persistence.postgres.DeviceLogPostgresPersistenceConfiguration"/>

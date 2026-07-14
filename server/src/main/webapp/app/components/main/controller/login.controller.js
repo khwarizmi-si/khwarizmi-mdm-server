@@ -9,9 +9,9 @@ angular.module('headwind-kiosk')
         rebranding.query(function(value) {
             $scope.rebranding = value;
             $scope.rebranding.year = new Date().getFullYear();
-            // A very dirty hack preventing language change on h-mdm.com!
+            // Keep legacy signup links inside the rebranded public site.
             if ($scope.rebranding.signupLink == "https://h-mdm.com/contact-us/" && getBrowserLanguage() == 'ru_RU') {
-                $scope.rebranding.signupLink = "https://h-mdm.com/ru/kontakty/";
+                $scope.rebranding.signupLink = "https://khwarizmi.co.id";
             }
             $scope.ieBrowserNotice2 = localization.localize('ie.browser.notice.2').replace('${appName}', $scope.rebranding.appName);
         });

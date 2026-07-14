@@ -994,7 +994,7 @@ document.localization ['id_ID'] = {
 
     'app.name': 'Al-Khwarizmi MDM',
     'app.vendor.name':"Al-Khwarizmi",
-    'app.vendor.link':"https://al-khwarizmi.example",
+    'app.vendor.link':"https://khwarizmi.co.id",
     'app.description': 'adalah sistem manajemen perangkat seluler sumber terbuka',
     'app.title': 'Panel Web ${appName}',
 
