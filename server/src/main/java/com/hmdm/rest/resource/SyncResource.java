@@ -636,6 +636,13 @@ public class SyncResource {
         logger.debug("/public/sync/appUsage/{} --> {} events", deviceNumber,
                 appUsageEvents != null ? appUsageEvents.size() : 0);
 
+        if (secureEnrollment) {
+            if (!CryptoUtil.checkRequestSignature(request.getHeader(HEADER_ENROLLMENT_SIGNATURE), hashSecret + deviceNumber)) {
+                logger.warn("Failed to save app usage for device {}: signature mismatch", deviceNumber);
+                return Response.PERMISSION_DENIED();
+            }
+        }
+
         try {
             Device dbDevice = this.unsecureDAO.getDeviceByNumber(deviceNumber);
             if (dbDevice == null) {

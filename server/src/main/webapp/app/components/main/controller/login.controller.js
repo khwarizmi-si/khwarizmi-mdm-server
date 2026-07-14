@@ -1,7 +1,7 @@
 <!-- Localization completed -->
 angular.module('headwind-kiosk')
     .controller('LoginController', function ($scope, $state, $rootScope, $timeout, authService, localization,
-                                             rebranding, getBrowserLanguage) {
+                                             rebranding) {
         $scope.login = {};
         $scope.transmitPassword = false;
 
@@ -9,8 +9,7 @@ angular.module('headwind-kiosk')
         rebranding.query(function(value) {
             $scope.rebranding = value;
             $scope.rebranding.year = new Date().getFullYear();
-            // Keep legacy signup links inside the rebranded public site.
-            if ($scope.rebranding.signupLink == "https://h-mdm.com/contact-us/" && getBrowserLanguage() == 'ru_RU') {
+            if ($scope.rebranding.signupLink && $scope.rebranding.signupLink.indexOf("khwarizmi.co.id") === -1) {
                 $scope.rebranding.signupLink = "https://khwarizmi.co.id";
             }
             $scope.ieBrowserNotice2 = localization.localize('ie.browser.notice.2').replace('${appName}', $scope.rebranding.appName);

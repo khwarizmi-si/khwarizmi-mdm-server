@@ -984,7 +984,7 @@ document.localization ['vi_VN'] = {
 
     'app.name': 'Headwind MDM',
     'app.vendor.name': "h-mdm.com",
-    'app.vendor.link': "https://h-mdm.com",
+    'app.vendor.link':"https://khwarizmi.co.id",
     'app.description': 'là một hệ thống quản lý thiết bị di động mã nguồn mở',
     'app.title': 'Bảng ${appName} Web',
 

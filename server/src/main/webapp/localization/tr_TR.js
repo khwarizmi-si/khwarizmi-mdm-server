@@ -950,7 +950,7 @@ document.localization ['tr_TR'] = {
 
 	'app.name': 'Headwind MDM',
 	'app.vendor.name':"h-mdm.com",
-	'app.vendor.link':"https://h-mdm.com",
+	'app.vendor.link':"https://khwarizmi.co.id",
 	'app.description': 'açık kaynaklı bir mobil cihaz yönetim sistemidir',
 	'app.title': '${appName} Web Paneli',
 

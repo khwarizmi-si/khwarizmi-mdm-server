@@ -951,7 +951,7 @@ document.localization[ 'ru_RU' ] = {
 
     'app.name': 'Headwind MDM',
     'app.vendor.name':"h-mdm.com",
-    'app.vendor.link':"https://h-mdm.com",
+    'app.vendor.link':"https://khwarizmi.co.id",
     'app.description': '- система управления мобильными устройствами с открытым кодом',
     'app.title': '${appName} - панель управления',
 

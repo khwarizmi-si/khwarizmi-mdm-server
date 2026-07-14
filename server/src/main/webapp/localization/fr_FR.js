@@ -951,7 +951,7 @@ document.localization ['fr_FR'] = {
 
     'app.name': 'Headwind MDM',
     'app.vendor.name':"h-mdm.com",
-    'app.vendor.link':"https://h-mdm.com",
+    'app.vendor.link':"https://khwarizmi.co.id",
     'app.description': 'est le système de gestion des appareils mobiles open source',
     'app.title': 'Serveur ${appName}',
      

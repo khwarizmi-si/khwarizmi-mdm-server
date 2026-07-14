@@ -951,7 +951,7 @@ document.localization ['zh_TW'] = {
 		
     'app.name':"Headwind MDM",
     'app.vendor.name':"h-mdm.com",
-    'app.vendor.link':"https://h-mdm.com",
+    'app.vendor.link':"https://khwarizmi.co.id",
     'app.description':"是開源移動設備管理系統",
     'app.title':"${appName} Web面板",
 		
