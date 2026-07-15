@@ -11,6 +11,7 @@ import com.hmdm.persistence.domain.Configuration;
 import com.hmdm.persistence.domain.Device;
 import org.mybatis.guice.transactional.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Singleton
@@ -20,14 +21,16 @@ public class PushService {
     private final PushSender pushSenderPolling;
     private final ConfigurationDAO configurationDAO;
     private final DeviceDAO deviceDAO;
+    private final NotificationMapper notificationMapper;
 
     @Inject
     public PushService(@Named("MQTT") PushSender pushSenderMqtt, @Named("Polling") PushSender pushSenderPolling,
-                       ConfigurationDAO configurationDAO, DeviceDAO deviceDAO) {
+                       ConfigurationDAO configurationDAO, DeviceDAO deviceDAO, NotificationMapper notificationMapper) {
         this.pushSenderMqtt = pushSenderMqtt;
         this.pushSenderPolling = pushSenderPolling;
         this.configurationDAO = configurationDAO;
         this.deviceDAO = deviceDAO;
+        this.notificationMapper = notificationMapper;
     }
 
     // Use both ways to send a message, because the decision how to receive messages is done on the device (configuration)
@@ -92,5 +95,13 @@ public class PushService {
 
             this.send(message);
         }
+    }
+
+    public void clearPendingRemoteScreenMessages(int deviceId) {
+        notificationMapper.deletePendingMessages(deviceId, Arrays.asList(
+                PushMessage.TYPE_REMOTE_SCREEN_START,
+                PushMessage.TYPE_REMOTE_SCREEN_STOP,
+                PushMessage.TYPE_REMOTE_SCREEN_CONTROL
+        ));
     }
 }

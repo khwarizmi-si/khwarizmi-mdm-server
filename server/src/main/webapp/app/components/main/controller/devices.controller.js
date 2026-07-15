@@ -1552,6 +1552,7 @@ angular.module('headwind-kiosk')
         var pollPromise;
         $scope.device = device;
         $scope.loading = true;
+        $scope.stopping = false;
         $scope.errorMessage = undefined;
         $scope.controlMessage = undefined;
         $scope.session = undefined;
@@ -1563,6 +1564,11 @@ angular.module('headwind-kiosk')
             }
         };
 
+        var isTerminalSession = function () {
+            return $scope.session && ($scope.session.status === 'ended' || $scope.session.status === 'expired' ||
+                $scope.session.status === 'failed');
+        };
+
         var loadSession = function () {
             if (!$scope.session) {
                 return;
@@ -1570,31 +1576,52 @@ angular.module('headwind-kiosk')
             deviceService.getRemoteScreenSession({sessionId: $scope.session.id}, function (response) {
                 if (response.status === 'OK') {
                     $scope.session = response.data;
-                    if ($scope.session.status === 'ended' || $scope.session.status === 'expired' ||
-                        $scope.session.status === 'failed') {
+                    if (isTerminalSession()) {
                         stopPolling();
                     }
                 }
             }, alertService.onRequestFailure);
         };
 
-        $scope.stop = function () {
-            if (!$scope.session) {
+        var stopSession = function (onStopped) {
+            if (!$scope.session || $scope.stopping || isTerminalSession()) {
                 return;
             }
+            $scope.stopping = true;
+            $scope.controlMessage = localization.localize('remote.screen.stopping');
             deviceService.stopRemoteScreen({sessionId: $scope.session.id}, function (response) {
                 if (response.status === 'OK') {
                     $scope.session = response.data;
                     stopPolling();
+                    if (onStopped) {
+                        onStopped();
+                    }
                 } else {
+                    $scope.stopping = false;
                     $scope.errorMessage = localization.localizeServerResponse(response);
                 }
-            }, alertService.onRequestFailure);
+            }, function (failure) {
+                $scope.stopping = false;
+                $scope.errorMessage = localization.localize('error.request.failure');
+                alertService.onRequestFailure(failure);
+            });
+        };
+
+        $scope.stop = function () {
+            stopSession();
         };
 
         $scope.close = function () {
-            $scope.stop();
-            $modalInstance.dismiss();
+            if ($scope.stopping) {
+                return;
+            }
+            if ($scope.session && !isTerminalSession()) {
+                stopSession(function () {
+                    $modalInstance.dismiss();
+                });
+            } else {
+                $modalInstance.dismiss();
+            }
         };
 
         var sendRemoteControl = function (payload) {
@@ -1610,7 +1637,7 @@ angular.module('headwind-kiosk')
         };
 
         $scope.sendRemoteControl = function (type) {
-            if (!$scope.session) {
+            if (!$scope.session || $scope.stopping) {
                 return;
             }
             if ($scope.session.status === 'failed' || $scope.session.status === 'expired' ||
@@ -1622,7 +1649,7 @@ angular.module('headwind-kiosk')
         };
 
         $scope.tapRemoteScreen = function ($event) {
-            if (!$scope.session || !$scope.session.frameDataUrl) {
+            if (!$scope.session || !$scope.session.frameDataUrl || $scope.stopping || isTerminalSession()) {
                 return;
             }
             var rect = $event.currentTarget.getBoundingClientRect();

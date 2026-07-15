@@ -1171,6 +1171,7 @@ document.localization ['id_ID'] = {
     'remote.screen.control.home': 'Home',
     'remote.screen.control.recents': 'Terbaru',
     'remote.screen.stop': 'Hentikan sesi',
+    'remote.screen.stopping': 'Menghentikan sesi...',
     'error.remote.screen.session.not.found': 'Sesi layar tidak ditemukan',
     'error.remote.screen.control.invalid': 'Aksi kendali jarak jauh tidak bisa dikirim',
 

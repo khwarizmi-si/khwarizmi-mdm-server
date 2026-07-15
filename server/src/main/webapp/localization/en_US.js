@@ -1171,6 +1171,7 @@ document.localization ['en_US'] = {
     'remote.screen.control.home': 'Home',
     'remote.screen.control.recents': 'Recents',
     'remote.screen.stop': 'Stop session',
+    'remote.screen.stopping': 'Stopping session...',
     'error.remote.screen.session.not.found': 'Remote screen session was not found',
     'error.remote.screen.control.invalid': 'Remote control action could not be sent',
 

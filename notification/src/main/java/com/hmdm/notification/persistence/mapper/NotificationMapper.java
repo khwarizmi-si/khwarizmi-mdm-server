@@ -81,4 +81,19 @@ public interface NotificationMapper {
             "     )" +
             ")")
     void purgeMessages(@Param("d1") long nonDeliveredMessagesLifeSpan, @Param("d2") long deliveredMessagesLifeSpan);
+
+    @Delete("<script>" +
+            "DELETE FROM pushMessages " +
+            "WHERE deviceId = #{deviceId} " +
+            "AND messageType IN " +
+            "<foreach item='messageType' collection='messageTypes' open='(' separator=',' close=')'>" +
+            "#{messageType}" +
+            "</foreach> " +
+            "AND EXISTS (" +
+            " SELECT 1 FROM pendingPushes " +
+            " WHERE pendingPushes.messageId = pushMessages.id " +
+            " AND pendingPushes.status = 0" +
+            ")" +
+            "</script>")
+    void deletePendingMessages(@Param("deviceId") int deviceId, @Param("messageTypes") List<String> messageTypes);
 }

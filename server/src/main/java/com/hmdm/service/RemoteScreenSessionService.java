@@ -38,6 +38,9 @@ public class RemoteScreenSessionService {
 
     public RemoteScreenSession start(Device device) {
         long now = System.currentTimeMillis();
+        closeOpenSessions(device.getId(), now);
+        pushService.clearPendingRemoteScreenMessages(device.getId());
+
         RemoteScreenSession session = new RemoteScreenSession();
         session.setId(UUID.randomUUID().toString());
         session.setDeviceId(device.getId());
@@ -60,6 +63,18 @@ public class RemoteScreenSessionService {
         return session;
     }
 
+    private void closeOpenSessions(int deviceId, long now) {
+        sessions.values().stream()
+                .filter(session -> session.getDeviceId() == deviceId)
+                .filter(session -> !STATUS_ENDED.equals(session.getStatus()))
+                .filter(session -> !STATUS_EXPIRED.equals(session.getStatus()))
+                .filter(session -> !STATUS_FAILED.equals(session.getStatus()))
+                .forEach(session -> {
+                    session.setStatus(STATUS_ENDED);
+                    session.setUpdatedAt(now);
+                });
+    }
+
     public RemoteScreenSession get(String id) {
         RemoteScreenSession session = sessions.get(id);
         if (session == null) {
@@ -76,7 +91,7 @@ public class RemoteScreenSessionService {
     public RemoteScreenSession updateFrame(String sessionId, RemoteScreenFrame frame) {
         RemoteScreenSession session = get(sessionId);
         if (session == null || STATUS_ENDED.equals(session.getStatus()) ||
-                STATUS_FAILED.equals(session.getStatus())) {
+                STATUS_EXPIRED.equals(session.getStatus()) || STATUS_FAILED.equals(session.getStatus())) {
             return null;
         }
         String imageData = frame.getImageData();
@@ -134,6 +149,7 @@ public class RemoteScreenSessionService {
         }
         session.setStatus(STATUS_ENDED);
         session.setUpdatedAt(System.currentTimeMillis());
+        pushService.clearPendingRemoteScreenMessages(session.getDeviceId());
 
         PushMessage message = new PushMessage();
         message.setDeviceId(session.getDeviceId());

@@ -83,7 +83,7 @@ public class LongPollingServlet extends HttpServlet {
      * <p>A constructor required by Swagger.</p>
      */
     public LongPollingServlet() {
-        log.error("Empty constructor called!");
+        log.debug("Empty constructor called");
     }
 
     /**

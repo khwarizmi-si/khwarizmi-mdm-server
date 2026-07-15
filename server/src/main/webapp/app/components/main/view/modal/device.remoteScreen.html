@@ -66,6 +66,9 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="stop()" ng-disabled="!session || session.status === 'ended' || session.status === 'failed'" localized>remote.screen.stop</button>
-    <button type="button" class="btn btn-default" ng-click="close()" localized>button.close</button>
+    <button type="button" class="btn btn-default" ng-click="stop()" ng-disabled="!session || stopping || session.status === 'ended' || session.status === 'expired' || session.status === 'failed'">
+        <span ng-if="!stopping" localized>remote.screen.stop</span>
+        <span ng-if="stopping" localized>remote.screen.stopping</span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="close()" ng-disabled="stopping" localized>button.close</button>
 </div>

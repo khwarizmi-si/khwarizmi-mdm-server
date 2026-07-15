@@ -53,24 +53,24 @@ public class RemoteScreenPublicResource {
     @Path("/{deviceNumber}/sessions/{sessionId}/frame")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response uploadFrame(@PathParam("deviceNumber") String deviceNumber,
-                                @PathParam("sessionId") String sessionId,
-                                @HeaderParam(SIGNATURE_HEADER) String signature,
-                                RemoteScreenFrame frame) {
+    public javax.ws.rs.core.Response uploadFrame(@PathParam("deviceNumber") String deviceNumber,
+                                                 @PathParam("sessionId") String sessionId,
+                                                 @HeaderParam(SIGNATURE_HEADER) String signature,
+                                                 RemoteScreenFrame frame) {
         RemoteScreenSession session = getAuthorizedSession(deviceNumber, sessionId, signature);
         if (session == null) {
-            return Response.ERROR("error.remote.screen.session.not.found");
+            return json(javax.ws.rs.core.Response.Status.GONE, Response.ERROR("error.remote.screen.session.not.found"));
         }
 
         if (frame == null) {
-            return Response.ERROR();
+            return json(javax.ws.rs.core.Response.Status.BAD_REQUEST, Response.ERROR());
         }
         frame.setSessionId(sessionId);
         session = sessionService.updateFrame(sessionId, frame);
         if (session == null) {
-            return Response.ERROR();
+            return json(javax.ws.rs.core.Response.Status.GONE, Response.ERROR("error.remote.screen.session.not.found"));
         }
-        return Response.OK();
+        return json(javax.ws.rs.core.Response.Status.OK, Response.OK());
     }
 
     @ApiOperation(value = "Update remote screen session status")
@@ -78,16 +78,25 @@ public class RemoteScreenPublicResource {
     @Path("/{deviceNumber}/sessions/{sessionId}/status")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateStatus(@PathParam("deviceNumber") String deviceNumber,
-                                 @PathParam("sessionId") String sessionId,
-                                 @HeaderParam(SIGNATURE_HEADER) String signature,
-                                 RemoteScreenStatus status) {
+    public javax.ws.rs.core.Response updateStatus(@PathParam("deviceNumber") String deviceNumber,
+                                                  @PathParam("sessionId") String sessionId,
+                                                  @HeaderParam(SIGNATURE_HEADER) String signature,
+                                                  RemoteScreenStatus status) {
         RemoteScreenSession session = getAuthorizedSession(deviceNumber, sessionId, signature);
-        if (session == null || status == null) {
-            return Response.ERROR("error.remote.screen.session.not.found");
+        if (session == null) {
+            return json(javax.ws.rs.core.Response.Status.GONE, Response.ERROR("error.remote.screen.session.not.found"));
+        }
+        if (status == null || (!"failed".equals(status.getStatus()) && !"ended".equals(status.getStatus()))) {
+            return json(javax.ws.rs.core.Response.Status.BAD_REQUEST, Response.ERROR());
         }
         session = sessionService.updateStatus(sessionId, status.getStatus(), status.getReason());
-        return session != null ? Response.OK() : Response.ERROR();
+        return session != null
+                ? json(javax.ws.rs.core.Response.Status.OK, Response.OK())
+                : json(javax.ws.rs.core.Response.Status.GONE, Response.ERROR("error.remote.screen.session.not.found"));
+    }
+
+    private javax.ws.rs.core.Response json(javax.ws.rs.core.Response.Status status, Response body) {
+        return javax.ws.rs.core.Response.status(status).entity(body).type(MediaType.APPLICATION_JSON).build();
     }
 
     private RemoteScreenSession getAuthorizedSession(String deviceNumber, String sessionId, String signature) {
