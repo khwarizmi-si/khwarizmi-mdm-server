@@ -15,12 +15,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class RemoteScreenSessionServiceTest {
     private RecordingNotificationMapper notificationMapper;
+    private RecordingPushSender mqttSender;
     private RemoteScreenSessionService service;
 
     @Before
@@ -30,7 +33,8 @@ public class RemoteScreenSessionServiceTest {
         SecurityContext.init(user);
 
         notificationMapper = new RecordingNotificationMapper();
-        PushService pushService = new PushService(new NoopPushSender(), new NoopPushSender(),
+        mqttSender = new RecordingPushSender();
+        PushService pushService = new PushService(mqttSender, new NoopPushSender(),
                 null, null, notificationMapper);
         service = new RemoteScreenSessionService(pushService);
     }
@@ -55,6 +59,11 @@ public class RemoteScreenSessionServiceTest {
         assertEquals(PushMessage.TYPE_REMOTE_SCREEN_START, notificationMapper.messageTypes.get(0));
         assertEquals(PushMessage.TYPE_REMOTE_SCREEN_STOP, notificationMapper.messageTypes.get(1));
         assertEquals(PushMessage.TYPE_REMOTE_SCREEN_CONTROL, notificationMapper.messageTypes.get(2));
+        assertEquals(3, mqttSender.messages.size());
+        assertEquals(PushMessage.TYPE_REMOTE_SCREEN_START, mqttSender.messages.get(0).getMessageType());
+        assertEquals(PushMessage.TYPE_REMOTE_SCREEN_STOP, mqttSender.messages.get(1).getMessageType());
+        assertTrue(mqttSender.messages.get(1).getPayload().contains(first.getId()));
+        assertEquals(PushMessage.TYPE_REMOTE_SCREEN_START, mqttSender.messages.get(2).getMessageType());
     }
 
     @Test
@@ -104,6 +113,16 @@ public class RemoteScreenSessionServiceTest {
 
         @Override
         public int send(PushMessage message) {
+            return 0;
+        }
+    }
+
+    private static class RecordingPushSender extends NoopPushSender {
+        private final List<PushMessage> messages = new ArrayList<>();
+
+        @Override
+        public int send(PushMessage message) {
+            messages.add(message);
             return 0;
         }
     }

@@ -38,8 +38,8 @@ public class RemoteScreenSessionService {
 
     public RemoteScreenSession start(Device device) {
         long now = System.currentTimeMillis();
-        closeOpenSessions(device.getId(), now);
         pushService.clearPendingRemoteScreenMessages(device.getId());
+        closeOpenSessions(device.getId(), now);
 
         RemoteScreenSession session = new RemoteScreenSession();
         session.setId(UUID.randomUUID().toString());
@@ -72,6 +72,7 @@ public class RemoteScreenSessionService {
                 .forEach(session -> {
                     session.setStatus(STATUS_ENDED);
                     session.setUpdatedAt(now);
+                    sendStopMessage(session);
                 });
     }
 
@@ -151,15 +152,19 @@ public class RemoteScreenSessionService {
         session.setUpdatedAt(System.currentTimeMillis());
         pushService.clearPendingRemoteScreenMessages(session.getDeviceId());
 
+        sendStopMessage(session);
+
+        log.info("Remote screen session {} stopped by user {}", id,
+                SecurityContext.get().getCurrentUser().get().getId());
+        return session;
+    }
+
+    private void sendStopMessage(RemoteScreenSession session) {
         PushMessage message = new PushMessage();
         message.setDeviceId(session.getDeviceId());
         message.setMessageType(PushMessage.TYPE_REMOTE_SCREEN_STOP);
         message.setPayload("{\"sessionId\":\"" + StringUtil.jsonEscape(session.getId()) + "\"}");
         pushService.send(message);
-
-        log.info("Remote screen session {} stopped by user {}", id,
-                SecurityContext.get().getCurrentUser().get().getId());
-        return session;
     }
 
     private boolean isNormalized(double value) {
