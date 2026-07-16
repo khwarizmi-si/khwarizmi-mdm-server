@@ -63,6 +63,11 @@ public class DeviceInstalledApp implements Serializable {
     private boolean system;
 
     /**
+     * {@code true} when Android exposes a launcher activity for this package.
+     */
+    private boolean launchable;
+
+    /**
      * <p>The package name of the installer (e.g. the app store), if known.</p>
      */
     private String installer;
@@ -118,6 +123,14 @@ public class DeviceInstalledApp implements Serializable {
 
     public void setSystem(boolean system) {
         this.system = system;
+    }
+
+    public boolean isLaunchable() {
+        return launchable;
+    }
+
+    public void setLaunchable(boolean launchable) {
+        this.launchable = launchable;
     }
 
     public String getInstaller() {

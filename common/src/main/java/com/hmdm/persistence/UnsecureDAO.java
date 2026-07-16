@@ -184,6 +184,65 @@ public class UnsecureDAO {
         this.deviceMapper.updateDeviceInfo(id, info, imeiUpdateTs, publicIp);
     }
 
+    /**
+     * Adds built-in, user-launchable apps to a device configuration once. Existing
+     * configuration entries, including an explicit deny, are never changed.
+     */
+    @Transactional
+    public boolean addLaunchableSystemAppsToConfiguration(Device device, List<DeviceInstalledApp> installedApps) {
+        if (device.getConfigurationId() == null || installedApps == null || installedApps.isEmpty()) {
+            return false;
+        }
+
+        List<Application> appsToAdd = new ArrayList<>();
+        for (DeviceInstalledApp installedApp : installedApps) {
+            if (!installedApp.isSystem() || !installedApp.isLaunchable()
+                    || !isValidPackage(installedApp.getPkg())
+                    || installedApp.getVersion() == null || installedApp.getVersion().trim().isEmpty()
+                    || this.configurationMapper.isAppInstalledInConfiguration(installedApp.getPkg(), device.getConfigurationId())) {
+                continue;
+            }
+
+            List<Application> matches = this.applicationMapper.findByPackageIdAndVersion(
+                    device.getCustomerId(), installedApp.getPkg(), installedApp.getVersion());
+            Application application;
+            if (matches.isEmpty()) {
+                application = new Application();
+                application.setName(limit(installedApp.getName(), 100, installedApp.getPkg()));
+                application.setPkg(installedApp.getPkg());
+                application.setVersion(limit(installedApp.getVersion(), 100, "0"));
+                application.setVersionCode(installedApp.getVersionCode() == null ? 0
+                        : (int) Math.min(installedApp.getVersionCode(), Integer.MAX_VALUE));
+                application.setSystem(true);
+                application.setCustomerId(device.getCustomerId());
+                application.setType(ApplicationType.app);
+                application.setShowIcon(false);
+                insertApplication(application);
+                application = this.applicationMapper.findById(application.getId());
+            } else {
+                application = matches.get(0);
+            }
+            application.setAction(1);
+            application.setShowIcon(false);
+            appsToAdd.add(application);
+        }
+
+        if (appsToAdd.isEmpty()) {
+            return false;
+        }
+        this.configurationMapper.insertConfigurationApplications(device.getConfigurationId(), appsToAdd);
+        return true;
+    }
+
+    private static boolean isValidPackage(String pkg) {
+        return pkg != null && pkg.matches("[A-Za-z0-9_.]{1,100}");
+    }
+
+    private static String limit(String value, int maxLength, String fallback) {
+        String result = value == null || value.trim().isEmpty() ? fallback : value.trim();
+        return result.length() <= maxLength ? result : result.substring(0, maxLength);
+    }
+
     public void updateDeviceCustomProperties(Integer id, Device device) {
         this.deviceMapper.updateDeviceCustomProperties(id, device.getCustom1(), device.getCustom2(), device.getCustom3());
     }

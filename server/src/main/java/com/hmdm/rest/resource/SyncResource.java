@@ -45,6 +45,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.hmdm.event.DeviceBatteryLevelUpdatedEvent;
+import com.hmdm.event.ConfigurationUpdatedEvent;
 import com.hmdm.event.DeviceInfoUpdatedEvent;
 import com.hmdm.event.DeviceLocationUpdatedEvent;
 import com.hmdm.event.EventService;
@@ -573,6 +574,11 @@ public class SyncResource {
                         objectMapper.writeValueAsString(deviceInfo),
                         dbDevice.getImeiUpdateTs(),
                         remoteAddrResolver.getRemoteAddr(request));
+
+                if (this.unsecureDAO.addLaunchableSystemAppsToConfiguration(
+                        dbDevice, deviceInfo.getInstalledApplications())) {
+                    this.eventService.fireEvent(new ConfigurationUpdatedEvent(dbDevice.getConfigurationId()));
+                }
 
                 boolean needUpdate = false;
                 if (deviceInfo.getCustom1() != null) {

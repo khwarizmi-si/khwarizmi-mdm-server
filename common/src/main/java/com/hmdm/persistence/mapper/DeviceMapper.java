@@ -221,6 +221,7 @@ public interface DeviceMapper {
             "    deviceApps.app ->> 'version' AS version, " +
             "    (deviceApps.app ->> 'versionCode')::bigint AS versionCode, " +
             "    COALESCE((deviceApps.app ->> 'system')::boolean, false) AS system, " +
+            "    COALESCE((deviceApps.app ->> 'launchable')::boolean, false) AS launchable, " +
             "    deviceApps.app ->> 'installer' AS installer, " +
             "    (deviceApps.app ->> 'firstInstall')::bigint AS firstInstall, " +
             "    (deviceApps.app ->> 'lastUpdate')::bigint AS lastUpdate " +
