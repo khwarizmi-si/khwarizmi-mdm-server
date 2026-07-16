@@ -1579,8 +1579,15 @@ angular.module('headwind-kiosk')
                     if (isTerminalSession()) {
                         stopPolling();
                     }
+                } else {
+                    stopPolling();
+                    $scope.errorMessage = localization.localizeServerResponse(response);
                 }
-            }, alertService.onRequestFailure);
+            }, function (failure) {
+                stopPolling();
+                $scope.errorMessage = localization.localize('error.request.failure');
+                alertService.onRequestFailure(failure);
+            });
         };
 
         var stopSession = function (onStopped) {

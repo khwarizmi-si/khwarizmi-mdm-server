@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RemoteScreenSessionService {
     private static final Logger log = LoggerFactory.getLogger(RemoteScreenSessionService.class);
     private static final long SESSION_TTL_MS = 5 * 60 * 1000L;
+    private static final long FRAME_TIMEOUT_MS = 15 * 1000L;
     private static final int MAX_FRAME_LENGTH = 2 * 1024 * 1024;
     private static final String STATUS_PENDING = "pending";
     private static final String STATUS_ACTIVE = "active";
@@ -81,10 +82,16 @@ public class RemoteScreenSessionService {
         if (session == null) {
             return null;
         }
-        if (session.getExpiresAt() < System.currentTimeMillis() &&
+        long now = System.currentTimeMillis();
+        if (session.getExpiresAt() < now &&
                 !STATUS_ENDED.equals(session.getStatus()) && !STATUS_FAILED.equals(session.getStatus())) {
             session.setStatus(STATUS_EXPIRED);
-            session.setUpdatedAt(System.currentTimeMillis());
+            session.setUpdatedAt(now);
+        } else if (STATUS_ACTIVE.equals(session.getStatus()) &&
+                session.getFrameUpdatedAt() + FRAME_TIMEOUT_MS < now) {
+            session.setStatus(STATUS_FAILED);
+            session.setStatusReason("frame_timeout");
+            session.setUpdatedAt(now);
         }
         return session;
     }

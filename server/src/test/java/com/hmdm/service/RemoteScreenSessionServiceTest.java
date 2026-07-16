@@ -85,6 +85,18 @@ public class RemoteScreenSessionServiceTest {
         assertNull(service.control(session.getId(), control("home")));
     }
 
+    @Test
+    public void staleActiveSessionFailsInsteadOfShowingAnOldFrame() {
+        RemoteScreenSession session = service.start(device(5, "tes01"));
+        service.updateFrame(session.getId(), frame());
+        session.setFrameUpdatedAt(1);
+
+        RemoteScreenSession result = service.get(session.getId());
+
+        assertEquals("failed", result.getStatus());
+        assertEquals("frame_timeout", result.getStatusReason());
+    }
+
     private Device device(int id, String number) {
         Device device = new Device();
         device.setId(id);
