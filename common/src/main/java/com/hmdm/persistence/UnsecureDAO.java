@@ -76,6 +76,13 @@ public class UnsecureDAO {
     private final EventService eventService;
 
     private static final int DEFAULT_CUSTOMER_ID = 1;
+    private static final Set<String> HIDDEN_SYSTEM_LAUNCHER_PACKAGES = new HashSet<>(Arrays.asList(
+            "com.android.settings",
+            "com.google.android.documentsui",
+            "com.google.android.healthconnect.controller",
+            "com.android.stk",
+            "com.android.traceur"
+    ));
 
     /**
      * <p>Constructs new <code>UnsecureDAO</code> instance. This implementation does nothing.</p>
@@ -216,14 +223,14 @@ public class UnsecureDAO {
                 application.setSystem(true);
                 application.setCustomerId(device.getCustomerId());
                 application.setType(ApplicationType.app);
-                application.setShowIcon(false);
+                application.setShowIcon(shouldShowSystemApp(installedApp.getPkg()));
                 insertApplication(application);
                 application = this.applicationMapper.findById(application.getId());
             } else {
                 application = matches.get(0);
             }
             application.setAction(1);
-            application.setShowIcon(false);
+            application.setShowIcon(shouldShowSystemApp(installedApp.getPkg()));
             appsToAdd.add(application);
         }
 
@@ -236,6 +243,10 @@ public class UnsecureDAO {
 
     private static boolean isValidPackage(String pkg) {
         return pkg != null && pkg.matches("[A-Za-z0-9_.]{1,100}");
+    }
+
+    private static boolean shouldShowSystemApp(String pkg) {
+        return !HIDDEN_SYSTEM_LAUNCHER_PACKAGES.contains(pkg);
     }
 
     private static String limit(String value, int maxLength, String fallback) {
