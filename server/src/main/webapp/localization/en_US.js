@@ -1164,6 +1164,8 @@ document.localization ['en_US'] = {
     'remote.screen.waiting.body': 'The command has been sent to the device. A live frame appears here after the Android app allows screen capture.',
     'remote.screen.failed.title': 'Screen session failed',
     'remote.screen.failed.body': 'The device could not start screen capture. Start a new session and approve screen sharing on the device.',
+    'remote.screen.failed.frame_timeout': 'Screen capture stopped sending updates.',
+    'remote.screen.failed.unknown': 'The screen session was ended by the device.',
     'remote.screen.control.hint': 'Click the screen image to send a tap to the device.',
     'remote.screen.control.sending': 'Sending tap...',
     'remote.screen.control.sent': 'Command sent',

@@ -1164,6 +1164,8 @@ document.localization ['id_ID'] = {
     'remote.screen.waiting.body': 'Perintah sudah dikirim ke perangkat. Frame live akan muncul setelah aplikasi Android mengizinkan tangkapan layar.',
     'remote.screen.failed.title': 'Sesi layar gagal',
     'remote.screen.failed.body': 'Perangkat tidak dapat memulai tangkapan layar. Buka ulang sesi dan pastikan izin berbagi layar disetujui di perangkat.',
+    'remote.screen.failed.frame_timeout': 'Tangkapan layar berhenti mengirim pembaruan.',
+    'remote.screen.failed.unknown': 'Sesi layar dihentikan oleh perangkat.',
     'remote.screen.control.hint': 'Klik gambar layar untuk mengirim tap ke perangkat.',
     'remote.screen.control.sending': 'Mengirim tap...',
     'remote.screen.control.sent': 'Perintah terkirim',

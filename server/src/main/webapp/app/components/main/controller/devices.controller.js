@@ -1550,12 +1550,18 @@ angular.module('headwind-kiosk')
                                                                alertService, device) {
 
         var pollPromise;
+        var remoteScreenStatusReasons = {
+            frame_timeout: 'remote.screen.failed.frame_timeout'
+        };
         $scope.device = device;
         $scope.loading = true;
         $scope.stopping = false;
         $scope.errorMessage = undefined;
         $scope.controlMessage = undefined;
         $scope.session = undefined;
+        $scope.remoteScreenStatusReason = function (reason) {
+            return localization.localize(remoteScreenStatusReasons[reason] || 'remote.screen.failed.unknown');
+        };
 
         var stopPolling = function () {
             if (pollPromise) {
