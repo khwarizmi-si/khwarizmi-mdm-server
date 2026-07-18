@@ -121,12 +121,16 @@ public class RemoteScreenSessionService {
         if (session == null || STATUS_EXPIRED.equals(session.getStatus())) {
             return null;
         }
-        if (!STATUS_FAILED.equals(status) && !STATUS_ENDED.equals(status)) {
+        if (!STATUS_ACTIVE.equals(status) && !STATUS_FAILED.equals(status) && !STATUS_ENDED.equals(status)) {
             return null;
         }
+        long now = System.currentTimeMillis();
         session.setStatus(status);
-        session.setStatusReason(reason);
-        session.setUpdatedAt(System.currentTimeMillis());
+        session.setStatusReason(STATUS_ACTIVE.equals(status) ? null : reason);
+        session.setUpdatedAt(now);
+        if (STATUS_ACTIVE.equals(status)) {
+            session.setFrameUpdatedAt(now);
+        }
         return session;
     }
 

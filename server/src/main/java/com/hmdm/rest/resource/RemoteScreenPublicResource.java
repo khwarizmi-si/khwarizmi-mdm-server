@@ -86,7 +86,8 @@ public class RemoteScreenPublicResource {
         if (session == null) {
             return json(javax.ws.rs.core.Response.Status.GONE, Response.ERROR("error.remote.screen.session.not.found"));
         }
-        if (status == null || (!"failed".equals(status.getStatus()) && !"ended".equals(status.getStatus()))) {
+        if (status == null || (!"active".equals(status.getStatus()) &&
+                !"failed".equals(status.getStatus()) && !"ended".equals(status.getStatus()))) {
             return json(javax.ws.rs.core.Response.Status.BAD_REQUEST, Response.ERROR());
         }
         session = sessionService.updateStatus(sessionId, status.getStatus(), status.getReason());

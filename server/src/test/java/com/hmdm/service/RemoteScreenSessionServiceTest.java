@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -95,6 +96,19 @@ public class RemoteScreenSessionServiceTest {
 
         assertEquals("failed", result.getStatus());
         assertEquals("frame_timeout", result.getStatusReason());
+    }
+
+    @Test
+    public void activeHeartbeatKeepsAStaticScreenSessionAlive() {
+        RemoteScreenSession session = service.start(device(5, "tes01"));
+        service.updateFrame(session.getId(), frame());
+        long frameUpdatedAt = session.getFrameUpdatedAt();
+
+        RemoteScreenSession result = service.updateStatus(session.getId(), "active", null);
+
+        assertNotNull(result);
+        assertEquals("active", result.getStatus());
+        assertTrue(result.getFrameUpdatedAt() >= frameUpdatedAt);
     }
 
     private Device device(int id, String number) {
