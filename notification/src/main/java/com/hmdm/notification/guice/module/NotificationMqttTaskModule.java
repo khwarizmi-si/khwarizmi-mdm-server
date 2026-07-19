@@ -108,6 +108,7 @@ public class NotificationMqttTaskModule {
         try {
             brokerService.addConnector("mqtt://" + serverUri);
             brokerService.start();
+            brokerService.waitUntilStarted();
             log.info("MQTT notification service started at " + serverUri);
         } catch (Exception e) {
             log.error("Failed to create MQTT broker service");
