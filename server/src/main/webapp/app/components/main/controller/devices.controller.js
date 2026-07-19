@@ -1545,7 +1545,7 @@ angular.module('headwind-kiosk')
 
     })
 
-    .controller('DeviceRemoteScreenModalController', function ($scope, $modalInstance, $interval,
+    .controller('DeviceRemoteScreenModalController', function ($scope, $modalInstance, $interval, $document,
                                                                localization, deviceService,
                                                                alertService, device) {
 
@@ -1682,18 +1682,22 @@ angular.module('headwind-kiosk')
         };
 
         $scope.startRemoteSwipe = function ($event) {
+            $event.preventDefault();
             remoteSwipeStart = {
                 x: $event.clientX,
-                y: $event.clientY
+                y: $event.clientY,
+                rect: $event.currentTarget.getBoundingClientRect()
             };
+            $document.on('mouseup', finishRemoteSwipe);
         };
 
-        $scope.finishRemoteSwipe = function ($event) {
+        var finishRemoteSwipe = function ($event) {
+            $document.off('mouseup', finishRemoteSwipe);
             if (!remoteSwipeStart || !$scope.session || !$scope.session.frameDataUrl || $scope.stopping || isTerminalSession()) {
                 remoteSwipeStart = undefined;
                 return;
             }
-            var rect = $event.currentTarget.getBoundingClientRect();
+            var rect = remoteSwipeStart.rect;
             var deltaX = $event.clientX - remoteSwipeStart.x;
             var deltaY = $event.clientY - remoteSwipeStart.y;
             remoteSwipeStart = undefined;
@@ -1710,7 +1714,10 @@ angular.module('headwind-kiosk')
             });
         };
 
-        $scope.$on('$destroy', stopPolling);
+        $scope.$on('$destroy', function () {
+            $document.off('mouseup', finishRemoteSwipe);
+            stopPolling();
+        });
 
         if (!device || (!device.id && !device.number)) {
             $scope.loading = false;
