@@ -1166,7 +1166,7 @@ document.localization ['en_US'] = {
     'remote.screen.failed.body': 'The device could not start screen capture. Start a new session and approve screen sharing on the device.',
     'remote.screen.failed.frame_timeout': 'Screen capture stopped sending updates.',
     'remote.screen.failed.unknown': 'The screen session was ended by the device.',
-    'remote.screen.control.hint': 'Click the screen image to send a tap to the device.',
+    'remote.screen.control.hint': 'Click the screen image to send a tap, or drag to swipe the device screen.',
     'remote.screen.control.sending': 'Sending tap...',
     'remote.screen.control.sent': 'Command sent',
     'remote.screen.control.back': 'Back',

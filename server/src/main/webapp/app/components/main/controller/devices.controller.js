@@ -1559,6 +1559,8 @@ angular.module('headwind-kiosk')
         $scope.errorMessage = undefined;
         $scope.controlMessage = undefined;
         $scope.session = undefined;
+        var remoteSwipeStart;
+        var ignoreNextRemoteTap = false;
         $scope.remoteScreenStatusReason = function (reason) {
             return localization.localize(remoteScreenStatusReasons[reason] || 'remote.screen.failed.unknown');
         };
@@ -1662,6 +1664,10 @@ angular.module('headwind-kiosk')
         };
 
         $scope.tapRemoteScreen = function ($event) {
+            if (ignoreNextRemoteTap) {
+                ignoreNextRemoteTap = false;
+                return;
+            }
             if (!$scope.session || !$scope.session.frameDataUrl || $scope.stopping || isTerminalSession()) {
                 return;
             }
@@ -1672,6 +1678,35 @@ angular.module('headwind-kiosk')
                 type: 'tap',
                 x: Math.max(0, Math.min(1, x)),
                 y: Math.max(0, Math.min(1, y))
+            });
+        };
+
+        $scope.startRemoteSwipe = function ($event) {
+            remoteSwipeStart = {
+                x: $event.clientX,
+                y: $event.clientY
+            };
+        };
+
+        $scope.finishRemoteSwipe = function ($event) {
+            if (!remoteSwipeStart || !$scope.session || !$scope.session.frameDataUrl || $scope.stopping || isTerminalSession()) {
+                remoteSwipeStart = undefined;
+                return;
+            }
+            var rect = $event.currentTarget.getBoundingClientRect();
+            var deltaX = $event.clientX - remoteSwipeStart.x;
+            var deltaY = $event.clientY - remoteSwipeStart.y;
+            remoteSwipeStart = undefined;
+            if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) {
+                return;
+            }
+            ignoreNextRemoteTap = true;
+            sendRemoteControl({
+                type: 'swipe',
+                x: Math.max(0, Math.min(1, ($event.clientX - deltaX - rect.left) / rect.width)),
+                y: Math.max(0, Math.min(1, ($event.clientY - deltaY - rect.top) / rect.height)),
+                x2: Math.max(0, Math.min(1, ($event.clientX - rect.left) / rect.width)),
+                y2: Math.max(0, Math.min(1, ($event.clientY - rect.top) / rect.height))
             });
         };
 
