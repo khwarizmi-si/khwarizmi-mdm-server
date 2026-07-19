@@ -24,8 +24,8 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "127.0.0.1:8080:8080"
-      - "127.0.0.1:31000:31000"
+      - "8080:8080"
+      - "31000:31000"
     volumes:
       - ../server/target/launcher.war:/usr/local/tomcat/webapps/hmdm.war:ro
       - ./context.xml:/usr/local/tomcat/conf/Catalina/localhost/hmdm.xml:ro
