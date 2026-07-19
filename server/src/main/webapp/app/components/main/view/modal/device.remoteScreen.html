@@ -30,6 +30,8 @@
                 <img ng-src="{{session.frameDataUrl}}"
                      ng-click="tapRemoteScreen($event)"
                      ng-mousedown="startRemoteSwipe($event)"
+                     ng-mouseup="finishRemoteSwipe($event)"
+                     ng-dragstart="$event.preventDefault()"
                      draggable="false"
                      class="tw-mx-auto tw-max-h-[520px] tw-w-auto tw-max-w-full tw-select-none tw-cursor-grab active:tw-cursor-grabbing"
                      alt="">

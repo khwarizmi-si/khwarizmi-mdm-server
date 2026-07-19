@@ -1691,7 +1691,7 @@ angular.module('headwind-kiosk')
             $document.on('mouseup', finishRemoteSwipe);
         };
 
-        var finishRemoteSwipe = function ($event) {
+        $scope.finishRemoteSwipe = function ($event) {
             $document.off('mouseup', finishRemoteSwipe);
             if (!remoteSwipeStart || !$scope.session || !$scope.session.frameDataUrl || $scope.stopping || isTerminalSession()) {
                 remoteSwipeStart = undefined;
@@ -1713,6 +1713,7 @@ angular.module('headwind-kiosk')
                 y2: Math.max(0, Math.min(1, ($event.clientY - rect.top) / rect.height))
             });
         };
+        var finishRemoteSwipe = $scope.finishRemoteSwipe;
 
         $scope.$on('$destroy', function () {
             $document.off('mouseup', finishRemoteSwipe);
