@@ -1550,6 +1550,7 @@ angular.module('headwind-kiosk')
                                                                alertService, device) {
 
         var pollPromise;
+        var sessionLoading = false;
         var remoteScreenStatusReasons = {
             frame_timeout: 'remote.screen.failed.frame_timeout'
         };
@@ -1578,10 +1579,12 @@ angular.module('headwind-kiosk')
         };
 
         var loadSession = function () {
-            if (!$scope.session) {
+            if (!$scope.session || sessionLoading) {
                 return;
             }
+            sessionLoading = true;
             deviceService.getRemoteScreenSession({sessionId: $scope.session.id}, function (response) {
+                sessionLoading = false;
                 if (response.status === 'OK') {
                     $scope.session = response.data;
                     if (isTerminalSession()) {
@@ -1592,6 +1595,7 @@ angular.module('headwind-kiosk')
                     $scope.errorMessage = localization.localizeServerResponse(response);
                 }
             }, function (failure) {
+                sessionLoading = false;
                 stopPolling();
                 $scope.errorMessage = localization.localize('error.request.failure');
                 alertService.onRequestFailure(failure);
@@ -1730,6 +1734,7 @@ angular.module('headwind-kiosk')
             $scope.loading = false;
             if (response.status === 'OK') {
                 $scope.session = response.data;
+                loadSession();
                 pollPromise = $interval(loadSession, 200);
             } else {
                 $scope.errorMessage = localization.localizeServerResponse(response);
