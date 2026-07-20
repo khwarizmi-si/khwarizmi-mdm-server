@@ -1730,7 +1730,7 @@ angular.module('headwind-kiosk')
             $scope.loading = false;
             if (response.status === 'OK') {
                 $scope.session = response.data;
-                pollPromise = $interval(loadSession, 3000);
+                pollPromise = $interval(loadSession, 500);
             } else {
                 $scope.errorMessage = localization.localizeServerResponse(response);
             }
